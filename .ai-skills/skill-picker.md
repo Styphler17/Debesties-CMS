@@ -53,3 +53,4 @@ These global skills are available to the AI assistant. Select the appropriate gl
 *   **Planning Architecture & Formulating Implementation Steps**: Use `concise-planning`.
 *   **Technical SEO Audit & Page Performance Checks**: Use `seo-audit` or `seo-fundamentals`.
 *   **Removing AI Writing Traces, Polishing Tone, & Naturalizing Text**: Use `humanizer`.
+*   **Maintaining AGENTS.md or CLAUDE.md Instructions**: Use `agents-md`.
