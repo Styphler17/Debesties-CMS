@@ -4,9 +4,9 @@ Welcome, future coding agent! Please follow these guidelines strictly when worki
 
 ## Step-by-Step Task Reading
 
-1.  **First**: Read `project-overview.md` to understand the goal, stack, and modules.
-2.  **Second**: Read `architecture.md` to see the structure and patterns of Controllers, Actions, Services, and Models.
-3.  **Third**: Read only the specific skill file related to your current task (e.g. `media-library.md` for uploading tasks).
+1.  **First**: Read [`skill-picker.md`](file:///.ai-skills/skill-picker.md) to identify the best local and global skills for your current job.
+2.  **Second**: Read [`project-overview.md`](file:///.ai-skills/project-overview.md) and [`architecture.md`](file:///.ai-skills/architecture.md) to align on target goals, stack, and codebase structure.
+3.  **Third**: Read the specific local skill files identified by `skill-picker.md` (e.g., `media-library.md` for uploading tasks) or activate the corresponding global skill (e.g. `laravel-expert` for backend queries).
 4.  **Avoid Full Code Scanning**: Do not recursively search the codebase or run heavy searches unless information is missing from the skill files.
 
 ## Technical & Architectural Rules

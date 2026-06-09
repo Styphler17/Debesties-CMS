@@ -5,6 +5,7 @@ This folder contains lightweight, project-specific documentation and specificati
 ## Files and Content Directory
 
 *   **[agent-instructions.md](file:///.ai-skills/agent-instructions.md)**: Entry point for AI agents. Guidelines on where to start and what libraries/architectures to avoid.
+*   **[skill-picker.md](file:///.ai-skills/skill-picker.md)**: Guide for picking the best local or global skill for any coding job.
 *   **[project-overview.md](file:///.ai-skills/project-overview.md)**: High-level overview of Debesties CMS, the target audience, technology stack, and CMS modules.
 *   **[architecture.md](file:///.ai-skills/architecture.md)**: Directory structure layout and organization of Controllers, Models, Services, and Actions.
 *   **[routes.md](file:///.ai-skills/routes.md)**: List of confirmed web and admin route definitions and naming conventions.
