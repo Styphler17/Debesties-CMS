@@ -1,0 +1,37 @@
+<!-- @dsCard group="Colors" -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600&family=Space+Mono:wght@700&display=swap" rel="stylesheet">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Outfit', sans-serif; background: #F8F5F0; padding: 20px; }
+.row { display: flex; gap: 6px; }
+.swatch { flex: 1; border-radius: 6px; height: 52px; }
+.swatch.tall { height: 72px; position: relative; }
+.label { font-size: 10px; color: #7A7163; margin-top: 5px; font-family: 'Space Mono', monospace; text-align: center; }
+.group { margin-bottom: 16px; }
+.group-title { font-size: 11px; font-weight: 600; color: #9E9387; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 8px; }
+.primary-badge { position: absolute; top: 4px; left: 50%; transform: translateX(-50%); font-size: 8px; font-weight: 700; background: rgba(0,0,0,0.25); color: white; border-radius: 3px; padding: 1px 5px; white-space: nowrap; letter-spacing: 0.05em; }
+</style>
+</head>
+<body>
+<div class="group">
+  <div class="group-title">Ink — Warm Neutral Scale</div>
+  <div class="row">
+    <div><div class="swatch" style="background:#F8F5F0; border:1px solid #EDE8E0;"></div><div class="label">50</div></div>
+    <div><div class="swatch" style="background:#EDE8E0;"></div><div class="label">100</div></div>
+    <div><div class="swatch" style="background:#D9D0C4;"></div><div class="label">200</div></div>
+    <div><div class="swatch" style="background:#BDB5A6;"></div><div class="label">300</div></div>
+    <div><div class="swatch" style="background:#9E9387;"></div><div class="label">400</div></div>
+    <div><div class="swatch" style="background:#7A7163;"></div><div class="label">500</div></div>
+    <div><div class="swatch" style="background:#5C5448;"></div><div class="label">600</div></div>
+    <div><div class="swatch" style="background:#3D3529;"></div><div class="label">700</div></div>
+    <div><div class="swatch" style="background:#2A2218;"></div><div class="label">800</div></div>
+    <div><div class="swatch tall" style="background:#1A1410;"><span class="primary-badge" style="background:rgba(255,255,255,0.2);">BASE</span></div><div class="label">900</div></div>
+    <div><div class="swatch" style="background:#0D0A07;"></div><div class="label">950</div></div>
+  </div>
+</div>
+</body>
+</html>

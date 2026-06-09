@@ -1,0 +1,39 @@
+<!-- @dsCard group="Colors" -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Outfit', sans-serif; background: #F8F5F0; padding: 20px; }
+.grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.token { display: flex; align-items: center; gap: 10px; background: white; border: 1px solid #EDE8E0; border-radius: 8px; padding: 8px 12px; }
+.dot { width: 32px; height: 32px; border-radius: 6px; flex-shrink: 0; }
+.name { font-size: 12px; font-weight: 600; color: #2A2218; }
+.val  { font-size: 10px; color: #7A7163; }
+.section { font-size: 10px; font-weight: 700; color: #9E9387; letter-spacing: 0.1em; text-transform: uppercase; margin: 14px 0 6px; }
+</style>
+</head>
+<body>
+<div class="section">Surfaces</div>
+<div class="grid">
+  <div class="token"><div class="dot" style="background:#F8F5F0; border:1px solid #D9D0C4;"></div><div><div class="name">--color-bg</div><div class="val">#F8F5F0 · Warm page</div></div></div>
+  <div class="token"><div class="dot" style="background:#FFFFFF; border:1px solid #D9D0C4;"></div><div><div class="name">--color-surface</div><div class="val">#FFFFFF · Card</div></div></div>
+</div>
+<div class="section">Foregrounds</div>
+<div class="grid">
+  <div class="token"><div class="dot" style="background:#1A1410;"></div><div><div class="name">--color-fg1</div><div class="val">#1A1410 · Headings</div></div></div>
+  <div class="token"><div class="dot" style="background:#3D3529;"></div><div><div class="name">--color-fg2</div><div class="val">#3D3529 · Body</div></div></div>
+  <div class="token"><div class="dot" style="background:#7A7163;"></div><div><div class="name">--color-fg3</div><div class="val">#7A7163 · Muted</div></div></div>
+  <div class="token"><div class="dot" style="background:#F8F5F0; border:1px solid #D9D0C4;"></div><div><div class="name">--color-fg-inverse</div><div class="val">#F8F5F0 · On dark</div></div></div>
+</div>
+<div class="section">Brand Actions</div>
+<div class="grid">
+  <div class="token"><div class="dot" style="background:#E8A800;"></div><div><div class="name">--color-primary</div><div class="val">#E8A800 · Gold</div></div></div>
+  <div class="token"><div class="dot" style="background:#1A5C2E;"></div><div><div class="name">--color-accent</div><div class="val">#1A5C2E · Forest</div></div></div>
+  <div class="token"><div class="dot" style="background:#B91C1C;"></div><div><div class="name">--color-danger</div><div class="val">#B91C1C · Ghana Red</div></div></div>
+  <div class="token"><div class="dot" style="background:#EDE8E0;"></div><div><div class="name">--color-border</div><div class="val">#EDE8E0 · Divider</div></div></div>
+</div>
+</body>
+</html>

@@ -1,0 +1,318 @@
+/* ============================================================
+   DEBESTIES DESIGN SYSTEM — Colors & Typography
+   Source: Google Fonts (Playfair Display, Outfit, Space Mono)
+   ============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,900;1,400;1,700&family=Outfit:wght@300;400;500;600;700&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap');
+
+/* ─── RAW COLOR PRIMITIVES ─────────────────────────────────── */
+
+:root {
+  /* Gold — primary brand color, awards, achievement */
+  --gold-50:  #FFFAED;
+  --gold-100: #FFF0C2;
+  --gold-200: #FFE085;
+  --gold-300: #FFCA3A;
+  --gold-400: #F5B000;
+  --gold-500: #E8A800;   /* primary gold */
+  --gold-600: #C88C00;
+  --gold-700: #A06C00;
+  --gold-800: #7A4F00;
+  --gold-900: #4D3000;
+
+  /* Forest Green — Ghana flag, prestige, secondary */
+  --green-50:  #EDFAF2;
+  --green-100: #C8EFD8;
+  --green-200: #8EDAB0;
+  --green-300: #4EC17E;
+  --green-400: #22A35A;
+  --green-500: #1A5C2E;  /* primary green */
+  --green-600: #144A24;
+  --green-700: #0E381B;
+  --green-800: #082612;
+  --green-900: #03140A;
+
+  /* Ghana Red — accent, urgency, highlight */
+  --red-50:  #FEF2F2;
+  --red-100: #FEE2E2;
+  --red-300: #FCA5A5;
+  --red-500: #B91C1C;   /* primary red */
+  --red-700: #7F1D1D;
+  --red-900: #450A0A;
+
+  /* Ink — warm near-black neutrals */
+  --ink-50:  #F8F5F0;   /* page background */
+  --ink-100: #EDE8E0;   /* borders, dividers */
+  --ink-200: #D9D0C4;
+  --ink-300: #BDB5A6;
+  --ink-400: #9E9387;
+  --ink-500: #7A7163;   /* muted text */
+  --ink-600: #5C5448;
+  --ink-700: #3D3529;   /* body text secondary */
+  --ink-800: #2A2218;   /* body text primary */
+  --ink-900: #1A1410;   /* near-black, headings */
+  --ink-950: #0D0A07;   /* darkest, hero bg */
+
+  /* Pure white */
+  --white:   #FFFFFF;
+}
+
+/* ─── SEMANTIC COLOR TOKENS ───────────────────────────────── */
+
+:root {
+  /* Brand primaries */
+  --color-primary:       var(--gold-500);
+  --color-primary-hover: var(--gold-600);
+  --color-primary-press: var(--gold-700);
+  --color-primary-subtle:var(--gold-50);
+
+  --color-accent:        var(--green-500);
+  --color-accent-hover:  var(--green-600);
+  --color-accent-subtle: var(--green-50);
+
+  --color-danger:        var(--red-500);
+  --color-danger-subtle: var(--red-50);
+
+  /* Surfaces */
+  --color-bg:            var(--ink-50);
+  --color-surface:       var(--white);
+  --color-surface-raised:var(--white);
+  --color-overlay:       rgba(26, 20, 16, 0.48);
+
+  /* Foregrounds */
+  --color-fg1:           var(--ink-900);   /* headings, strong */
+  --color-fg2:           var(--ink-700);   /* body text */
+  --color-fg3:           var(--ink-500);   /* captions, muted */
+  --color-fg-inverse:    var(--ink-50);    /* text on dark bg */
+
+  /* Borders */
+  --color-border:        var(--ink-100);
+  --color-border-strong: var(--ink-200);
+
+  /* Interactive states */
+  --color-hover-overlay: rgba(26, 20, 16, 0.06);
+  --color-focus-ring:    rgba(232, 168, 0, 0.40);
+}
+
+/* ─── TYPOGRAPHY — FONT FAMILIES ─────────────────────────── */
+
+:root {
+  --font-display: 'Playfair Display', 'Georgia', serif;
+  --font-body:    'Outfit', 'Helvetica Neue', sans-serif;
+  --font-mono:    'Space Mono', 'Courier New', monospace;
+}
+
+/* ─── TYPOGRAPHY — SCALE ─────────────────────────────────── */
+
+:root {
+  /* Type sizes */
+  --text-xs:   0.75rem;    /* 12px — captions, labels */
+  --text-sm:   0.875rem;   /* 14px — small UI */
+  --text-base: 1rem;       /* 16px — body */
+  --text-lg:   1.125rem;   /* 18px — large body */
+  --text-xl:   1.25rem;    /* 20px — small heading */
+  --text-2xl:  1.5rem;     /* 24px — section heading */
+  --text-3xl:  1.875rem;   /* 30px — article heading */
+  --text-4xl:  2.25rem;    /* 36px — page heading */
+  --text-5xl:  3rem;       /* 48px — hero sub */
+  --text-6xl:  3.75rem;    /* 60px — hero */
+  --text-7xl:  5rem;       /* 80px — display */
+
+  /* Line heights */
+  --leading-tight:  1.15;
+  --leading-snug:   1.3;
+  --leading-normal: 1.5;
+  --leading-relaxed:1.7;
+
+  /* Letter spacing */
+  --tracking-tight: -0.03em;
+  --tracking-normal: 0em;
+  --tracking-wide:   0.05em;
+  --tracking-widest: 0.12em;
+
+  /* Font weights */
+  --weight-light:    300;
+  --weight-regular:  400;
+  --weight-medium:   500;
+  --weight-semibold: 600;
+  --weight-bold:     700;
+  --weight-black:    900;
+}
+
+/* ─── SEMANTIC TYPE ROLES ────────────────────────────────── */
+
+:root {
+  /* Display — hero headlines, award names */
+  --type-hero-font:     var(--font-display);
+  --type-hero-size:     var(--text-6xl);
+  --type-hero-weight:   var(--weight-black);
+  --type-hero-leading:  var(--leading-tight);
+  --type-hero-tracking: var(--tracking-tight);
+
+  /* H1 — page titles */
+  --type-h1-font:       var(--font-display);
+  --type-h1-size:       var(--text-4xl);
+  --type-h1-weight:     var(--weight-bold);
+  --type-h1-leading:    var(--leading-snug);
+  --type-h1-tracking:   var(--tracking-tight);
+
+  /* H2 — article headlines */
+  --type-h2-font:       var(--font-display);
+  --type-h2-size:       var(--text-3xl);
+  --type-h2-weight:     var(--weight-bold);
+  --type-h2-leading:    var(--leading-snug);
+
+  /* H3 — section headings */
+  --type-h3-font:       var(--font-body);
+  --type-h3-size:       var(--text-xl);
+  --type-h3-weight:     var(--weight-semibold);
+  --type-h3-leading:    var(--leading-normal);
+
+  /* H4 — card labels, sidebar headings */
+  --type-h4-font:       var(--font-body);
+  --type-h4-size:       var(--text-base);
+  --type-h4-weight:     var(--weight-semibold);
+  --type-h4-leading:    var(--leading-normal);
+
+  /* Body — article text */
+  --type-body-font:     var(--font-body);
+  --type-body-size:     var(--text-base);
+  --type-body-weight:   var(--weight-regular);
+  --type-body-leading:  var(--leading-relaxed);
+
+  /* Body LG — lead paragraphs */
+  --type-body-lg-size:  var(--text-lg);
+  --type-body-lg-leading: var(--leading-relaxed);
+
+  /* Label — UI labels, nav items */
+  --type-label-font:    var(--font-body);
+  --type-label-size:    var(--text-sm);
+  --type-label-weight:  var(--weight-medium);
+  --type-label-tracking:var(--tracking-wide);
+
+  /* Caption — timestamps, credits */
+  --type-caption-font:  var(--font-body);
+  --type-caption-size:  var(--text-xs);
+  --type-caption-weight:var(--weight-regular);
+  --type-caption-color: var(--color-fg3);
+
+  /* Kicker — overline above headlines */
+  --type-kicker-font:   var(--font-body);
+  --type-kicker-size:   var(--text-xs);
+  --type-kicker-weight: var(--weight-bold);
+  --type-kicker-tracking:var(--tracking-widest);
+  --type-kicker-transform: uppercase;
+
+  /* Data / Year — mono figures in timelines */
+  --type-data-font:     var(--font-mono);
+  --type-data-size:     var(--text-sm);
+  --type-data-weight:   var(--weight-bold);
+  --type-data-color:    var(--color-primary);
+}
+
+/* ─── SPACING ─────────────────────────────────────────────── */
+
+:root {
+  --space-1:  0.25rem;   /* 4px  */
+  --space-2:  0.5rem;    /* 8px  */
+  --space-3:  0.75rem;   /* 12px */
+  --space-4:  1rem;      /* 16px */
+  --space-5:  1.25rem;   /* 20px */
+  --space-6:  1.5rem;    /* 24px */
+  --space-8:  2rem;      /* 32px */
+  --space-10: 2.5rem;    /* 40px */
+  --space-12: 3rem;      /* 48px */
+  --space-16: 4rem;      /* 64px */
+  --space-20: 5rem;      /* 80px */
+  --space-24: 6rem;      /* 96px */
+}
+
+/* ─── BORDER RADII ───────────────────────────────────────── */
+
+:root {
+  --radius-sm:   4px;    /* badges, tags, chips */
+  --radius-md:   8px;    /* buttons, inputs */
+  --radius-lg:   12px;   /* cards */
+  --radius-xl:   20px;   /* large panels */
+  --radius-pill: 9999px; /* pills, avatars */
+}
+
+/* ─── SHADOWS ─────────────────────────────────────────────── */
+
+:root {
+  --shadow-sm:  0 1px 4px rgba(26, 20, 16, 0.06);
+  --shadow-md:  0 2px 8px rgba(26, 20, 16, 0.08);
+  --shadow-lg:  0 8px 32px rgba(26, 20, 16, 0.12);
+  --shadow-xl:  0 16px 48px rgba(26, 20, 16, 0.16);
+  --shadow-gold:0 4px 20px rgba(232, 168, 0, 0.28);
+}
+
+/* ─── TRANSITIONS ─────────────────────────────────────────── */
+
+:root {
+  --ease-out:   cubic-bezier(0.25, 0, 0, 1);   /* @kind other */
+  --ease-in:    cubic-bezier(0.55, 0, 1, 0.45); /* @kind other */
+  --ease-inout: cubic-bezier(0.4, 0, 0.2, 1);   /* @kind other */
+  --duration-fast:   150ms;   /* @kind other */
+  --duration-base:   200ms;   /* @kind other */
+  --duration-slow:   350ms;   /* @kind other */
+}
+
+/* ─── LAYOUT ─────────────────────────────────────────────── */
+
+:root {
+  --content-max:   1200px;
+  --article-max:    680px;
+  --sidebar-width:  280px;
+}
+
+/* ─── UTILITY CLASSES ────────────────────────────────────── */
+
+.ds-h1 {
+  font-family: var(--type-h1-font);
+  font-size: var(--type-h1-size);
+  font-weight: var(--type-h1-weight);
+  line-height: var(--type-h1-leading);
+  letter-spacing: var(--type-h1-tracking);
+  color: var(--color-fg1);
+}
+.ds-h2 {
+  font-family: var(--type-h2-font);
+  font-size: var(--type-h2-size);
+  font-weight: var(--type-h2-weight);
+  line-height: var(--type-h2-leading);
+  color: var(--color-fg1);
+}
+.ds-h3 {
+  font-family: var(--type-h3-font);
+  font-size: var(--type-h3-size);
+  font-weight: var(--type-h3-weight);
+  line-height: var(--type-h3-leading);
+  color: var(--color-fg1);
+}
+.ds-body {
+  font-family: var(--type-body-font);
+  font-size: var(--type-body-size);
+  font-weight: var(--type-body-weight);
+  line-height: var(--type-body-leading);
+  color: var(--color-fg2);
+}
+.ds-caption {
+  font-family: var(--type-caption-font);
+  font-size: var(--type-caption-size);
+  color: var(--color-fg3);
+}
+.ds-kicker {
+  font-family: var(--type-kicker-font);
+  font-size: var(--type-kicker-size);
+  font-weight: var(--type-kicker-weight);
+  letter-spacing: var(--type-kicker-tracking);
+  text-transform: var(--type-kicker-transform);
+  color: var(--color-primary);
+}
+.ds-data {
+  font-family: var(--type-data-font);
+  font-size: var(--type-data-size);
+  font-weight: var(--type-data-weight);
+  color: var(--type-data-color);
+}

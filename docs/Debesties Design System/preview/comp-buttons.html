@@ -1,0 +1,51 @@
+<!-- @dsCard group="Components" -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Outfit', sans-serif; background: #F8F5F0; padding: 20px; }
+.section { font-size: 11px; font-weight: 700; color: #9E9387; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 10px; }
+.row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin-bottom: 18px; }
+/* Primary */
+.btn { display: inline-flex; align-items: center; gap: 7px; font-family: 'Outfit', sans-serif; font-size: 14px; font-weight: 600; border: none; cursor: pointer; transition: all 150ms; padding: 10px 20px; border-radius: 8px; letter-spacing: 0.01em; }
+.btn-primary { background: #E8A800; color: #1A1410; }
+.btn-secondary { background: #1A5C2E; color: #F8F5F0; }
+.btn-ghost { background: transparent; color: #1A1410; border: 1.5px solid #EDE8E0; }
+.btn-ghost-gold { background: transparent; color: #E8A800; border: 1.5px solid #E8A800; }
+.btn-dark { background: #1A1410; color: #F8F5F0; }
+.btn-danger { background: #B91C1C; color: white; }
+.btn-sm { font-size: 12px; padding: 7px 14px; border-radius: 6px; }
+.btn-lg { font-size: 16px; padding: 14px 28px; border-radius: 10px; }
+.btn-pill { border-radius: 9999px; }
+.dark-bg { background: #1A1410; padding: 14px; border-radius: 10px; display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+</style>
+</head>
+<body>
+<div class="section">Buttons — Variants</div>
+<div class="row">
+  <button class="btn btn-primary">Read Article</button>
+  <button class="btn btn-secondary">Explore Era</button>
+  <button class="btn btn-ghost">Share</button>
+  <button class="btn btn-ghost-gold">View All Winners</button>
+  <button class="btn btn-dark">Subscribe</button>
+  <button class="btn btn-danger">Report Error</button>
+</div>
+
+<div class="section">Buttons — Sizes</div>
+<div class="row">
+  <button class="btn btn-primary btn-sm">Small</button>
+  <button class="btn btn-primary">Default</button>
+  <button class="btn btn-primary btn-lg">Large</button>
+  <button class="btn btn-primary btn-pill">Pill Shape</button>
+</div>
+
+<div class="section">On Dark Background</div>
+<div class="dark-bg">
+  <button class="btn btn-primary">Read More</button>
+  <button class="btn btn-ghost" style="border-color:rgba(255,255,255,0.25);color:#F8F5F0;">Share</button>
+</div>
+</body>
+</html>

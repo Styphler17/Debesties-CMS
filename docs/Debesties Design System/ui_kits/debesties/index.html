@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<!-- @dsCard group="UI Kit — Debesties" name="Debesties Blog UI Kit" subtitle="Interactive homepage + timeline — click through both screens" viewport="1200x700" -->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Debesties — Ghana Music Awards Coverage</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400;1,700&family=Outfit:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { background: #F8F5F0; font-family: 'Outfit', sans-serif; color: #3D3529; -webkit-font-smoothing: antialiased; }
+  ::-webkit-scrollbar { width: 6px; } ::-webkit-scrollbar-track { background: #F8F5F0; } ::-webkit-scrollbar-thumb { background: #D9D0C4; border-radius: 3px; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel" src="Navigation.jsx"></script>
+<script type="text/babel" src="ArticleCard.jsx"></script>
+<script type="text/babel" src="TimelinePage.jsx"></script>
+<script type="text/babel">
+
+/* ── DATA ─────────────────────────────────────────────── */
+
+const ARTICLES = [
+  {
+    id: 'elite-club',
+    kicker: 'Cover Story · Awards History',
+    title: 'The Elite Club: 4 Artists Who Dominated the TGMAs',
+    excerpt: 'V.I.P, Sarkodie, Stonebwoy and Black Sherif — the only acts to claim Artiste of the Year more than once in 27 years of Ghana Music Awards history.',
+    date: 'May 27, 2026',
+    readTime: '8 min read',
+    page: 'timeline',
+  },
+];
+
+const GRID_ARTICLES = [
+  {
+    id: 'annulment',
+    kicker: 'Analysis',
+    title: 'The 2019 Annulment: What Really Happened?',
+    excerpt: 'The only year in TGMA history with no winner — and why it still matters to the integrity of the award.',
+    date: 'Apr 12, 2026', readTime: '5 min read', page: 'timeline',
+  },
+  {
+    id: 'black-sherif',
+    kicker: 'Profile · 2026',
+    title: "Black Sherif's Second Crown: Legacy Cemented",
+    excerpt: 'How the Konongo Zongo native went from breakthrough star to two-time champion in just three years.',
+    date: 'May 20, 2026', readTime: '6 min read', page: 'timeline',
+  },
+  {
+    id: 'king-promise',
+    kicker: 'Year in Review · 2025',
+    title: "King Promise's 2025 Win: A New Chapter for Highlife",
+    excerpt: "The Ghanaian singer's breakout year on the global stage translated into his first Artiste of the Year title.",
+    date: 'Mar 3, 2026', readTime: '4 min read', page: 'timeline',
+  },
+  {
+    id: 'sarkodie',
+    kicker: 'Legacy · Retrospective',
+    title: "Sarkodie's Back-to-Back: The Years That Built an Icon",
+    excerpt: "2010 and 2012 — how two consecutive awards cemented Sarkodie as Ghana's greatest rapper.",
+    date: 'Feb 14, 2026', readTime: '7 min read', page: 'timeline',
+  },
+  {
+    id: 'vip',
+    kicker: 'Hiplife Era',
+    title: 'V.I.P: The Group That Started It All',
+    excerpt: 'Winners in 2004 and 2011, V.I.P defined the Hiplife era and remain the first to win the award twice.',
+    date: 'Jan 8, 2026', readTime: '5 min read', page: 'timeline',
+  },
+];
+
+const CHAMPIONS = [
+  { name: 'V.I.P',         years: ['2004', '2011'], era: 'Hiplife Era' },
+  { name: 'Sarkodie',      years: ['2010', '2012'], era: 'Highlife Revival' },
+  { name: 'Stonebwoy',     years: ['2015', '2024'], era: 'Multi-Era' },
+  { name: 'Black Sherif',  years: ['2023', '2026'], era: 'Afrobeats Era' },
+];
+
+/* ── HOME PAGE ────────────────────────────────────────── */
+
+const homeStyles = {
+  wrap: { minHeight: '100vh' },
+  main: { maxWidth: 1200, margin: '0 auto', padding: '40px 32px 80px' },
+  heroWrap: { marginBottom: 40 },
+  sectionHead: {
+    display: 'flex', alignItems: 'baseline', justifyContent: 'space-between',
+    marginBottom: 20, paddingBottom: 14,
+    borderBottom: '1px solid #EDE8E0',
+  },
+  sectionTitle: {
+    fontFamily: "'Outfit', sans-serif", fontSize: 13, fontWeight: 700,
+    letterSpacing: '0.1em', textTransform: 'uppercase', color: '#7A7163',
+  },
+  sectionLink: {
+    fontFamily: "'Outfit', sans-serif", fontSize: 12, fontWeight: 600,
+    color: '#E8A800', cursor: 'pointer', letterSpacing: '0.04em',
+    display: 'flex', alignItems: 'center', gap: 4,
+  },
+  grid: {
+    display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 20, marginBottom: 48,
+  },
+  champStrip: {
+    background: '#1A1410', borderRadius: 16,
+    padding: '36px 40px', marginBottom: 48,
+  },
+  champHead: {
+    display: 'flex', alignItems: 'baseline',
+    justifyContent: 'space-between', marginBottom: 24,
+  },
+  champTitle: {
+    fontFamily: "'Playfair Display', serif", fontSize: 22, fontWeight: 900,
+    color: '#FFFFFF', letterSpacing: '-0.02em',
+  },
+  champSub: {
+    fontFamily: "'Outfit', sans-serif", fontSize: 12, color: '#5C5448',
+  },
+  champGrid: {
+    display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: 14,
+  },
+  champCard: {
+    background: 'rgba(255,255,255,0.04)',
+    border: '1px solid rgba(232,168,0,0.18)',
+    borderRadius: 10, padding: '16px 18px',
+  },
+  champName: {
+    fontFamily: "'Playfair Display', serif", fontSize: 17, fontWeight: 700,
+    color: '#FFFFFF', marginBottom: 6, lineHeight: 1.2,
+  },
+  champYears: {
+    fontFamily: "'Space Mono', monospace", fontSize: 12, fontWeight: 700,
+    color: '#E8A800', marginBottom: 4,
+  },
+  champEra: {
+    fontFamily: "'Outfit', sans-serif", fontSize: 10, color: '#5C5448',
+    letterSpacing: '0.04em',
+  },
+  champBadge: {
+    display: 'inline-flex', alignItems: 'center', gap: 4,
+    fontFamily: "'Outfit', sans-serif", fontSize: 9, fontWeight: 700,
+    letterSpacing: '0.09em', textTransform: 'uppercase',
+    background: '#E8A800', color: '#1A1410',
+    padding: '2px 7px', borderRadius: 3, marginTop: 8,
+  },
+  newsletter: {
+    background: '#FFFAED', border: '1px solid #FFE085',
+    borderRadius: 14, padding: '32px 36px',
+    display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 24,
+  },
+  nlLeft: {},
+  nlTitle: {
+    fontFamily: "'Playfair Display', serif", fontSize: 20, fontWeight: 700,
+    color: '#1A1410', marginBottom: 6,
+  },
+  nlSub: { fontFamily: "'Outfit', sans-serif", fontSize: 14, color: '#7A7163' },
+  nlForm: { display: 'flex', gap: 10, flexShrink: 0 },
+  nlInput: {
+    fontFamily: "'Outfit', sans-serif", fontSize: 14,
+    border: '1.5px solid #EDE8E0', borderRadius: 8,
+    padding: '10px 16px', width: 240, outline: 'none',
+    background: 'white', color: '#1A1410',
+  },
+  nlBtn: {
+    fontFamily: "'Outfit', sans-serif", fontSize: 13, fontWeight: 600,
+    background: '#E8A800', color: '#1A1410',
+    border: 'none', cursor: 'pointer',
+    padding: '10px 22px', borderRadius: 8, flexShrink: 0,
+  },
+  footer: {
+    background: '#1A1410', padding: '36px 32px',
+    display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+  },
+  footerLogo: {
+    fontFamily: "'Playfair Display', serif", fontSize: 20,
+    display: 'flex', alignItems: 'baseline',
+  },
+  footerLinks: {
+    display: 'flex', gap: 24,
+    fontFamily: "'Outfit', sans-serif", fontSize: 13,
+    color: '#5C5448', listStyle: 'none',
+  },
+  footerCopy: {
+    fontFamily: "'Outfit', sans-serif", fontSize: 12, color: '#3D3529',
+  },
+};
+
+function HomePage({ onNavigate }) {
+  return (
+    <div style={homeStyles.wrap}>
+      <div style={homeStyles.main}>
+        {/* Hero */}
+        <div style={homeStyles.heroWrap}>
+          <FeaturedCard article={ARTICLES[0]} onNavigate={onNavigate} />
+        </div>
+
+        {/* Latest */}
+        <div style={homeStyles.sectionHead}>
+          <span style={homeStyles.sectionTitle}>Latest Stories</span>
+          <span style={homeStyles.sectionLink} onClick={() => onNavigate('timeline')}>
+            View Timeline <i data-lucide="arrow-right" style={{width:13,height:13}}></i>
+          </span>
+        </div>
+        <div style={homeStyles.grid}>
+          {GRID_ARTICLES.slice(0, 3).map((a, i) => (
+            <ArticleCard key={a.id} article={a} index={i} onNavigate={onNavigate} />
+          ))}
+        </div>
+
+        {/* Champion strip */}
+        <div style={homeStyles.champStrip}>
+          <div style={homeStyles.champHead}>
+            <div>
+              <div style={{fontFamily:"'Outfit',sans-serif",fontSize:10,fontWeight:700,letterSpacing:'0.14em',textTransform:'uppercase',color:'#E8A800',marginBottom:6}}>
+                The Elite Club
+              </div>
+              <div style={homeStyles.champTitle}>Artists Who Won It Twice</div>
+            </div>
+            <div style={homeStyles.champSub}>1999 – 2026</div>
+          </div>
+          <div style={homeStyles.champGrid}>
+            {CHAMPIONS.map(c => (
+              <div key={c.name} style={homeStyles.champCard}>
+                <div style={homeStyles.champName}>{c.name}</div>
+                <div style={homeStyles.champYears}>{c.years.join(' · ')}</div>
+                <div style={homeStyles.champEra}>{c.era}</div>
+                <div style={homeStyles.champBadge}>★★ 2× Artiste of the Year</div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* More stories */}
+        <div style={homeStyles.sectionHead}>
+          <span style={homeStyles.sectionTitle}>More Stories</span>
+        </div>
+        <div style={homeStyles.grid}>
+          {GRID_ARTICLES.slice(2).map((a, i) => (
+            <ArticleCard key={a.id} article={a} index={i + 2} onNavigate={onNavigate} />
+          ))}
+        </div>
+
+        {/* Newsletter */}
+        <div style={homeStyles.newsletter}>
+          <div style={homeStyles.nlLeft}>
+            <div style={homeStyles.nlTitle}>Get the Debesties Digest</div>
+            <div style={homeStyles.nlSub}>Every TGMA update, analysis and deep dive — delivered weekly.</div>
+          </div>
+          <div style={homeStyles.nlForm}>
+            <input style={homeStyles.nlInput} placeholder="Your email address" type="email" />
+            <button style={homeStyles.nlBtn}>Subscribe</button>
+          </div>
+        </div>
+      </div>
+
+      {/* Footer */}
+      <footer style={homeStyles.footer}>
+        <div style={homeStyles.footerLogo}>
+          <span style={{fontWeight:900,color:'#F8F5F0',letterSpacing:'-0.03em'}}>De</span>
+          <span style={{fontWeight:700,fontStyle:'italic',color:'#E8A800',letterSpacing:'-0.02em'}}>besties</span>
+        </div>
+        <ul style={homeStyles.footerLinks}>
+          {['Home','Timeline','Artists','Analysis','About'].map(l => (
+            <li key={l} style={{cursor:'pointer'}}>{l}</li>
+          ))}
+        </ul>
+        <div style={homeStyles.footerCopy}>© 2026 Debesties · Ghana Music Coverage</div>
+      </footer>
+    </div>
+  );
+}
+
+/* ── APP ──────────────────────────────────────────────── */
+
+function App() {
+  const [page, setPage] = React.useState('home');
+
+  const navigate = (p) => {
+    setPage(p);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  React.useEffect(() => {
+    if (window.lucide) lucide.createIcons();
+  });
+
+  return (
+    <>
+      <Navigation page={page} onNavigate={navigate} />
+      {page === 'timeline' ? (
+        <TimelinePage onNavigate={navigate} />
+      ) : (
+        <HomePage onNavigate={navigate} />
+      )}
+    </>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
+</body>
+</html>

@@ -1,0 +1,37 @@
+<!-- @dsCard group="Spacing" -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600&family=Space+Mono:wght@700&display=swap" rel="stylesheet">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Outfit', sans-serif; background: #F8F5F0; padding: 20px; }
+.section { font-size: 11px; font-weight: 700; color: #9E9387; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 12px; }
+.row { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; margin-bottom: 20px; }
+.demo { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+.box { background: white; border: 2px solid #EDE8E0; display: flex; align-items: center; justify-content: center; }
+.label { font-family: 'Space Mono', monospace; font-size: 9px; font-weight: 700; color: #E8A800; }
+.name { font-size: 10px; color: #7A7163; }
+</style>
+</head>
+<body>
+<div class="section">Border Radius</div>
+<div class="row">
+  <div class="demo"><div class="box" style="width:40px;height:40px;border-radius:4px;"></div><div class="label">4px</div><div class="name">--radius-sm</div></div>
+  <div class="demo"><div class="box" style="width:40px;height:40px;border-radius:8px;"></div><div class="label">8px</div><div class="name">--radius-md</div></div>
+  <div class="demo"><div class="box" style="width:40px;height:40px;border-radius:12px;"></div><div class="label">12px</div><div class="name">--radius-lg</div></div>
+  <div class="demo"><div class="box" style="width:40px;height:40px;border-radius:20px;"></div><div class="label">20px</div><div class="name">--radius-xl</div></div>
+  <div class="demo"><div class="box" style="width:64px;height:32px;border-radius:9999px;"></div><div class="label">pill</div><div class="name">--radius-pill</div></div>
+</div>
+
+<div class="section">Shadow Scale</div>
+<div class="row">
+  <div class="demo"><div class="box" style="width:72px;height:48px;border-radius:10px;border:none;box-shadow:0 1px 4px rgba(26,20,16,0.06);"></div><div class="label">sm</div><div class="name">--shadow-sm</div></div>
+  <div class="demo"><div class="box" style="width:72px;height:48px;border-radius:10px;border:none;box-shadow:0 2px 8px rgba(26,20,16,0.08);"></div><div class="label">md</div><div class="name">--shadow-md</div></div>
+  <div class="demo"><div class="box" style="width:72px;height:48px;border-radius:10px;border:none;box-shadow:0 8px 32px rgba(26,20,16,0.12);"></div><div class="label">lg</div><div class="name">--shadow-lg</div></div>
+  <div class="demo"><div class="box" style="width:72px;height:48px;border-radius:10px;border:none;box-shadow:0 16px 48px rgba(26,20,16,0.16);"></div><div class="label">xl</div><div class="name">--shadow-xl</div></div>
+  <div class="demo"><div class="box" style="width:72px;height:48px;border-radius:10px;border:none;box-shadow:0 4px 20px rgba(232,168,0,0.28);background:#FFF8E6;"></div><div class="label">gold</div><div class="name">--shadow-gold</div></div>
+</div>
+</body>
+</html>

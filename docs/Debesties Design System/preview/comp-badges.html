@@ -1,0 +1,62 @@
+<!-- @dsCard group="Components" -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&family=Space+Mono:wght@700&display=swap" rel="stylesheet">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Outfit', sans-serif; background: #F8F5F0; padding: 20px; }
+.section { font-size: 11px; font-weight: 700; color: #9E9387; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 10px; }
+.row { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin-bottom: 16px; }
+.badge { display: inline-flex; align-items: center; gap: 5px; font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; padding: 3px 9px; border-radius: 4px; }
+.badge-gold { background: #FFF0C2; color: #A06C00; }
+.badge-gold-solid { background: #E8A800; color: #1A1410; }
+.badge-green { background: #C8EFD8; color: #0E381B; }
+.badge-red { background: #FEE2E2; color: #7F1D1D; }
+.badge-ink { background: #EDE8E0; color: #3D3529; }
+.badge-dark { background: #1A1410; color: #F8F5F0; }
+.tag { display: inline-flex; align-items: center; gap: 5px; font-size: 12px; font-weight: 500; padding: 5px 12px; border-radius: 9999px; border: 1.5px solid; }
+.tag-gold { border-color: #E8A800; color: #A06C00; background: #FFFAED; }
+.tag-green { border-color: #1A5C2E; color: #1A5C2E; background: #EDFAF2; }
+.tag-ink { border-color: #BDB5A6; color: #5C5448; background: white; }
+.champion-badge { display: inline-flex; align-items: center; gap: 6px; font-family: 'Space Mono', monospace; font-size: 11px; font-weight: 700; background: linear-gradient(135deg, #E8A800, #FFCA3A); color: #1A1410; padding: 5px 12px; border-radius: 4px; box-shadow: 0 2px 8px rgba(232,168,0,0.30); }
+.era-chip { display: inline-flex; align-items: center; font-size: 11px; font-weight: 600; padding: 4px 10px; border-radius: 9999px; letter-spacing: 0.04em; }
+.era-hiplife { background: #7A4F00; color: #FFE085; }
+.era-afrobeats { background: #0E381B; color: #8EDAB0; }
+.era-highlife { background: #3D3529; color: #D9D0C4; }
+</style>
+</head>
+<body>
+<div class="section">Award Badges</div>
+<div class="row">
+  <span class="badge badge-gold-solid">★ Double Winner</span>
+  <span class="badge badge-gold">Artiste of the Year</span>
+  <span class="badge badge-green">TGMA 2026</span>
+  <span class="badge badge-red">Annulled</span>
+  <span class="badge badge-ink">Nominated</span>
+  <span class="badge badge-dark">Hiplife Era</span>
+</div>
+
+<div class="section">Category Tags (Pill)</div>
+<div class="row">
+  <span class="tag tag-gold">Ghana Music Awards</span>
+  <span class="tag tag-green">Afrobeats</span>
+  <span class="tag tag-ink">Hiplife</span>
+  <span class="tag tag-ink">Timeline</span>
+  <span class="tag tag-ink">Analysis</span>
+</div>
+
+<div class="section">Era Chips</div>
+<div class="row">
+  <span class="era-chip era-hiplife">Hiplife Era '99–'09</span>
+  <span class="era-chip era-highlife">Highlife Era '10–'16</span>
+  <span class="era-chip era-afrobeats">Afrobeats Era '17–Now</span>
+</div>
+
+<div class="section">Champion Badge (Timeline)</div>
+<div class="row">
+  <span class="champion-badge">★★ 2× Champion</span>
+</div>
+</body>
+</html>

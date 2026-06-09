@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Debesties Studio — Publishing CMS</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;0,800;0,900;1,400&family=Outfit:wght@300;400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; }
+  body { background: #F4F1EC; font-family: 'Outfit', sans-serif; -webkit-font-smoothing: antialiased; color: #1A1410; }
+  #root { height: 100%; }
+  ::-webkit-scrollbar { width: 9px; height: 9px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: #D6CEC1; border-radius: 999px; border: 2px solid #F4F1EC; }
+  ::-webkit-scrollbar-thumb:hover { background: #BDB5A6; }
+  .cms-nav-scroll::-webkit-scrollbar { width: 5px; }
+  .cms-nav-scroll::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.12); border: none; }
+  textarea, input { font-family: inherit; }
+
+  @keyframes dsFade { from { opacity: 0; } to { opacity: 1; } }
+  @keyframes dsPop { from { opacity: 0; transform: translateY(6px) scale(0.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
+  @keyframes dsSpin { to { transform: rotate(360deg); } }
+  @keyframes cmsShimmer { 0% { background-position: -400px 0; } 100% { background-position: 400px 0; } }
+  .cms-shimmer { background: linear-gradient(90deg, #EFEBE3 25%, #F6F3EE 50%, #EFEBE3 75%); background-size: 800px 100%; animation: cmsShimmer 1.4s infinite linear; }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .cms-view-enter { animation: cmsSlideUp 300ms cubic-bezier(0.25,0,0,1); }
+  }
+  @keyframes cmsSlideUp { from { transform: translateY(8px); } to { transform: translateY(0); } }
+
+  .cms-mobile-only { display: none !important; }
+
+  /* Tablet */
+  @media (max-width: 1100px) {
+    .cms-stat-grid { grid-template-columns: repeat(3,1fr) !important; }
+    .cms-qa-grid { grid-template-columns: repeat(2,1fr) !important; }
+    .cms-dash-cols { grid-template-columns: 1fr !important; }
+    .cms-editor-rail { display: none !important; }
+    .cms-editor-cols { grid-template-columns: 1fr !important; }
+  }
+
+  /* Mobile */
+  @media (max-width: 760px) {
+    .cms-sidebar { position: fixed !important; left: 0; top: 0; transform: translateX(-100%); width: 248px !important; box-shadow: 0 0 40px rgba(0,0,0,0.3); }
+    .cms-sidebar.cms-mobile-open { transform: translateX(0); }
+    .cms-mobile-backdrop { display: block !important; }
+    .cms-desktop-only { display: none !important; }
+    .cms-mobile-only { display: flex !important; }
+    .cms-search-hide { display: none !important; }
+    .cms-stat-grid { grid-template-columns: repeat(2,1fr) !important; }
+    .cms-qa-grid { grid-template-columns: 1fr !important; }
+    .cms-content { padding: 16px !important; }
+    .cms-settings { grid-template-columns: 1fr !important; }
+    .cms-newpost-hide { display: none !important; }
+  }
+</style>
+</head>
+<body>
+<div id="root"></div>
+
+<script type="text/babel" src="tweaks-panel.jsx"></script>
+<script type="text/babel" src="components.jsx"></script>
+<script type="text/babel" src="data.jsx"></script>
+<script type="text/babel" src="AppShell.jsx"></script>
+<script type="text/babel" src="Dashboard.jsx"></script>
+<script type="text/babel" src="PostsList.jsx"></script>
+<script type="text/babel" src="PostEditor.jsx"></script>
+<script type="text/babel" src="Analytics.jsx"></script>
+<script type="text/babel" src="ContentViews.jsx"></script>
+<script type="text/babel" src="Subscribers.jsx"></script>
+<script type="text/babel" src="SystemViews.jsx"></script>
+
+<script type="text/babel">
+const { useState, useEffect } = React;
+
+const PAGE_TITLES = {
+  dashboard: 'Dashboard', analytics: 'Analytics', calendar: 'Editorial Calendar',
+  posts: 'Posts', pages: 'Pages', categories: 'Categories', tags: 'Tags', media: 'Media Library',
+  comments: 'Comments', subscribers: 'Subscribers', seo: 'SEO Tools', ai: 'AI Visibility', navbuilder: 'Navigation Builder',
+  homebuilder: 'Homepage Builder', users: 'Users & Roles', settings: 'Site Settings',
+};
+
+const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
+  "accent": "#E8A800",
+  "density": "compact",
+  "demoState": "normal"
+}/*EDITMODE-END*/;
+
+function App() {
+  const [t, setTweak] = useTweaks(TWEAK_DEFAULTS);
+  const [page, setPage] = useState('dashboard');
+  const [editing, setEditing] = useState(null);   // null = list, {} or post = editor
+  const [collapsed, setCollapsed] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const accent = t.accent;
+
+  const navigate = (p) => { setEditing(null); setPage(p); window.scrollTo({ top: 0 }); };
+  const openEditor = (post) => { setEditing(post || {}); window.scrollTo({ top: 0 }); };
+  const newPost = () => { setEditing({}); };
+
+  const pad = t.density === 'compact' ? 16 : 24;
+
+  // Editor is full-bleed (own chrome)
+  const inEditor = editing !== null;
+
+  const renderView = () => {
+    if (t.demoState === 'loading') return <LoadingState />;
+    if (t.demoState === 'error') return <ErrorState onRetry={() => setTweak('demoState', 'normal')} />;
+    switch (page) {
+      case 'dashboard': return <Dashboard onNavigate={navigate} onNewPost={newPost} accent={accent} />;
+      case 'analytics': return <Analytics accent={accent} />;
+      case 'calendar': return <Calendar onEditPost={openEditor} accent={accent} />;
+      case 'posts': return <PostsList onNavigate={navigate} onEditPost={openEditor} onNewPost={newPost} accent={accent} />;
+      case 'pages': return <Pages onEditPost={openEditor} onNewPost={newPost} accent={accent} />;
+      case 'categories': return <Categories accent={accent} />;
+      case 'tags': return <Tags accent={accent} />;
+      case 'media': return <MediaLibrary accent={accent} />;
+      case 'comments': return <Comments accent={accent} />;
+      case 'subscribers': return <Subscribers accent={accent} />;
+      case 'seo': return <SeoTools accent={accent} />;
+      case 'ai': return <AiVisibility accent={accent} />;
+      case 'navbuilder': return <NavBuilder accent={accent} />;
+      case 'homebuilder': return <HomeBuilder accent={accent} />;
+      case 'users': return <UsersRoles accent={accent} />;
+      case 'settings': return <Settings accent={accent} />;
+      default: return <Dashboard onNavigate={navigate} onNewPost={newPost} accent={accent} />;
+    }
+  };
+
+  return (
+    <div style={{ display: 'flex', minHeight: '100vh', background: DS.bg }}>
+      <Sidebar active={page} onNavigate={navigate} collapsed={collapsed} mobileOpen={mobileOpen} onCloseMobile={() => setMobileOpen(false)} accent={accent} />
+      <div style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column' }}>
+        <Topbar
+          title={inEditor ? (editing.title ? 'Edit Post' : 'New Post') : PAGE_TITLES[page]}
+          onToggleSidebar={() => setCollapsed(c => !c)}
+          onMobileMenu={() => setMobileOpen(true)}
+          onNewPost={newPost}
+          accent={accent} />
+        <main className="cms-content" style={{ flex: 1, padding: inEditor ? 24 : pad }}>
+          {inEditor
+            ? <PostEditor key={editing.id || 'new'} post={editing.id ? editing : null} onBack={() => setEditing(null)} accent={accent} />
+            : <div key={page + t.demoState} className="cms-view-enter">{renderView()}</div>}
+        </main>
+      </div>
+
+      {/* Tweaks */}
+      <TweaksPanel>
+        <TweakSection label="Brand" />
+        <TweakColor label="Accent color" value={t.accent}
+          options={['#E8A800', '#1A8A4B', '#2F6BD8', '#B14FD8', '#C8372B']}
+          onChange={(v) => setTweak('accent', v)} />
+        <TweakSection label="Layout" />
+        <TweakRadio label="Density" value={t.density} options={['compact', 'regular']}
+          onChange={(v) => setTweak('density', v)} />
+        <TweakSection label="Demo States" />
+        <TweakRadio label="Content state" value={t.demoState} options={['normal', 'loading', 'error']}
+          onChange={(v) => setTweak('demoState', v)} />
+      </TweaksPanel>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
+</body>
+</html>
