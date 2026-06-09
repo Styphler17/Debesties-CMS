@@ -33,6 +33,7 @@ These global skills are available to the AI assistant. Select the appropriate gl
 *   **Artisan Commands, Service Providers, & Eloquent Queries**: Use `laravel-expert`.
 *   **Security Vulnerabilities & Hardening Backend Code**: Use `laravel-security-audit`.
 *   **SQL Schema Optimization & Database Queries**: Use `postgres-best-practices` or `postgresql`.
+*   **Debugging Slow SQL Queries & Database Indexing**: Use `sql-optimization`.
 
 ### 🎨 Visual & UI Design
 *   **UI/UX Layouts, Colors, Glassmorphism, & Visual Excellence**: Use `antigravity-design-expert` or `frontend-design`.
