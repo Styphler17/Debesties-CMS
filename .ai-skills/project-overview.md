@@ -1,7 +1,7 @@
 # Project Overview
 
 *   **Project Name**: Debesties CMS
-*   **Purpose**: Replaces WordPress as a lightweight, fast publishing platform for Debesties.com (targeting Ghana Music Awards coverage).
+*   **Purpose**: Replaces WordPress as a lightweight, fast publishing platform for Debesties.com (Ghana's premier source for lifestyle, entertainment, celebrity news, politics, culture, finance, sports, and travel).
 *   **Technology Stack**:
     *   Core: Laravel 11/13, PHP 8.3+
     *   Database: MySQL / MariaDB (default SQLite for local mock testing)
