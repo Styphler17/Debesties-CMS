@@ -46,6 +46,7 @@ These global skills are available to the AI assistant. Select the appropriate gl
 *   **Scalability & Load Testing**: Use `k6-load-testing`.
 *   **Troubleshooting General Code Errors**: Use `systematic-debugging` or `test-fixing`.
 *   **Automated Pull Request Code Review & Quality Checks**: Use `code-reviewer`.
+*   **WCAG Accessibility Audits & Inclusive UI Checks**: Use `accessibility-compliance-accessibility-audit`.
 
 ### 🛠️ Workflows & General Code Health
 *   **Writing High-Quality Conventional Git Commits**: Use `commit` or `git-pushing`.
