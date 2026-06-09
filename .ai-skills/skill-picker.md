@@ -44,6 +44,7 @@ These global skills are available to the AI assistant. Select the appropriate gl
 *   **Playwright Test Setup & Page Actions**: Use `playwright-skill` or `webapp-testing`.
 *   **Scalability & Load Testing**: Use `k6-load-testing`.
 *   **Troubleshooting General Code Errors**: Use `systematic-debugging` or `test-fixing`.
+*   **Automated Pull Request Code Review & Quality Checks**: Use `code-reviewer`.
 
 ### 🛠️ Workflows & General Code Health
 *   **Writing High-Quality Conventional Git Commits**: Use `commit` or `git-pushing`.
