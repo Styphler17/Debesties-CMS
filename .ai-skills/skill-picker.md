@@ -50,3 +50,4 @@ These global skills are available to the AI assistant. Select the appropriate gl
 *   **General Code Quality & Automated Linting**: Use `lint-and-validate` or `clean-code`.
 *   **Planning Architecture & Formulating Implementation Steps**: Use `concise-planning`.
 *   **Technical SEO Audit & Page Performance Checks**: Use `seo-audit` or `seo-fundamentals`.
+*   **Removing AI Writing Traces, Polishing Tone, & Naturalizing Text**: Use `humanizer`.
