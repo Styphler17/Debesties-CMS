@@ -9,6 +9,7 @@ use App\Models\Role;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Illuminate\View\View;
 
@@ -25,11 +26,16 @@ class RegisterController extends Controller
 
     public function store(RegisterRequest $request): RedirectResponse
     {
+        $baseSlug = Str::slug($request->name);
+        do {
+            $slug = $baseSlug . '-' . Str::random(4);
+        } while (User::where('slug', $slug)->exists());
+
         $user = User::create([
             'name'       => $request->name,
-            'slug'       => Str::slug($request->name) . '-' . Str::random(4),
+            'slug'       => $slug,
             'email'      => $request->email,
-            'password'   => $request->password,
+            'password'   => Hash::make($request->password),
             'newsletter' => true,
             'status'     => 'active',
         ]);
@@ -42,6 +48,8 @@ class RegisterController extends Controller
         SendWelcomeEmail::dispatch($user);
 
         Auth::login($user);
+
+        $request->session()->regenerate();
 
         return redirect()->route('home');
     }

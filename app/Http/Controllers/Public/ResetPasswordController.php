@@ -16,7 +16,10 @@ class ResetPasswordController extends Controller
 {
     public function create(Request $request): View
     {
-        return view('public.auth.reset-password', ['request' => $request]);
+        return view('public.auth.reset-password', [
+            'token' => $request->route('token'),
+            'email' => $request->query('email', ''),
+        ]);
     }
 
     public function store(Request $request): RedirectResponse

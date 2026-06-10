@@ -11,11 +11,11 @@
     <form method="POST" action="{{ route('password.store') }}">
         @csrf
 
-        <input type="hidden" name="token" value="{{ $request->route('token') }}">
+        <input type="hidden" name="token" value="{{ $token }}">
 
         <div>
             <label for="email">Email Address</label>
-            <input type="email" id="email" name="email" value="{{ old('email', $request->email) }}" required>
+            <input type="email" id="email" name="email" value="{{ old('email', $email) }}" required>
             @error('email')<span>{{ $message }}</span>@enderror
         </div>
 
