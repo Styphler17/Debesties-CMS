@@ -10,6 +10,7 @@ use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\HomepageBuilderController;
 use App\Http\Controllers\Admin\MediaController;
 use App\Http\Controllers\Admin\MenuController;
+use App\Http\Controllers\Admin\PageController;
 use App\Http\Controllers\Admin\PostController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\SeoController;
@@ -42,6 +43,7 @@ Route::prefix('admin')
         Route::resource('roles', RoleController::class);
         Route::resource('comments', CommentController::class);
 
+        Route::get('pages', [PageController::class, 'index'])->name('pages.index');
         Route::get('calendar', [CalendarController::class, 'index'])->name('calendar.index');
         Route::get('analytics', [AnalyticsController::class, 'index'])->name('analytics.index');
         Route::get('menus', [MenuController::class, 'index'])->name('menus.index');
