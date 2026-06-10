@@ -27,11 +27,99 @@
     $avgScore = round(array_sum(array_column($auditPosts, 'score')) / count($auditPosts));
 @endphp
 
+<style>
+.seo-tab {
+    height: 42px;
+    padding: 0 20px;
+    font-family: var(--cms-font-ui);
+    font-size: 13.5px;
+    font-weight: 600;
+    background: transparent;
+    border: none;
+    border-bottom: 2px solid transparent;
+    color: var(--cms-fg3);
+    cursor: pointer;
+    transition: all 150ms;
+    margin-bottom: -1px;
+}
+.seo-tab--active {
+    border-bottom-color: var(--cms-gold);
+    color: var(--cms-gold);
+}
+.audit-filter {
+    height: 30px;
+    padding: 0 12px;
+    font-family: var(--cms-font-ui);
+    font-size: 12.5px;
+    font-weight: 600;
+    border-radius: 999px;
+    border: 1.5px solid var(--cms-border);
+    background: var(--cms-surface);
+    color: var(--cms-fg3);
+    cursor: pointer;
+}
+.audit-filter--active {
+    border-color: var(--cms-gold);
+    background: var(--cms-gold-soft);
+    color: var(--cms-gold-deep);
+}
+.issue-card {
+    background: var(--cms-surface);
+    border: 1px solid var(--cms-border);
+    border-radius: var(--cms-r-lg);
+    padding: 18px;
+    box-shadow: var(--cms-sh-card);
+    cursor: pointer;
+    transition: all 150ms;
+}
+.issue-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: var(--cms-r-md);
+    background: var(--icon-bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.issue-icon i {
+    width: 17px;
+    height: 17px;
+    color: var(--icon-color);
+}
+.issue-count {
+    font-family: var(--cms-font-disp);
+    font-size: 32px;
+    font-weight: 700;
+}
+.issue-count--bad  { color: var(--icon-color); }
+.issue-count--good { color: var(--cms-green); }
+.th-base {
+    text-align: left;
+    font-family: var(--cms-font-ui);
+    font-size: 11.5px;
+    font-weight: 700;
+    color: var(--cms-fg3);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+.th-normal { padding: 10px 0 10px 16px; }
+.th-last   { padding: 10px 16px; }
+.score--high { color: var(--cms-green); }
+.score--mid  { color: var(--cms-gold); }
+.score--low  { color: var(--cms-red); }
+.score-bar { width: var(--score-w); height: 100%; border-radius: 999px; }
+.score-bar--high { background: var(--cms-green); }
+.score-bar--mid  { background: var(--cms-gold); }
+.score-bar--low  { background: var(--cms-red); }
+.link-count--zero   { color: var(--cms-red); }
+.link-count--normal { color: var(--cms-fg1); }
+</style>
+
 {{-- Tab Nav --}}
 <div style="display: flex; gap: 0; border-bottom: 1px solid var(--cms-border); margin-bottom: 20px;">
     @foreach(['overview'=>'Overview','audit'=>'Post Meta Audit','links'=>'Internal Links'] as $tab => $label)
-        <button class="seo-tab" data-tab="{{ $tab }}" onclick="setTab('{{ $tab }}')"
-                style="height: 42px; padding: 0 20px; font-family: var(--cms-font-ui); font-size: 13.5px; font-weight: 600; background: transparent; border: none; border-bottom: 2px solid {{ $tab === 'overview' ? 'var(--cms-gold)' : 'transparent' }}; color: {{ $tab === 'overview' ? 'var(--cms-gold)' : 'var(--cms-fg3)' }}; cursor: pointer; transition: all 150ms; margin-bottom: -1px;">
+        <button class="seo-tab {{ $tab === 'overview' ? 'seo-tab--active' : '' }}"
+                data-tab="{{ $tab }}" onclick="setTab('{{ $tab }}')">
             {{ $label }}
         </button>
     @endforeach
@@ -48,11 +136,12 @@
                 <path d="M15 70 A55 55 0 0 1 105 70" fill="none" stroke="var(--cms-border)" stroke-width="10" stroke-linecap="round"/>
                 {{-- Fill --}}
                 @php
-                    $circumference = 3.14159 * 55; // half arc
+                    $circumference = 3.14159 * 55;
                     $filled = round($circumference * ($avgScore / 100));
+                    $gaugeColor = $avgScore >= 80 ? 'var(--cms-green)' : ($avgScore >= 60 ? 'var(--cms-gold)' : 'var(--cms-red)');
                 @endphp
                 <path d="M15 70 A55 55 0 0 1 105 70" fill="none"
-                      stroke="{{ $avgScore >= 80 ? 'var(--cms-green)' : ($avgScore >= 60 ? 'var(--cms-gold)' : 'var(--cms-red)') }}"
+                      stroke="{{ $gaugeColor }}"
                       stroke-width="10" stroke-linecap="round"
                       stroke-dasharray="{{ $filled }} {{ $circumference }}"
                       style="transition: stroke-dasharray 1s ease;"/>
@@ -73,17 +162,18 @@
                 ];
             @endphp
             @foreach($issues as $issue)
-                <div style="background: var(--cms-surface); border: 1px solid var(--cms-border); border-radius: var(--cms-r-lg); padding: 18px; box-shadow: var(--cms-sh-card); cursor: pointer; transition: all 150ms;"
+                <div class="issue-card"
+                     style="{{ '--icon-bg: ' . $issue['bg'] . '; --icon-color: ' . $issue['color'] }}"
                      onclick="setTab('audit')"
                      onmouseover="this.style.transform='translateY(-1px)'; this.style.boxShadow='var(--cms-sh-pop)'"
                      onmouseout="this.style.transform=''; this.style.boxShadow='var(--cms-sh-card)'">
                     <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
-                        <div style="width: 36px; height: 36px; border-radius: var(--cms-r-md); background: {{ $issue['bg'] }}; display: flex; align-items: center; justify-content: center;">
-                            <i data-lucide="{{ $issue['icon'] }}" style="width: 17px; height: 17px; color: {{ $issue['color'] }};"></i>
+                        <div class="issue-icon">
+                            <i data-lucide="{{ $issue['icon'] }}"></i>
                         </div>
                         <span style="font-family: var(--cms-font-ui); font-size: 13px; color: var(--cms-fg2);">{{ $issue['label'] }}</span>
                     </div>
-                    <div style="font-family: var(--cms-font-disp); font-size: 32px; font-weight: 700; color: {{ $issue['count'] > 0 ? $issue['color'] : 'var(--cms-green)' }};">{{ $issue['count'] }}</div>
+                    <div class="issue-count {{ $issue['count'] > 0 ? 'issue-count--bad' : 'issue-count--good' }}">{{ $issue['count'] }}</div>
                     <div style="font-family: var(--cms-font-ui); font-size: 12px; color: var(--cms-fg4); margin-top: 2px;">{{ $issue['count'] > 0 ? 'need attention' : 'all good' }}</div>
                 </div>
             @endforeach
@@ -97,8 +187,7 @@
         <span style="font-family: var(--cms-font-ui); font-size: 13px; color: var(--cms-fg3);">Filter:</span>
         @foreach(['All','Missing meta','Low score'] as $filter)
             <button onclick="filterAudit('{{ strtolower(str_replace(' ','_',$filter)) }}', this)"
-                    class="audit-filter"
-                    style="height: 30px; padding: 0 12px; font-family: var(--cms-font-ui); font-size: 12.5px; font-weight: 600; border-radius: 999px; border: 1.5px solid {{ $filter === 'All' ? 'var(--cms-gold)' : 'var(--cms-border)' }}; background: {{ $filter === 'All' ? 'var(--cms-gold-soft)' : 'var(--cms-surface)' }}; color: {{ $filter === 'All' ? 'var(--cms-gold-deep)' : 'var(--cms-fg3)' }}; cursor: pointer;">
+                    class="audit-filter {{ $filter === 'All' ? 'audit-filter--active' : '' }}">
                 {{ $filter }}
             </button>
         @endforeach
@@ -108,14 +197,14 @@
             <thead>
                 <tr style="border-bottom: 1px solid var(--cms-border);">
                     @foreach(['Post Title','Meta Title','Meta Desc','Keyword','Score',''] as $h)
-                        <th style="padding: 10px {{ $loop->last ? '16px' : '0' }} 10px 16px; text-align: left; font-family: var(--cms-font-ui); font-size: 11.5px; font-weight: 700; color: var(--cms-fg3); text-transform: uppercase; letter-spacing: 0.04em;">{{ $h }}</th>
+                        <th class="th-base {{ $loop->last ? 'th-last' : 'th-normal' }}">{{ $h }}</th>
                     @endforeach
                 </tr>
             </thead>
             <tbody>
                 @foreach($auditPosts as $p)
                     @php
-                        $seoColor = $p['score'] >= 80 ? 'var(--cms-green)' : ($p['score'] >= 60 ? 'var(--cms-gold)' : 'var(--cms-red)');
+                        $scoreLevel = $p['score'] >= 80 ? 'high' : ($p['score'] >= 60 ? 'mid' : 'low');
                         $hasMissing = empty($p['meta_title']) || empty($p['meta_desc']);
                     @endphp
                     <tr class="audit-row"
@@ -149,9 +238,9 @@
                         </td>
                         <td style="padding: 12px 16px 12px 0; white-space: nowrap;">
                             <div style="display: flex; align-items: center; gap: 8px;">
-                                <span style="font-family: var(--cms-font-ui); font-size: 13px; font-weight: 700; color: {{ $seoColor }}; min-width: 26px;">{{ $p['score'] }}</span>
+                                <span class="score--{{ $scoreLevel }}" style="font-family: var(--cms-font-ui); font-size: 13px; font-weight: 700; min-width: 26px;">{{ $p['score'] }}</span>
                                 <div style="width: 50px; height: 5px; background: var(--cms-border); border-radius: 999px; overflow: hidden;">
-                                    <div style="width: {{ $p['score'] }}%; height: 100%; background: {{ $seoColor }}; border-radius: 999px;"></div>
+                                    <div class="score-bar score-bar--{{ $scoreLevel }}" style="{{ '--score-w: ' . $p['score'] . '%' }}"></div>
                                 </div>
                             </div>
                         </td>
@@ -180,7 +269,7 @@
             <thead>
                 <tr style="border-bottom: 1px solid var(--cms-border);">
                     @foreach(['Post','Existing Links','Suggestions',''] as $h)
-                        <th style="padding: 10px {{ $loop->last ? '16px' : '0' }} 10px 16px; text-align: left; font-family: var(--cms-font-ui); font-size: 11.5px; font-weight: 700; color: var(--cms-fg3); text-transform: uppercase; letter-spacing: 0.04em;">{{ $h }}</th>
+                        <th class="th-base {{ $loop->last ? 'th-last' : 'th-normal' }}">{{ $h }}</th>
                     @endforeach
                 </tr>
             </thead>
@@ -192,7 +281,8 @@
                             <span style="font-family: var(--cms-font-ui); font-size: 13.5px; font-weight: 600; color: var(--cms-fg1);">{{ $lp['title'] }}</span>
                         </td>
                         <td style="padding: 13px 16px 13px 0;">
-                            <span style="font-family: var(--cms-font-ui); font-size: 13px; font-weight: 600; color: {{ $lp['link_count'] === 0 ? 'var(--cms-red)' : 'var(--cms-fg1)' }};">{{ $lp['link_count'] }}</span>
+                            <span class="link-count {{ $lp['link_count'] === 0 ? 'link-count--zero' : 'link-count--normal' }}"
+                                  style="font-family: var(--cms-font-ui); font-size: 13px; font-weight: 600;">{{ $lp['link_count'] }}</span>
                             <span style="font-family: var(--cms-font-ui); font-size: 12px; color: var(--cms-fg4);"> links</span>
                         </td>
                         <td style="padding: 13px 16px 13px 0;">
@@ -222,21 +312,13 @@
             document.getElementById('tab-' + t).style.display = t === tab ? 'block' : 'none';
         });
         document.querySelectorAll('.seo-tab').forEach(btn => {
-            const active = btn.dataset.tab === tab;
-            btn.style.borderBottomColor = active ? 'var(--cms-gold)' : 'transparent';
-            btn.style.color = active ? 'var(--cms-gold)' : 'var(--cms-fg3)';
+            btn.classList.toggle('seo-tab--active', btn.dataset.tab === tab);
         });
     }
 
     function filterAudit(filter, btn) {
-        document.querySelectorAll('.audit-filter').forEach(b => {
-            b.style.borderColor = 'var(--cms-border)';
-            b.style.background = 'var(--cms-surface)';
-            b.style.color = 'var(--cms-fg3)';
-        });
-        btn.style.borderColor = 'var(--cms-gold)';
-        btn.style.background = 'var(--cms-gold-soft)';
-        btn.style.color = 'var(--cms-gold-deep)';
+        document.querySelectorAll('.audit-filter').forEach(b => b.classList.remove('audit-filter--active'));
+        btn.classList.add('audit-filter--active');
 
         document.querySelectorAll('.audit-row').forEach(row => {
             if (filter === 'all') row.style.display = '';

@@ -4,32 +4,13 @@
 @section('page_title', 'Tags')
 
 @section('content')
-@php
-    $tags = [
-        ['id'=>1, 'name'=>'TGMA', 'slug'=>'tgma', 'count'=>48],
-        ['id'=>2, 'name'=>'Ghana Music', 'slug'=>'ghana-music', 'count'=>36],
-        ['id'=>3, 'name'=>'Black Sherif', 'slug'=>'black-sherif', 'count'=>22],
-        ['id'=>4, 'name'=>'Highlife', 'slug'=>'highlife', 'count'=>19],
-        ['id'=>5, 'name'=>'Awards', 'slug'=>'awards', 'count'=>17],
-        ['id'=>6, 'name'=>'King Promise', 'slug'=>'king-promise', 'count'=>14],
-        ['id'=>7, 'name'=>'Afrobeats', 'slug'=>'afrobeats', 'count'=>11],
-        ['id'=>8, 'name'=>'Gospel', 'slug'=>'gospel', 'count'=>9],
-        ['id'=>9, 'name'=>'Diana Hamilton', 'slug'=>'diana-hamilton', 'count'=>8],
-        ['id'=>10, 'name'=>'Hiplife', 'slug'=>'hiplife', 'count'=>7],
-        ['id'=>11, 'name'=>'Sarkodie', 'slug'=>'sarkodie', 'count'=>6],
-        ['id'=>12, 'name'=>'Celebrity', 'slug'=>'celebrity', 'count'=>5],
-    ];
-
-    $maxCount = max(array_column($tags, 'count'));
-@endphp
-
 <div style="display: flex; flex-direction: column; gap: 20px;">
 
     {{-- Top Bar --}}
     <div style="display: flex; align-items: center; justify-content: space-between; gap: 14px; flex-wrap: wrap;">
         <div>
             <div style="font-family: var(--cms-font-ui); font-size: 13px; color: var(--cms-fg3);">
-                {{ count($tags) }} tags total
+                {{ $tags->total() }} tags total
             </div>
         </div>
         <div style="display: flex; align-items: center; gap: 10px;">
@@ -60,20 +41,21 @@
                     <span style="font-family: var(--cms-font-ui); font-size: 14px; font-weight: 700; color: var(--cms-fg1);">Tag Cloud</span>
                 </div>
                 <div style="display: flex; flex-wrap: wrap; gap: 8px;" id="tag-cloud">
+                    @php $maxCount = $tags->max('posts_count') ?: 1; @endphp
                     @foreach($tags as $tag)
                         @php
-                            $ratio = $tag['count'] / $maxCount;
+                            $ratio = $tag->posts_count / $maxCount;
                             $size = 12 + ($ratio * 10);
                             $opacity = 0.5 + ($ratio * 0.5);
                         @endphp
-                        <button onclick="selectTag({{ $tag['id'] }}, '{{ $tag['name'] }}', '{{ $tag['slug'] }}')"
-                                data-tag-id="{{ $tag['id'] }}"
-                                data-tag-name="{{ strtolower($tag['name']) }}"
+                        <button onclick="selectTag({{ $tag->id }}, '{{ $tag->name }}', '{{ $tag->slug }}')"
+                                data-tag-id="{{ $tag->id }}"
+                                data-tag-name="{{ strtolower($tag->name) }}"
                                 style="display: inline-flex; align-items: center; gap: 5px; padding: 5px 12px; background: rgba(232,168,0,{{ $opacity * 0.15 }}); color: var(--cms-gold-deep); border: 1.5px solid rgba(232,168,0,{{ $opacity * 0.4 }}); border-radius: 999px; font-family: var(--cms-font-ui); font-size: {{ $size }}px; font-weight: 600; cursor: pointer; transition: all 150ms;"
                                 onmouseover="this.style.background='var(--cms-gold-soft)'; this.style.borderColor='var(--cms-gold)'"
                                 onmouseout="this.style.background='rgba(232,168,0,{{ $opacity * 0.15 }})'; this.style.borderColor='rgba(232,168,0,{{ $opacity * 0.4 }})'">
-                            {{ $tag['name'] }}
-                            <span style="font-size: 11px; opacity: 0.7;">{{ $tag['count'] }}</span>
+                            {{ $tag->name }}
+                            <span style="font-size: 11px; opacity: 0.7;">{{ $tag->posts_count }}</span>
                         </button>
                     @endforeach
                 </div>
@@ -101,37 +83,37 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach($tags as $i => $tag)
-                            <tr class="tag-row" data-name="{{ strtolower($tag['name']) }}"
-                                style="border-bottom: {{ $i < count($tags)-1 ? '1px solid var(--cms-border)' : 'none' }}; transition: background 100ms;"
+                        @foreach($tags as $tag)
+                            <tr class="tag-row" data-name="{{ strtolower($tag->name) }}"
+                                style="border-bottom: {{ !$loop->last ? '1px solid var(--cms-border)' : 'none' }}; transition: background 100ms;"
                                 onmouseover="this.style.background='#FDFBF8'" onmouseout="this.style.background='transparent'">
                                 <td style="padding: 12px 16px; text-align: center;">
-                                    <input type="checkbox" class="tag-cb" value="{{ $tag['id'] }}" onchange="updateBulk()" style="cursor: pointer; accent-color: var(--cms-gold); width: 14px; height: 14px;" />
+                                    <input type="checkbox" class="tag-cb" value="{{ $tag->id }}" onchange="updateBulk()" style="cursor: pointer; accent-color: var(--cms-gold); width: 14px; height: 14px;" />
                                 </td>
                                 <td style="padding: 12px 16px 12px 0;">
-                                    <div id="name-display-{{ $tag['id'] }}" style="display: flex; align-items: center; gap: 8px;">
-                                        <span style="font-family: var(--cms-font-ui); font-size: 13.5px; font-weight: 600; color: var(--cms-fg1);">{{ $tag['name'] }}</span>
+                                    <div id="name-display-{{ $tag->id }}" style="display: flex; align-items: center; gap: 8px;">
+                                        <span style="font-family: var(--cms-font-ui); font-size: 13.5px; font-weight: 600; color: var(--cms-fg1);">{{ $tag->name }}</span>
                                     </div>
-                                    <input id="name-input-{{ $tag['id'] }}" type="text" value="{{ $tag['name'] }}"
+                                    <input id="name-input-{{ $tag->id }}" type="text" value="{{ $tag->name }}"
                                            style="display: none; width: 100%; height: 32px; padding: 0 10px; font-family: var(--cms-font-ui); font-size: 13.5px; color: var(--cms-fg1); background: var(--cms-bg); border: 1.5px solid var(--cms-gold); border-radius: var(--cms-r-md); outline: none;"
-                                           onkeydown="if(event.key==='Enter') saveTag({{ $tag['id'] }}); if(event.key==='Escape') cancelEdit({{ $tag['id'] }});"
-                                           onblur="saveTag({{ $tag['id'] }})" />
+                                           onkeydown="if(event.key==='Enter') saveTag({{ $tag->id }}); if(event.key==='Escape') cancelEdit({{ $tag->id }});"
+                                           onblur="saveTag({{ $tag->id }})" />
                                 </td>
                                 <td style="padding: 12px 16px 12px 0;">
-                                    <span style="font-family: var(--cms-font-mono); font-size: 12px; color: var(--cms-fg3);">{{ $tag['slug'] }}</span>
+                                    <span style="font-family: var(--cms-font-mono); font-size: 12px; color: var(--cms-fg3);">{{ $tag->slug }}</span>
                                 </td>
                                 <td style="padding: 12px 16px 12px 0; text-align: center;">
-                                    <span style="font-family: var(--cms-font-ui); font-size: 13px; font-weight: 600; color: var(--cms-fg2);">{{ $tag['count'] }}</span>
+                                    <span style="font-family: var(--cms-font-ui); font-size: 13px; font-weight: 600; color: var(--cms-fg2);">{{ $tag->posts_count }}</span>
                                 </td>
                                 <td style="padding: 12px 16px; text-align: right;">
                                     <div style="display: flex; gap: 6px; justify-content: flex-end;">
-                                        <button onclick="editTag({{ $tag['id'] }})" title="Edit"
+                                        <button onclick="editTag({{ $tag->id }})" title="Edit"
                                                 style="width: 30px; height: 30px; border-radius: 6px; border: 1.5px solid var(--cms-border); background: var(--cms-surface); cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--cms-fg3);"
                                                 onmouseover="this.style.background='var(--cms-bg)'; this.style.color='var(--cms-fg1)'"
                                                 onmouseout="this.style.background='var(--cms-surface)'; this.style.color='var(--cms-fg3)'">
                                             <i data-lucide="edit-2" style="width: 13px; height: 13px;"></i>
                                         </button>
-                                        <button onclick="confirmDeleteTag({{ $tag['id'] }}, '{{ $tag['name'] }}')" title="Delete"
+                                        <button onclick="confirmDeleteTag({{ $tag->id }}, '{{ $tag->name }}')" title="Delete"
                                                 style="width: 30px; height: 30px; border-radius: 6px; border: 1.5px solid rgba(200,55,43,0.2); background: var(--cms-red-soft); cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--cms-red);"
                                                 onmouseover="this.style.background='#F8D5D2'" onmouseout="this.style.background='var(--cms-red-soft)'">
                                             <i data-lucide="trash-2" style="width: 13px; height: 13px;"></i>
@@ -151,12 +133,12 @@
                 <i data-lucide="plus-circle" style="width: 15px; height: 15px; color: var(--cms-gold);"></i>
                 <span style="font-family: var(--cms-font-ui); font-size: 14px; font-weight: 700; color: var(--cms-fg1);" id="form-title">Add New Tag</span>
             </div>
-            <form id="tag-form" style="padding: 18px; display: flex; flex-direction: column; gap: 14px;">
+            <form id="tag-form" method="POST" action="{{ route('admin.tags.store') }}" style="padding: 18px; display: flex; flex-direction: column; gap: 14px;">
                 @csrf
                 <input type="hidden" id="edit-tag-id" value="" />
                 <div>
                     <label style="font-family: var(--cms-font-ui); font-size: 12px; font-weight: 700; color: var(--cms-fg3); text-transform: uppercase; letter-spacing: 0.04em; display: block; margin-bottom: 6px;">Name</label>
-                    <input id="new-tag-name" type="text" placeholder="e.g. Afrobeats" oninput="autoSlug(this.value)"
+                    <input id="new-tag-name" name="name" type="text" placeholder="e.g. Afrobeats" oninput="autoSlug(this.value)"
                            style="display: block; width: 100%; height: 40px; padding: 0 12px; font-family: var(--cms-font-ui); font-size: 13.5px; color: var(--cms-fg1); background: var(--cms-bg); border: 1.5px solid var(--cms-border); border-radius: var(--cms-r-md); outline: none;"
                            onfocus="this.style.borderColor='var(--cms-gold)'; this.style.boxShadow='0 0 0 3px rgba(232,168,0,0.13)'"
                            onblur="this.style.borderColor='var(--cms-border)'; this.style.boxShadow='none'" />

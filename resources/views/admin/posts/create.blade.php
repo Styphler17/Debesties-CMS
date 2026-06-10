@@ -4,10 +4,6 @@
 @section('page_title', 'New Post')
 
 @section('content')
-@php
-    $categories = ['Awards History', 'Profiles', 'Analysis', 'Explainers', 'News', 'Lifestyle', 'Entertainment', 'Sports', 'Politics', 'Finance', 'Travel', 'Culture', 'Celebrity'];
-    $authors    = ['Ama Boateng', 'Yaw Owusu', 'Kwesi Mensah', 'Esi Arthur'];
-@endphp
 
 <form id="post-form" method="POST" action="{{ route('admin.posts.store') }}" enctype="multipart/form-data">
 @csrf
@@ -187,8 +183,8 @@
                 <div>
                     <label style="font-family: var(--cms-font-ui); font-size: 12px; font-weight: 700; color: var(--cms-fg3); text-transform: uppercase; letter-spacing: 0.04em; display: block; margin-bottom: 5px;">Author</label>
                     <select name="author_id" style="width: 100%; height: 38px; padding: 0 10px; font-family: var(--cms-font-ui); font-size: 13.5px; color: var(--cms-fg1); background: var(--cms-bg); border: 1.5px solid var(--cms-border); border-radius: var(--cms-r-md); cursor: pointer; outline: none;">
-                        @foreach($authors as $a)
-                            <option value="{{ $a }}">{{ $a }}</option>
+                        @foreach($users as $u)
+                            <option value="{{ $u->id }}">{{ $u->name }}</option>
                         @endforeach
                     </select>
                 </div>
@@ -245,8 +241,8 @@
             <div style="padding: 14px 16px; display: flex; flex-direction: column; gap: 6px; max-height: 200px; overflow-y: auto;">
                 @foreach($categories as $cat)
                     <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-family: var(--cms-font-ui); font-size: 13.5px; color: var(--cms-fg2);">
-                        <input type="radio" name="category" value="{{ $cat }}" style="accent-color: var(--cms-gold); width: 15px; height: 15px; cursor: pointer;" />
-                        {{ $cat }}
+                        <input type="radio" name="category_id" value="{{ $cat->id }}" style="accent-color: var(--cms-gold); width: 15px; height: 15px; cursor: pointer;" />
+                        {{ $cat->name }}
                     </label>
                 @endforeach
             </div>
@@ -257,16 +253,14 @@
             <div style="padding: 13px 16px; border-bottom: 1px solid var(--cms-border); font-family: var(--cms-font-ui); font-size: 14px; font-weight: 700; color: var(--cms-fg1); display: flex; align-items: center; gap: 7px;">
                 <i data-lucide="tag" style="width: 15px; height: 15px; color: var(--cms-fg3);"></i> Tags
             </div>
-            <div style="padding: 14px 16px;">
-                <div id="tags-container" style="display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 8px;" aria-label="Added tags"></div>
-                <div style="display: flex; gap: 6px;">
-                    <input type="text" id="tag-input" placeholder="Add a tag…"
-                           style="flex: 1; height: 36px; padding: 0 10px; font-family: var(--cms-font-ui); font-size: 13px; color: var(--cms-fg1); background: var(--cms-bg); border: 1.5px solid var(--cms-border); border-radius: var(--cms-r-md); outline: none;"
-                           onkeydown="if(event.key==='Enter'||event.key===','){event.preventDefault();addTag()}"
-                           onfocus="this.style.borderColor='var(--cms-gold)'" onblur="this.style.borderColor='var(--cms-border)'" />
-                    <button type="button" onclick="addTag()" style="height: 36px; padding: 0 12px; font-family: var(--cms-font-ui); font-size: 13px; font-weight: 600; background: var(--cms-gold-soft); color: var(--cms-gold-deep); border: 1.5px solid rgba(232,168,0,0.3); border-radius: var(--cms-r-md); cursor: pointer;">Add</button>
-                </div>
-                <input type="hidden" name="tags" id="tags-hidden" />
+            <div style="display: flex; flex-direction: column; gap: 6px; max-height: 200px; overflow-y: auto; padding: 14px 16px;">
+                @foreach($tags as $tag)
+                    <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-family: var(--cms-font-ui); font-size: 13.5px; color: var(--cms-fg2);">
+                        <input type="checkbox" name="tags[]" value="{{ $tag->id }}"
+                               style="accent-color: var(--cms-gold); width: 15px; height: 15px; cursor: pointer;" />
+                        {{ $tag->name }}
+                    </label>
+                @endforeach
             </div>
         </div>
 
@@ -405,29 +399,5 @@
         document.getElementById('featured-placeholder').style.display = 'block';
     }
 
-    // ── Tags ─────────────────────────────────────────────────
-    let tags = [];
-    function addTag() {
-        const input = document.getElementById('tag-input');
-        const val = input.value.trim().replace(/,/g,'');
-        if (!val || tags.includes(val)) { input.value=''; return; }
-        tags.push(val);
-        renderTags();
-        input.value = '';
-    }
-    function removeTag(tag) {
-        tags = tags.filter(t => t !== tag);
-        renderTags();
-    }
-    function renderTags() {
-        const container = document.getElementById('tags-container');
-        container.innerHTML = tags.map(t => `
-            <span style="display: inline-flex; align-items: center; gap: 5px; padding: 4px 10px; background: var(--cms-gold-soft); color: var(--cms-gold-deep); border-radius: 999px; font-family: var(--cms-font-ui); font-size: 12.5px; font-weight: 600;">
-                ${t}
-                <button type="button" onclick="removeTag('${t}')" style="border: none; background: none; cursor: pointer; color: var(--cms-gold-deep); padding: 0; line-height: 1; font-size: 14px; opacity: 0.7;">×</button>
-            </span>
-        `).join('');
-        document.getElementById('tags-hidden').value = tags.join(',');
-    }
 </script>
 @endsection

@@ -110,6 +110,7 @@
                         ],
                         'Content' => [
                             ['key' => 'posts', 'label' => 'Posts', 'icon' => 'file-text', 'route' => 'admin.posts.index', 'count' => 248],
+                            ['key' => 'pages', 'label' => 'Pages', 'icon' => 'file', 'route' => 'admin.pages.index'],
                             ['key' => 'categories', 'label' => 'Categories', 'icon' => 'folder', 'route' => 'admin.categories.index'],
                             ['key' => 'tags', 'label' => 'Tags', 'icon' => 'tag', 'route' => 'admin.tags.index'],
                             ['key' => 'media', 'label' => 'Media Library', 'icon' => 'image', 'route' => 'admin.media.index'],
@@ -134,7 +135,7 @@
                         
                         @foreach($items as $item)
                             @php
-                                $isActive = request()->routeIs($item['route']) || (request()->routeIs(explode('.', $item['route'])[0] . '.*') && !in_array($item['key'], ['calendar', 'seo', 'ai', 'navbuilder', 'homebuilder', 'settings']));
+                                $isActive = request()->routeIs($item['route']) || (request()->routeIs(explode('.', $item['route'])[0] . '.*') && !in_array($item['key'], ['calendar', 'seo', 'ai', 'navbuilder', 'homebuilder', 'settings', 'pages']));
                             @endphp
                             
                             <a href="{{ route($item['route']) }}" class="sidebar-link {{ $isActive ? 'active' : '' }}" style="display: flex; align-items: center; gap: 11px; width: 100%; padding: 9px 10px; border-radius: var(--cms-r-md); margin-bottom: 1px; font-family: var(--cms-font-ui); font-size: 13.5px; text-decoration: none; position: relative;">

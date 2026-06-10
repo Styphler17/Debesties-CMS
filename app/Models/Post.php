@@ -2,10 +2,13 @@
 
 namespace App\Models;
 
+use App\Observers\PostObserver;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
+#[ObservedBy([PostObserver::class])]
 class Post extends Model
 {
     use HasFactory, SoftDeletes;
@@ -13,11 +16,11 @@ class Post extends Model
     protected $guarded = [];
 
     protected $casts = [
-        'published_at' => 'datetime',
-        'scheduled_at' => 'datetime',
-        'faq' => 'array',
-        'sources' => 'array',
-        'key_facts' => 'array',
+        'published_at'  => 'datetime',
+        'scheduled_for' => 'datetime',
+        'faq'           => 'array',
+        'sources'       => 'array',
+        'key_facts'     => 'array',
     ];
 
     public function user()
@@ -32,7 +35,7 @@ class Post extends Model
 
     public function tags()
     {
-        return $this->belongsToMany(Tag::class);
+        return $this->belongsToMany(Tag::class, 'post_tags');
     }
 
     public function comments()
@@ -42,6 +45,16 @@ class Post extends Model
 
     public function meta()
     {
-        return $this->hasMany(PostMeta::class);
+        return $this->hasOne(PostMeta::class);
+    }
+
+    public function featuredImage()
+    {
+        return $this->belongsTo(\App\Models\Media::class, 'featured_image_id');
+    }
+
+    public function scopePublished($query)
+    {
+        return $query->where('status', 'published');
     }
 }
