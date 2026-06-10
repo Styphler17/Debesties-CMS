@@ -1,21 +1,21 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Admin\DashboardController;
-use App\Http\Controllers\Admin\PostController;
-use App\Http\Controllers\Admin\CategoryController;
-use App\Http\Controllers\Admin\TagController;
-use App\Http\Controllers\Admin\MediaController;
-use App\Http\Controllers\Admin\UserController;
-use App\Http\Controllers\Admin\RoleController;
-use App\Http\Controllers\Admin\AnalyticsController;
-use App\Http\Controllers\Admin\MenuController;
-use App\Http\Controllers\Admin\SettingController;
-use App\Http\Controllers\Admin\CalendarController;
-use App\Http\Controllers\Admin\CommentController;
-use App\Http\Controllers\Admin\SeoController;
 use App\Http\Controllers\Admin\AiVisibilityController;
+use App\Http\Controllers\Admin\AnalyticsController;
+use App\Http\Controllers\Admin\CalendarController;
+use App\Http\Controllers\Admin\CategoryController;
+use App\Http\Controllers\Admin\CommentController;
+use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\HomepageBuilderController;
+use App\Http\Controllers\Admin\MediaController;
+use App\Http\Controllers\Admin\MenuController;
+use App\Http\Controllers\Admin\PostController;
+use App\Http\Controllers\Admin\RoleController;
+use App\Http\Controllers\Admin\SeoController;
+use App\Http\Controllers\Admin\SettingController;
+use App\Http\Controllers\Admin\TagController;
+use App\Http\Controllers\Admin\UserController;
+use Illuminate\Support\Facades\Route;
 
 Route::prefix('admin')
     ->name('admin.')
