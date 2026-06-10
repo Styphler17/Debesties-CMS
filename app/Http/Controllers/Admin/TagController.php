@@ -50,7 +50,10 @@ class TagController extends Controller
 
     public function update(UpdateTagRequest $request, Tag $tag)
     {
-        $slug = (new GenerateSlug())->handle($request->name, 'tags');
+        $slug = $tag->slug;
+        if ($request->name !== $tag->name) {
+            $slug = (new GenerateSlug())->handle($request->name, 'tags');
+        }
 
         $tag->update([
             'name' => $request->name,

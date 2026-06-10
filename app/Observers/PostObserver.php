@@ -20,6 +20,16 @@ class PostObserver
 
     public function deleted(Post $post): void
     {
+        //
+    }
+
+    public function restored(Post $post): void
+    {
+        //
+    }
+
+    public function forceDeleted(Post $post): void
+    {
         DB::table('post_meta')->where('post_id', $post->id)->delete();
         DB::table('post_tags')->where('post_id', $post->id)->delete();
         DB::table('post_related')
@@ -31,15 +41,5 @@ class PostObserver
         DB::table('post_internal_links')->where('post_id', $post->id)->delete();
         DB::table('post_faqs')->where('post_id', $post->id)->delete();
         DB::table('post_sources')->where('post_id', $post->id)->delete();
-    }
-
-    public function restored(Post $post): void
-    {
-        //
-    }
-
-    public function forceDeleted(Post $post): void
-    {
-        //
     }
 }
