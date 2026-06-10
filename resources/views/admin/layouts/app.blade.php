@@ -177,7 +177,7 @@
         </aside>
 
         <!-- Main Content Area -->
-        <div style="flex: 1; min-width: 0; display: flex; flexDirection: column;">
+        <div style="flex: 1; min-width: 0; display: flex; flex-direction: column;">
             
             <!-- Topbar Header -->
             <header style="height: 64px; background: rgba(244,241,236,0.85); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-bottom: 1px solid var(--cms-border); display: flex; align-items: center; justify-content: space-between; padding: 0 24px; gap: 16px; position: sticky; top: 0; z-index: 80; flex-shrink: 0;">
