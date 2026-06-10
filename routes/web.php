@@ -20,4 +20,4 @@ Route::get('/tag/{tag:slug}', [TagController::class, 'show'])->name('tags.show')
 
 Route::get('/{post:slug}', [ArticleController::class, 'show'])
     ->name('posts.show')
-    ->where('post', '^(?!admin$).*$');
+    ->where('post', '^(?!admin$|register$|login$|logout$|forgot-password$|reset-password$)[^/]+$');
