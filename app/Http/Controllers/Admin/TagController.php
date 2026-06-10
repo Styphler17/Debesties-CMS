@@ -2,14 +2,21 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Actions\SEO\GenerateSlug;
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
+use App\Http\Requests\Admin\StoreTagRequest;
+use App\Http\Requests\Admin\UpdateTagRequest;
+use App\Models\Tag;
 
 class TagController extends Controller
 {
     public function index()
     {
-        return view('admin.tags.index');
+        $tags = Tag::withCount('posts')
+            ->orderBy('name')
+            ->paginate(50);
+
+        return view('admin.tags.index', compact('tags'));
     }
 
     public function create()
@@ -17,28 +24,51 @@ class TagController extends Controller
         return view('admin.tags.create');
     }
 
-    public function store(Request $request)
+    public function store(StoreTagRequest $request)
     {
-        // Store logic
+        $slug = (new GenerateSlug())->handle($request->name, 'tags');
+
+        Tag::create([
+            'name' => $request->name,
+            'slug' => $slug,
+        ]);
+
+        return redirect()
+            ->route('admin.tags.index')
+            ->with('success', 'Tag created successfully.');
     }
 
-    public function show(string $id)
+    public function show(Tag $tag)
     {
-        return view('admin.tags.show', compact('id'));
+        return view('admin.tags.show', compact('tag'));
     }
 
-    public function edit(string $id)
+    public function edit(Tag $tag)
     {
-        return view('admin.tags.edit', compact('id'));
+        return view('admin.tags.edit', compact('tag'));
     }
 
-    public function update(Request $request, string $id)
+    public function update(UpdateTagRequest $request, Tag $tag)
     {
-        // Update logic
+        $slug = (new GenerateSlug())->handle($request->name, 'tags');
+
+        $tag->update([
+            'name' => $request->name,
+            'slug' => $slug,
+        ]);
+
+        return redirect()
+            ->route('admin.tags.index')
+            ->with('success', 'Tag updated successfully.');
     }
 
-    public function destroy(string $id)
+    public function destroy(Tag $tag)
     {
-        // Destroy logic
+        $tag->posts()->detach();
+        $tag->delete();
+
+        return redirect()
+            ->route('admin.tags.index')
+            ->with('success', 'Tag deleted.');
     }
 }
