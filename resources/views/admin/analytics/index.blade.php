@@ -4,6 +4,44 @@
 @section('page_title', 'Analytics')
 
 @section('content')
+<style>
+    .range-btn {
+        height: 32px;
+        padding: 0 16px;
+        font-family: var(--cms-font-ui);
+        font-size: 13px;
+        font-weight: 600;
+        border: none;
+        border-radius: var(--cms-r-md);
+        cursor: pointer;
+        transition: all 150ms;
+        background: transparent;
+        color: var(--cms-fg3);
+    }
+    .range-btn.active {
+        background: var(--cms-gold);
+        color: #1A1410;
+    }
+    .range-btn:hover:not(.active) {
+        background: var(--cms-border-soft);
+        color: var(--cms-fg1);
+    }
+    .stat-trend {
+        font-family: var(--cms-font-ui);
+        font-size: 12px;
+        font-weight: 700;
+        padding: 3px 8px;
+        border-radius: 999px;
+    }
+    .stat-trend.up {
+        background: rgba(46,204,113,0.12);
+        color: var(--cms-green);
+    }
+    .stat-trend.down {
+        background: rgba(200,55,43,0.1);
+        color: var(--cms-red);
+    }
+</style>
 @php
     $ranges = ['7d' => '7 Days', '30d' => '30 Days', '90d' => '90 Days'];
     $stats = [
@@ -45,9 +83,8 @@
     <div style="display: flex; gap: 4px; background: var(--cms-surface); border: 1.5px solid var(--cms-border); border-radius: var(--cms-r-lg); padding: 4px;">
         @foreach($ranges as $key => $label)
             <button onclick="setRange('{{ $key }}', this)"
-                    class="range-btn"
-                    data-range="{{ $key }}"
-                    style="height: 32px; padding: 0 16px; font-family: var(--cms-font-ui); font-size: 13px; font-weight: 600; border: none; border-radius: var(--cms-r-md); cursor: pointer; transition: all 150ms; background: {{ $key === '30d' ? 'var(--cms-gold)' : 'transparent' }}; color: {{ $key === '30d' ? '#1A1410' : 'var(--cms-fg3)' }};">
+                    class="range-btn {{ $key === '30d' ? 'active' : '' }}"
+                    data-range="{{ $key }}">
                 {{ $label }}
             </button>
         @endforeach
@@ -65,7 +102,7 @@
                 <div style="width: 38px; height: 38px; border-radius: var(--cms-r-md); background: var(--cms-gold-soft); display: flex; align-items: center; justify-content: center;">
                     <i data-lucide="{{ $stat['icon'] }}" style="width: 18px; height: 18px; color: var(--cms-gold);"></i>
                 </div>
-                <span style="font-family: var(--cms-font-ui); font-size: 12px; font-weight: 700; padding: 3px 8px; border-radius: 999px; background: {{ $stat['up'] ? 'rgba(46,204,113,0.12)' : 'rgba(200,55,43,0.1)' }}; color: {{ $stat['up'] ? 'var(--cms-green)' : 'var(--cms-red)' }};">{{ $stat['delta'] }}</span>
+                <span class="stat-trend {{ $stat['up'] ? 'up' : 'down' }}">{{ $stat['delta'] }}</span>
             </div>
             <div style="font-family: var(--cms-font-disp); font-size: 26px; font-weight: 700; color: var(--cms-fg1); margin-bottom: 4px;">{{ $stat['value'] }}</div>
             <div style="font-family: var(--cms-font-ui); font-size: 12.5px; color: var(--cms-fg3);">{{ $stat['label'] }}</div>
@@ -192,8 +229,7 @@
 <script>
     function setRange(r, btn) {
         document.querySelectorAll('.range-btn').forEach(b => {
-            b.style.background = b.dataset.range === r ? 'var(--cms-gold)' : 'transparent';
-            b.style.color = b.dataset.range === r ? '#1A1410' : 'var(--cms-fg3)';
+            b.classList.toggle('active', b.dataset.range === r);
         });
     }
     function showBarTip(e, val, label) {
