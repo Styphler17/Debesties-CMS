@@ -16,4 +16,20 @@ class ExampleTest extends TestCase
 
         $response->assertStatus(200);
     }
+
+    public function test_admin_dashboard_returns_a_successful_response(): void
+    {
+        $response = $this->get('/admin');
+
+        $response->assertStatus(200);
+        $response->assertSee('Dashboard');
+    }
+
+    public function test_article_route_returns_a_successful_response(): void
+    {
+        $response = $this->get('/my-awesome-post');
+
+        $response->assertStatus(200);
+        $response->assertSee('my-awesome-post');
+    }
 }

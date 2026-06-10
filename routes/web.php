@@ -18,4 +18,6 @@ Route::get('/category/{category:slug}', [CategoryController::class, 'show'])->na
 
 Route::get('/tag/{tag:slug}', [TagController::class, 'show'])->name('tags.show');
 
-Route::get('/{post:slug}', [ArticleController::class, 'show'])->name('posts.show');
+Route::get('/{post:slug}', [ArticleController::class, 'show'])
+    ->name('posts.show')
+    ->where('post', '^(?!admin$).*$');
