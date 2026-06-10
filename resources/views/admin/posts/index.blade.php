@@ -4,29 +4,6 @@
 @section('page_title', 'Posts')
 
 @section('content')
-@php
-    // Placeholder posts for UI scaffolding
-    $posts = [
-        ['id'=>1, 'title'=>'The Elite Club: 4 Artists Who Dominated the TGMAs', 'category'=>'Awards History', 'author'=>'Ama Boateng', 'status'=>'published', 'views'=>'48.2K', 'seo'=>92, 'date'=>'Jun 8, 2026'],
-        ['id'=>2, 'title'=>'Black Sherif\'s Second Crown: Legacy Cemented', 'category'=>'Profiles', 'author'=>'Yaw Owusu', 'status'=>'published', 'views'=>'31.4K', 'seo'=>88, 'date'=>'Jun 7, 2026'],
-        ['id'=>3, 'title'=>'The 2019 Annulment: What Really Happened?', 'category'=>'Analysis', 'author'=>'Yaw Owusu', 'status'=>'review', 'views'=>'—', 'seo'=>74, 'date'=>'Jun 10, 2026'],
-        ['id'=>4, 'title'=>'Every Hiplife Winner That Defined an Era', 'category'=>'Awards History', 'author'=>'Kwesi Mensah', 'status'=>'published', 'views'=>'18.7K', 'seo'=>85, 'date'=>'Jun 5, 2026'],
-        ['id'=>5, 'title'=>'TGMA 2026: Full Winners List (Preview)', 'category'=>'News', 'author'=>'Ama Boateng', 'status'=>'scheduled', 'views'=>'—', 'seo'=>79, 'date'=>'Jun 15, 2026'],
-        ['id'=>6, 'title'=>'Diana Hamilton & The Rise of Gospel at TGMAs', 'category'=>'Profiles', 'author'=>'Esi Arthur', 'status'=>'published', 'views'=>'14.3K', 'seo'=>90, 'date'=>'Jun 3, 2026'],
-        ['id'=>7, 'title'=>'V.I.P: The Group That Started It All', 'category'=>'Profiles', 'author'=>'Kwesi Mensah', 'status'=>'draft', 'views'=>'—', 'seo'=>61, 'date'=>'May 28, 2026'],
-        ['id'=>8, 'title'=>'How TGMA Voting Actually Works in 2026', 'category'=>'Explainers', 'author'=>'Ama Boateng', 'status'=>'draft', 'views'=>'—', 'seo'=>55, 'date'=>'Jun 9, 2026'],
-    ];
-
-    $statusMeta = [
-        'published' => ['label'=>'Published', 'bg'=>'var(--cms-green-soft)', 'color'=>'var(--cms-green-deep)'],
-        'draft'     => ['label'=>'Draft',     'bg'=>'#F0EDE8',              'color'=>'var(--cms-fg3)'],
-        'review'    => ['label'=>'In Review', 'bg'=>'#FFF6DD',              'color'=>'var(--cms-gold-deep)'],
-        'scheduled' => ['label'=>'Scheduled', 'bg'=>'var(--cms-blue-soft)', 'color'=>'var(--cms-blue)'],
-        'trash'     => ['label'=>'Trash',     'bg'=>'var(--cms-red-soft)',  'color'=>'var(--cms-red-deep)'],
-    ];
-
-    $counts = ['all'=>8, 'published'=>4, 'draft'=>2, 'review'=>1, 'scheduled'=>1];
-@endphp
 
 <div style="display: flex; flex-direction: column; gap: 20px;">
 
@@ -131,16 +108,16 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach($posts as $i => $post)
-                    @php $sm = $statusMeta[$post['status']]; @endphp
+                @foreach($posts as $post)
+                    @php $sm = $statusMeta[$post->status] ?? $statusMeta['draft']; @endphp
                     <tr class="post-row"
-                        style="border-bottom: {{ $i < count($posts)-1 ? '1px solid var(--cms-border)' : 'none' }}; transition: background 100ms; cursor: default;"
+                        style="border-bottom: {{ !$loop->last ? '1px solid var(--cms-border)' : 'none' }}; transition: background 100ms; cursor: default;"
                         onmouseover="this.style.background='#FDFBF8'"
                         onmouseout="this.style.background='transparent'">
 
                         {{-- Checkbox --}}
                         <td style="padding: 14px 16px; text-align: center;">
-                            <input type="checkbox" class="post-checkbox" value="{{ $post['id'] }}"
+                            <input type="checkbox" class="post-checkbox" value="{{ $post->id }}"
                                    onchange="updateBulkBar()"
                                    style="cursor: pointer; accent-color: var(--cms-gold); width: 15px; height: 15px;" />
                         </td>
@@ -148,18 +125,18 @@
                         {{-- Title + hover actions --}}
                         <td style="padding: 14px 16px 14px 0; max-width: 340px;">
                             <div style="font-size: 13.5px; font-weight: 600; color: var(--cms-fg1); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 4px;">
-                                {{ $post['title'] }}
+                                {{ $post->title }}
                             </div>
                             <div class="row-actions" style="display: flex; gap: 10px;">
-                                <a href="{{ route('admin.posts.edit', $post['id']) }}"
+                                <a href="{{ route('admin.posts.edit', $post->id) }}"
                                    style="font-size: 12px; font-weight: 600; color: var(--cms-gold); text-decoration: none;"
                                    onmouseover="this.style.color='var(--cms-gold-deep)'" onmouseout="this.style.color='var(--cms-gold)'">Edit</a>
                                 <span style="color: var(--cms-border-st); font-size: 12px;">|</span>
-                                <a href="{{ route('admin.posts.show', $post['id']) }}"
+                                <a href="{{ route('admin.posts.show', $post->id) }}"
                                    style="font-size: 12px; font-weight: 600; color: var(--cms-fg3); text-decoration: none;"
                                    onmouseover="this.style.color='var(--cms-fg1)'" onmouseout="this.style.color='var(--cms-fg3)'">Preview</a>
                                 <span style="color: var(--cms-border-st); font-size: 12px;">|</span>
-                                <button onclick="confirmDelete({{ $post['id'] }})"
+                                <button onclick="confirmDelete({{ $post->id }})"
                                         style="font-size: 12px; font-weight: 600; color: var(--cms-red); background: none; border: none; cursor: pointer; padding: 0; font-family: var(--cms-font-ui);"
                                         onmouseover="this.style.color='var(--cms-red-deep)'" onmouseout="this.style.color='var(--cms-red)'">Trash</button>
                             </div>
@@ -167,27 +144,27 @@
 
                         {{-- Category --}}
                         <td style="padding: 14px 16px 14px 0; font-size: 13px; color: var(--cms-fg2); white-space: nowrap;">
-                            {{ $post['category'] }}
+                            {{ $post->category?->name ?? '—' }}
                         </td>
 
                         {{-- Author --}}
                         <td style="padding: 14px 16px 14px 0; white-space: nowrap;">
                             <div style="display: flex; align-items: center; gap: 7px;">
                                 <div style="width: 24px; height: 24px; border-radius: 999px; background: rgba(74,66,54,0.12); color: var(--cms-fg2); display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; border: 1px solid rgba(74,66,54,0.18); flex-shrink: 0;">
-                                    {{ strtoupper(substr($post['author'], 0, 1) . substr(strrchr($post['author'], ' '), 1, 1)) }}
+                                    {{ strtoupper(substr($post->user->name, 0, 1) . substr(strrchr($post->user->name, ' ') ?: ' ', 1, 1)) }}
                                 </div>
-                                <span style="font-size: 13px; color: var(--cms-fg2);">{{ $post['author'] }}</span>
+                                <span style="font-size: 13px; color: var(--cms-fg2);">{{ $post->user->name }}</span>
                             </div>
                         </td>
 
                         {{-- Status badge --}}
                         <td style="padding: 14px 16px 14px 0; white-space: nowrap;">
                             <span style="display: inline-flex; align-items: center; gap: 4px; font-family: var(--cms-font-ui); font-size: 12px; font-weight: 700; padding: 3px 10px; border-radius: 999px; background: {{ $sm['bg'] }}; color: {{ $sm['color'] }};">
-                                @if($post['status'] === 'published')
+                                @if($post->status === 'published')
                                     <span style="width: 6px; height: 6px; border-radius: 999px; background: var(--cms-green); display: inline-block;"></span>
-                                @elseif($post['status'] === 'scheduled')
+                                @elseif($post->status === 'scheduled')
                                     <i data-lucide="clock" style="width: 11px; height: 11px;"></i>
-                                @elseif($post['status'] === 'review')
+                                @elseif($post->status === 'review')
                                     <i data-lucide="eye" style="width: 11px; height: 11px;"></i>
                                 @endif
                                 {{ $sm['label'] }}
@@ -196,38 +173,29 @@
 
                         {{-- Views --}}
                         <td style="padding: 14px 16px 14px 0; text-align: right; font-size: 13px; color: var(--cms-fg2); font-weight: 500; white-space: nowrap;">
-                            {{ $post['views'] }}
+                            {{ number_format($post->view_count) }}
                         </td>
 
                         {{-- SEO Score --}}
                         <td style="padding: 14px 16px 14px 0; text-align: center;">
-                            @php
-                                $seo = $post['seo'];
-                                $seoColor = $seo >= 80 ? 'var(--cms-green)' : ($seo >= 60 ? 'var(--cms-gold)' : 'var(--cms-red)');
-                            @endphp
-                            <div style="display: inline-flex; flex-direction: column; align-items: center; gap: 3px;">
-                                <span style="font-size: 13px; font-weight: 700; color: {{ $seoColor }};">{{ $seo }}</span>
-                                <div style="width: 36px; height: 4px; border-radius: 999px; background: var(--cms-border); overflow: hidden;">
-                                    <div style="width: {{ $seo }}%; height: 100%; background: {{ $seoColor }}; border-radius: 999px;"></div>
-                                </div>
-                            </div>
+                            <span style="font-size: 13px; color: var(--cms-fg4);">—</span>
                         </td>
 
                         {{-- Date --}}
                         <td style="padding: 14px 16px 14px 0; font-size: 12.5px; color: var(--cms-fg3); white-space: nowrap;">
-                            {{ $post['date'] }}
+                            {{ $post->created_at->format('M j, Y') }}
                         </td>
 
                         {{-- Row menu --}}
                         <td style="padding: 14px 16px; text-align: center; position: relative;">
-                            <button onclick="toggleRowMenu({{ $post['id'] }}, event)"
+                            <button onclick="toggleRowMenu({{ $post->id }}, event)"
                                     style="border: none; background: none; cursor: pointer; color: var(--cms-fg4); padding: 4px; border-radius: 6px; display: flex; align-items: center; justify-content: center;"
                                     onmouseover="this.style.background='var(--cms-border)'; this.style.color='var(--cms-fg2)'"
                                     onmouseout="this.style.background='transparent'; this.style.color='var(--cms-fg4)'">
                                 <i data-lucide="more-horizontal" style="width: 17px; height: 17px;"></i>
                             </button>
-                            <div id="row-menu-{{ $post['id'] }}" style="display: none; position: absolute; right: 12px; top: 42px; width: 160px; background: var(--cms-surface); border: 1px solid var(--cms-border); border-radius: var(--cms-r-md); box-shadow: var(--cms-sh-pop); z-index: 50; overflow: hidden; animation: dsPop 150ms ease;">
-                                <a href="{{ route('admin.posts.edit', $post['id']) }}" style="display: flex; align-items: center; gap: 8px; padding: 9px 14px; font-family: var(--cms-font-ui); font-size: 13px; color: var(--cms-fg1); text-decoration: none;" onmouseover="this.style.background='#FBF9F5'" onmouseout="this.style.background='transparent'">
+                            <div id="row-menu-{{ $post->id }}" style="display: none; position: absolute; right: 12px; top: 42px; width: 160px; background: var(--cms-surface); border: 1px solid var(--cms-border); border-radius: var(--cms-r-md); box-shadow: var(--cms-sh-pop); z-index: 50; overflow: hidden; animation: dsPop 150ms ease;">
+                                <a href="{{ route('admin.posts.edit', $post->id) }}" style="display: flex; align-items: center; gap: 8px; padding: 9px 14px; font-family: var(--cms-font-ui); font-size: 13px; color: var(--cms-fg1); text-decoration: none;" onmouseover="this.style.background='#FBF9F5'" onmouseout="this.style.background='transparent'">
                                     <i data-lucide="edit-2" style="width: 14px; height: 14px; color: var(--cms-fg3);"></i> Edit
                                 </a>
                                 <a href="#" style="display: flex; align-items: center; gap: 8px; padding: 9px 14px; font-family: var(--cms-font-ui); font-size: 13px; color: var(--cms-fg1); text-decoration: none;" onmouseover="this.style.background='#FBF9F5'" onmouseout="this.style.background='transparent'">
@@ -237,7 +205,7 @@
                                     <i data-lucide="external-link" style="width: 14px; height: 14px; color: var(--cms-fg3);"></i> View live
                                 </a>
                                 <div style="border-top: 1px solid var(--cms-border); margin: 3px 0;"></div>
-                                <button onclick="confirmDelete({{ $post['id'] }})" style="display: flex; align-items: center; gap: 8px; padding: 9px 14px; font-family: var(--cms-font-ui); font-size: 13px; color: var(--cms-red); background: none; border: none; cursor: pointer; width: 100%; text-align: left;" onmouseover="this.style.background='var(--cms-red-soft)'" onmouseout="this.style.background='transparent'">
+                                <button onclick="confirmDelete({{ $post->id }})" style="display: flex; align-items: center; gap: 8px; padding: 9px 14px; font-family: var(--cms-font-ui); font-size: 13px; color: var(--cms-red); background: none; border: none; cursor: pointer; width: 100%; text-align: left;" onmouseover="this.style.background='var(--cms-red-soft)'" onmouseout="this.style.background='transparent'">
                                     <i data-lucide="trash-2" style="width: 14px; height: 14px;"></i> Move to Trash
                                 </button>
                             </div>
@@ -249,19 +217,9 @@
 
         {{-- Pagination --}}
         <div style="display: flex; align-items: center; justify-content: space-between; padding: 12px 20px; border-top: 1px solid var(--cms-border);">
-            <span style="font-family: var(--cms-font-ui); font-size: 13px; color: var(--cms-fg3);">Showing 1–8 of 248 posts</span>
-            <div style="display: flex; gap: 4px;">
-                <button style="width: 34px; height: 34px; border-radius: var(--cms-r-md); border: 1.5px solid var(--cms-border); background: var(--cms-surface); cursor: not-allowed; display: flex; align-items: center; justify-content: center; color: var(--cms-fg4);" disabled>
-                    <i data-lucide="chevron-left" style="width: 16px; height: 16px;"></i>
-                </button>
-                @foreach([1,2,3,'…',10] as $page)
-                    <button style="width: 34px; height: 34px; border-radius: var(--cms-r-md); border: {{ $page===1 ? '1.5px solid var(--cms-gold)' : '1.5px solid var(--cms-border)' }}; background: {{ $page===1 ? 'var(--cms-gold-soft)' : 'var(--cms-surface)' }}; cursor: {{ $page==='…' ? 'default' : 'pointer' }}; font-family: var(--cms-font-ui); font-size: 13px; font-weight: {{ $page===1 ? '700' : '500' }}; color: {{ $page===1 ? 'var(--cms-gold-deep)' : 'var(--cms-fg2)' }};">
-                        {{ $page }}
-                    </button>
-                @endforeach
-                <button style="width: 34px; height: 34px; border-radius: var(--cms-r-md); border: 1.5px solid var(--cms-border); background: var(--cms-surface); cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--cms-fg2);">
-                    <i data-lucide="chevron-right" style="width: 16px; height: 16px;"></i>
-                </button>
+            <span style="font-family: var(--cms-font-ui); font-size: 13px; color: var(--cms-fg3);">Showing {{ $posts->firstItem() }}–{{ $posts->lastItem() }} of {{ $posts->total() }} posts</span>
+            <div style="font-family: var(--cms-font-ui); font-size: 13px;">
+                {{ $posts->links() }}
             </div>
         </div>
     </div>
