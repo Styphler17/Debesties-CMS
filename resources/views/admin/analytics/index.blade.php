@@ -120,7 +120,7 @@
         @foreach($chartBars as $i => $val)
             @php $h = max(4, round(($val / $maxBar) * 100)); @endphp
             <div style="flex: 1; display: flex; flex-direction: column; align-items: center; gap: 3px; height: 100%;">
-                <div style="width: 100%; margin-top: auto; {{ "height: {$h}%;" }} background: linear-gradient(180deg, var(--cms-gold) 0%, rgba(232,168,0,0.4) 100%); border-radius: 4px 4px 0 0; transition: opacity 150ms; min-height: 4px;"
+                <div style="width: 100%; margin-top: auto; height: {{ $h }}%; background: linear-gradient(180deg, var(--cms-gold) 0%, rgba(232,168,0,0.4) 100%); border-radius: 4px 4px 0 0; transition: opacity 150ms; min-height: 4px;"
                      onmouseover="this.style.opacity='0.75'; showBarTip(event, '{{ $val }}K', '{{ $i + 1 }} May')"
                      onmouseout="this.style.opacity='1'; hideBarTip()"></div>
             </div>
