@@ -48,6 +48,11 @@ class Post extends Model
         return $this->hasOne(PostMeta::class);
     }
 
+    public function featuredImage()
+    {
+        return $this->belongsTo(\App\Models\Media::class, 'featured_image_id');
+    }
+
     public function scopePublished($query)
     {
         return $query->where('status', 'published');

@@ -224,23 +224,23 @@
             </div>
             <div style="padding: 14px 16px;">
                 <div id="featured-drop" onclick="document.getElementById('featured-file').click()"
-                     style="border: 2px dashed var(--cms-border); border-radius: var(--cms-r-md); padding: {{ $post->featured_image ? '0' : '24px 12px' }}; text-align: center; cursor: pointer; transition: border-color 150ms, background 150ms; overflow: hidden;"
+                     style="border: 2px dashed var(--cms-border); border-radius: var(--cms-r-md); padding: {{ $post->featured_image_id ? '0' : '24px 12px' }}; text-align: center; cursor: pointer; transition: border-color 150ms, background 150ms; overflow: hidden;"
                      ondragover="event.preventDefault(); this.style.borderColor='var(--cms-gold)'; this.style.background='var(--cms-gold-soft)'"
                      ondragleave="this.style.borderColor='var(--cms-border)'; this.style.background='transparent'"
                      ondrop="handleImageDrop(event)"
                      onmouseover="this.style.borderColor='var(--cms-gold)'; this.style.background='#FFFBF0'"
                      onmouseout="this.style.borderColor='var(--cms-border)'; this.style.background='transparent'">
-                    <div id="featured-placeholder" style="{{ $post->featured_image ? 'display:none' : '' }}">
+                    <div id="featured-placeholder" style="{{ $post->featured_image_id ? 'display:none' : '' }}">
                         <i data-lucide="upload-cloud" style="width: 28px; height: 28px; color: var(--cms-fg4); margin: 0 auto 8px;"></i>
                         <div style="font-family: var(--cms-font-ui); font-size: 13px; color: var(--cms-fg3);">Click or drag to replace</div>
                         <div style="font-family: var(--cms-font-ui); font-size: 11.5px; color: var(--cms-fg4); margin-top: 3px;">JPG, PNG, WEBP · Max 5MB</div>
                     </div>
-                    <img id="featured-preview" src="{{ $post->featured_image ?? '' }}" alt="Featured"
-                         style="display: {{ $post->featured_image ? 'block' : 'none' }}; width: 100%; border-radius: 7px;" />
+                    <img id="featured-preview" src="{{ $post->featuredImage?->path ?? '' }}" alt="Featured"
+                         style="display: {{ $post->featured_image_id ? 'block' : 'none' }}; width: 100%; border-radius: 7px;" />
                 </div>
                 <input type="file" id="featured-file" name="featured_image" accept="image/*" style="display: none;" onchange="previewFeatured(event)" />
                 <button type="button" id="featured-remove" onclick="removeFeatured()"
-                        style="display: {{ $post->featured_image ? 'block' : 'none' }}; margin-top: 8px; width: 100%; height: 34px; font-family: var(--cms-font-ui); font-size: 13px; font-weight: 600; color: var(--cms-red); background: var(--cms-red-soft); border: none; border-radius: var(--cms-r-md); cursor: pointer;">
+                        style="display: {{ $post->featured_image_id ? 'block' : 'none' }}; margin-top: 8px; width: 100%; height: 34px; font-family: var(--cms-font-ui); font-size: 13px; font-weight: 600; color: var(--cms-red); background: var(--cms-red-soft); border: none; border-radius: var(--cms-r-md); cursor: pointer;">
                     Remove Image
                 </button>
             </div>
