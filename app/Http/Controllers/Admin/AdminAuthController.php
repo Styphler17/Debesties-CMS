@@ -31,18 +31,20 @@ class AdminAuthController extends Controller
             ])->onlyInput('email');
         }
 
-        $request->session()->regenerate();
-
         $user = Auth::user();
         $hasAdminRole = $user->roles()->where('slug', '!=', 'subscriber')->exists();
 
         if (!$hasAdminRole) {
             Auth::logout();
+            $request->session()->invalidate();
+            $request->session()->regenerateToken();
+
             return back()->withErrors([
                 'email' => 'You do not have permission to access the admin panel.',
             ])->onlyInput('email');
         }
 
+        $request->session()->regenerate();
         $user->update(['last_login_at' => now()]);
 
         return redirect()->intended(route('admin.dashboard'));

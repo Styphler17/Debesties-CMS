@@ -65,12 +65,14 @@ class AdminAuthTest extends TestCase
     {
         $user = $this->createSubscriberUser();
 
-        $this->post('/admin/login', [
+        $response = $this->post('/admin/login', [
             'email'    => $user->email,
             'password' => 'password',
         ]);
 
         // Should be blocked at login — subscriber flag check
+        $response->assertRedirect();
+        $response->assertSessionHasErrors('email');
         $this->assertGuest();
     }
 
