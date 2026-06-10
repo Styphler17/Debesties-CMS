@@ -2,10 +2,12 @@
 
 namespace App\Actions\Posts;
 
+use App\Models\Post;
+
 class DeletePost
 {
-    public function handle(int $id)
+    public function handle(Post $post): void
     {
-        // Handle deleting a post
+        $post->delete();
     }
 }

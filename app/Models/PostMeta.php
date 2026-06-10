@@ -9,6 +9,8 @@ class PostMeta extends Model
 {
     use HasFactory;
 
+    protected $table = 'post_meta';
+
     protected $fillable = [
         'post_id',
         'seo_title',

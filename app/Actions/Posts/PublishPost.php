@@ -2,10 +2,15 @@
 
 namespace App\Actions\Posts;
 
+use App\Models\Post;
+use Illuminate\Support\Carbon;
+
 class PublishPost
 {
-    public function handle(int $id)
+    public function handle(Post $post): void
     {
-        // Handle publishing a post
+        $post->status       = 'published';
+        $post->published_at = Carbon::now();
+        $post->save();
     }
 }
