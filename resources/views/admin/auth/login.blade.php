@@ -34,7 +34,7 @@
     </form>
 
     <div class="auth-footer">
-        <a href="{{ route('password.request') }}">Forgot your password?</a>
+        <a href="#">Forgot your password?</a>
     </div>
 </div>
 @endsection

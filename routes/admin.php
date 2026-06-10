@@ -28,7 +28,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
 // Protected admin routes
 Route::prefix('admin')
     ->name('admin.')
-    ->middleware(['auth', 'admin'])
+    ->middleware(['admin'])
     ->group(function () {
         Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
 
