@@ -33,6 +33,8 @@ Route::prefix('admin')
         Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
 
         Route::resource('posts', PostController::class);
+        Route::post('posts/{post}/publish', [PostController::class, 'publish'])->name('posts.publish');
+        Route::post('posts/{post}/schedule', [PostController::class, 'schedule'])->name('posts.schedule');
         Route::resource('categories', CategoryController::class);
         Route::resource('tags', TagController::class);
         Route::resource('media', MediaController::class)->only(['index', 'store', 'show', 'destroy']);
