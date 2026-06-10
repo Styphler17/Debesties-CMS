@@ -13,11 +13,11 @@ class Post extends Model
     protected $guarded = [];
 
     protected $casts = [
-        'published_at' => 'datetime',
-        'scheduled_at' => 'datetime',
-        'faq' => 'array',
-        'sources' => 'array',
-        'key_facts' => 'array',
+        'published_at'  => 'datetime',
+        'scheduled_for' => 'datetime',
+        'faq'           => 'array',
+        'sources'       => 'array',
+        'key_facts'     => 'array',
     ];
 
     public function user()
@@ -32,7 +32,7 @@ class Post extends Model
 
     public function tags()
     {
-        return $this->belongsToMany(Tag::class);
+        return $this->belongsToMany(Tag::class, 'post_tags');
     }
 
     public function comments()
@@ -42,6 +42,11 @@ class Post extends Model
 
     public function meta()
     {
-        return $this->hasMany(PostMeta::class);
+        return $this->hasOne(PostMeta::class);
+    }
+
+    public function scopePublished($query)
+    {
+        return $query->where('status', 'published');
     }
 }
