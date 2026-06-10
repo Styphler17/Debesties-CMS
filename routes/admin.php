@@ -17,8 +17,7 @@ use App\Http\Controllers\Admin\SeoController;
 use App\Http\Controllers\Admin\AiVisibilityController;
 use App\Http\Controllers\Admin\HomepageBuilderController;
 
-Route::middleware(['auth', 'admin'])
-    ->prefix('admin')
+Route::prefix('admin')
     ->name('admin.')
     ->group(function () {
         Route::get('/', [DashboardController::class, 'index'])->name('dashboard');

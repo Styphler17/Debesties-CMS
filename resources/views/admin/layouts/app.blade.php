@@ -4,6 +4,26 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title', 'Debesties Studio — Publishing CMS')</title>
+    
+    <!-- Favicons -->
+    <link rel="apple-touch-icon" sizes="57x57" href="{{ asset('apple-icon-57x57.png') }}">
+    <link rel="apple-touch-icon" sizes="60x60" href="{{ asset('apple-icon-60x60.png') }}">
+    <link rel="apple-touch-icon" sizes="72x72" href="{{ asset('apple-icon-72x72.png') }}">
+    <link rel="apple-touch-icon" sizes="76x76" href="{{ asset('apple-icon-76x76.png') }}">
+    <link rel="apple-touch-icon" sizes="114x114" href="{{ asset('apple-icon-114x114.png') }}">
+    <link rel="apple-touch-icon" sizes="120x120" href="{{ asset('apple-icon-120x120.png') }}">
+    <link rel="apple-touch-icon" sizes="144x144" href="{{ asset('apple-icon-144x144.png') }}">
+    <link rel="apple-touch-icon" sizes="152x152" href="{{ asset('apple-icon-152x152.png') }}">
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('apple-icon-180x180.png') }}">
+    <link rel="icon" type="image/png" sizes="192x192"  href="{{ asset('android-icon-192x192.png') }}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('favicon-32x32.png') }}">
+    <link rel="icon" type="image/png" sizes="96x96" href="{{ asset('favicon-96x96.png') }}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('favicon-16x16.png') }}">
+    <link rel="manifest" href="{{ asset('manifest.json') }}">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="{{ asset('ms-icon-144x144.png') }}">
+    <meta name="theme-color" content="#ffffff">
+
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;0,800;0,900;1,400&family=Outfit:wght@300;400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
@@ -56,6 +76,12 @@
             color: var(--cms-gold) !important;
             font-weight: 600;
         }
+        .cms-sidebar.collapsed .sidebar-logo-full {
+            display: none !important;
+        }
+        .cms-sidebar.collapsed .sidebar-logo-icon {
+            display: block !important;
+        }
     </style>
 </head>
 <body style="height: 100%;">
@@ -67,12 +93,9 @@
         <!-- Sidebar Navigation -->
         <aside id="cms-sidebar" class="cms-sidebar" style="width: 248px; background: var(--cms-sidebar); height: 100vh; position: sticky; top: 0; display: flex; flex-direction: column; flex-shrink: 0; z-index: 95; border-right: 1px solid rgba(255,255,255,0.06);">
             <!-- Logo Section -->
-            <div class="logo-container" style="height: 64px; display: flex; alignItems: center; gap: 10px; padding: 0 20px; flex-shrink: 0; border-bottom: 1px solid rgba(255,255,255,0.06);">
-                <div style="width: 36px; height: 36px; border-radius: 9px; flex-shrink: 0; background: linear-gradient(125deg, var(--cms-ai-from), var(--cms-ai-to)); display: flex; align-items: center; justify-content: center; font-family: var(--cms-font-ui); font-weight: 800; font-size: 19px; color: #fff; box-shadow: 0 2px 10px rgba(120,79,224,0.4);">d</div>
-                <div class="sidebar-logo-text" style="overflow: hidden;">
-                    <div style="font-family: var(--cms-font-ui); font-weight: 700; font-size: 16px; color: #fff; letter-spacing: -0.01em; line-height: 1.1;">debesties</div>
-                    <div style="font-family: var(--cms-font-ui); font-size: 10.5px; color: rgba(255,255,255,0.4); letter-spacing: 0.08em; text-transform: uppercase; font-weight: 600;">Studio</div>
-                </div>
+            <div class="logo-container" style="height: 64px; display: flex; align-items: center; gap: 10px; padding: 0 20px; flex-shrink: 0; border-bottom: 1px solid rgba(255,255,255,0.06);">
+                <img class="sidebar-logo-icon" src="{{ asset('favicon-96x96.png') }}" style="width: 32px; height: 32px; flex-shrink: 0; display: none;" alt="debesties icon">
+                <img class="sidebar-logo-full" src="{{ asset('logo.png') }}" style="height: 28px; width: auto; max-width: 100%; display: block;" alt="debesties logo">
             </div>
 
             <!-- Navigation Links -->
