@@ -9,11 +9,14 @@ class MediaService
 {
     public static function url(Media $media, string $variant = 'original'): string
     {
+        /** @var \Illuminate\Filesystem\FilesystemAdapter $disk */
+        $disk = Storage::disk('public');
+
         if ($variant === 'original') {
-            return Storage::disk('public')->url($media->file_path);
+            return $disk->url($media->file_path);
         }
 
         $fileName = basename($media->file_path);
-        return Storage::disk('public')->url("uploads/{$variant}/{$fileName}");
+        return $disk->url("uploads/{$variant}/{$fileName}");
     }
 }
