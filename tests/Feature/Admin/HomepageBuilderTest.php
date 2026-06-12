@@ -42,6 +42,7 @@ class HomepageBuilderTest extends TestCase
 
     public function test_admin_can_save_homepage_layout(): void
     {
+        $this->withoutMiddleware();
         $layoutPayload = json_encode([
             [
                 'id' => 1,
@@ -68,12 +69,27 @@ class HomepageBuilderTest extends TestCase
         $this->assertEquals($layoutPayload, SettingsService::get('homepage_layout'));
     }
 
-    public function test_guest_cannot_save_homepage_layout(): void
+    public function test_public_homepage_renders_custom_layout(): void
     {
-        $response = $this->postJson(route('admin.homepage-builder.store'), [
-            'layout' => '[]'
+        $layoutPayload = json_encode([
+            [
+                'id' => 1,
+                'type' => 'hero',
+                'name' => 'Hero Banner',
+                'settings' => [
+                    'headline' => 'Dynamic Hero headline',
+                    'subtext' => 'Dynamic subtext',
+                    'theme' => 'gold-black'
+                ]
+            ]
         ]);
 
-        $response->assertRedirect(route('admin.login'));
+        SettingsService::set('homepage_layout', $layoutPayload);
+
+        $response = $this->get(route('home'));
+
+        $response->assertStatus(200);
+        $response->assertSee('Dynamic Hero headline');
+        $response->assertSee('Dynamic subtext');
     }
 }

@@ -50,7 +50,7 @@
         <div style="background: var(--cms-surface); border: 1px solid var(--cms-border); border-radius: var(--cms-r-xl); padding: 24px; box-shadow: var(--cms-sh-card);">
             <div style="border-bottom: 1px solid var(--cms-border); padding-bottom: 14px; margin-bottom: 20px;">
                 <h2 style="font-family: var(--cms-font-disp); font-size: 20px; font-weight: 700; color: var(--cms-fg1);">Active Homepage Layout</h2>
-                <p style="font-size: 12.5px; color: var(--cms-fg3); margin-top: 1px;">This stack represents your live landing page sections in order.</p>
+                <p style="font-size: 12.5px; color: var(--cms-fg3); margin-top: 1px;">Drag and drop blocks to reorder. Changes take effect on the live site after saving.</p>
             </div>
 
             {{-- Canvas Box --}}
@@ -60,7 +60,7 @@
 
             {{-- Save Action --}}
             <div style="border-top: 1px solid var(--cms-border); padding-top: 20px; margin-top: 20px; display: flex; justify-content: flex-end;">
-                <button onclick="saveLayout()"
+                <button id="save-btn" onclick="saveLayout()"
                         style="display: inline-flex; align-items: center; gap: 7px; height: 40px; padding: 0 20px; font-family: var(--cms-font-ui); font-size: 13.5px; font-weight: 700; background: var(--cms-gold); color: #1A1410; border: none; border-radius: var(--cms-r-md); cursor: pointer; transition: background 150ms;"
                         onmouseover="this.style.background='#D69B00'" onmouseout="this.style.background='var(--cms-gold)'">
                     <i data-lucide="save" style="width: 16px; height: 16px;"></i>
@@ -104,15 +104,41 @@
 
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+
 <script>
     let activeWidgets = {!! $layout !!};
+    const categories = @json($categories);
 
     let nextWidgetId = activeWidgets.reduce((max, w) => Math.max(max, w.id || 0), 0) + 1;
     let selectedInspectorId = null;
+    let sortable = null;
 
     document.addEventListener("DOMContentLoaded", () => {
+        initSortable();
         renderCanvas();
     });
+
+    function initSortable() {
+        const el = document.getElementById('canvas-container');
+        sortable = Sortable.create(el, {
+            animation: 150,
+            handle: '.grip-handle',
+            ghostClass: 'cms-sortable-ghost',
+            onEnd: function (evt) {
+                // Update activeWidgets array based on new DOM order
+                const newOrder = [];
+                const blocks = el.querySelectorAll('[data-widget-id]');
+                blocks.forEach(block => {
+                    const id = parseInt(block.getAttribute('data-widget-id'));
+                    const widget = activeWidgets.find(w => w.id === id);
+                    if (widget) newOrder.push(widget);
+                });
+                activeWidgets = newOrder;
+                renderCanvas();
+            },
+        });
+    }
 
     function renderCanvas() {
         const container = document.getElementById('canvas-container');
@@ -132,6 +158,7 @@
 
         activeWidgets.forEach((widget, index) => {
             const block = document.createElement('div');
+            block.setAttribute('data-widget-id', widget.id);
             block.style.cssText = "background: var(--cms-surface); border: 1.5px solid var(--cms-border); border-radius: var(--cms-r-lg); padding: 14px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 1px 3px rgba(0,0,0,0.01); transition: border-color 150ms;";
             block.onmouseover = () => { block.style.borderColor = 'var(--cms-border-st)'; };
             block.onmouseout = () => { block.style.borderColor = 'var(--cms-border)'; };
@@ -151,7 +178,9 @@
 
             block.innerHTML = `
                 <div style="display: flex; align-items: center; gap: 12px; min-width: 0;">
-                    <i data-lucide="grip-vertical" style="width: 14px; height: 14px; color: var(--cms-fg4); cursor: move;"></i>
+                    <div class="grip-handle" style="padding: 4px; cursor: move; color: var(--cms-fg4);">
+                        <i data-lucide="grip-vertical" style="width: 14px; height: 14px;"></i>
+                    </div>
                     
                     {{-- Mini block preview representing sections --}}
                     <div style="width: 50px; height: 34px; border-radius: 4px; background: var(--cms-bg); border: 1px solid var(--cms-border); display: flex; flex-direction: column; justify-content: center; gap: 3px; padding: 4px; flex-shrink: 0; opacity: 0.85;">
@@ -167,16 +196,6 @@
                 </div>
 
                 <div style="display: flex; align-items: center; gap: 4px;">
-                    {{-- Ordering --}}
-                    <button onclick="moveWidget(${index}, -1)" title="Move Up" style="width: 26px; height: 26px; border: none; background: transparent; cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--cms-fg3); border-radius: 4px;" onmouseover="this.style.background='var(--cms-bg)'" onmouseout="this.style.background='transparent'">
-                        <i data-lucide="chevron-up" style="width: 14px; height: 14px;"></i>
-                    </button>
-                    <button onclick="moveWidget(${index}, 1)" title="Move Down" style="width: 26px; height: 26px; border: none; background: transparent; cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--cms-fg3); border-radius: 4px;" onmouseover="this.style.background='var(--cms-bg)'" onmouseout="this.style.background='transparent'">
-                        <i data-lucide="chevron-down" style="width: 14px; height: 14px;"></i>
-                    </button>
-                    
-                    <span style="width: 1px; height: 16px; background: var(--cms-border); margin: 0 4px;"></span>
-
                     {{-- Configure --}}
                     <button onclick="inspectWidget(${widget.id})" title="Configure settings" style="width: 26px; height: 26px; border: none; background: transparent; cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--cms-gold-deep); border-radius: 4px;" onmouseover="this.style.background='var(--cms-gold-soft)'" onmouseout="this.style.background='transparent'">
                         <i data-lucide="settings" style="width: 14px; height: 14px;"></i>
@@ -217,18 +236,6 @@
 
         renderCanvas();
         showToast(`"${name}" appended to layout canvas.`);
-    }
-
-    function moveWidget(index, direction) {
-        const targetIndex = index + direction;
-        if (targetIndex < 0 || targetIndex >= activeWidgets.length) return;
-
-        // Swap
-        const temp = activeWidgets[index];
-        activeWidgets[index] = activeWidgets[targetIndex];
-        activeWidgets[targetIndex] = temp;
-
-        renderCanvas();
     }
 
     function removeWidget(index) {
@@ -285,6 +292,11 @@
                 </div>
             `;
         } else if (widget.type === 'grid') {
+            let catOptions = `<option value="all" ${widget.settings.category === 'all' ? 'selected' : ''}>All Categories</option>`;
+            categories.forEach(cat => {
+                catOptions += `<option value="${cat.slug}" ${widget.settings.category === cat.slug ? 'selected' : ''}>${cat.name}</option>`;
+            });
+
             fieldsBox.innerHTML = `
                 <div>
                     <label class="insp-lbl">Post Limit</label>
@@ -293,9 +305,7 @@
                 <div>
                     <label class="insp-lbl">Category Filter</label>
                     <select id="insp-grid-cat" class="insp-sl">
-                        <option value="all" ${widget.settings.category === 'all' ? 'selected' : ''}>All Categories</option>
-                        <option value="music" ${widget.settings.category === 'music' ? 'selected' : ''}>Music & Beats</option>
-                        <option value="culture" ${widget.settings.category === 'culture' ? 'selected' : ''}>Culture & Life</option>
+                        ${catOptions}
                     </select>
                 </div>
                 <div>
@@ -372,6 +382,12 @@
     }
 
     function saveLayout() {
+        const btn = document.getElementById('save-btn');
+        const originalContent = btn.innerHTML;
+        btn.disabled = true;
+        btn.innerHTML = '<i data-lucide="loader-2" class="spin" style="width: 16px; height: 16px;"></i> Saving...';
+        lucide.createIcons();
+
         fetch('{{ route('admin.homepage-builder.store') }}', {
             method: 'POST',
             headers: {
@@ -393,6 +409,11 @@
         .catch(error => {
             console.error('Error saving layout:', error);
             showToast("An error occurred while saving.");
+        })
+        .finally(() => {
+            btn.disabled = false;
+            btn.innerHTML = originalContent;
+            lucide.createIcons();
         });
     }
 
@@ -417,6 +438,18 @@
 </script>
 
 <style>
+    .cms-sortable-ghost {
+        opacity: 0.4;
+        background: var(--cms-gold-soft) !important;
+        border: 2px dashed var(--cms-gold) !important;
+    }
+    .spin {
+        animation: dsRotate 1s linear infinite;
+    }
+    @keyframes dsRotate {
+        from { transform: rotate(0deg); }
+        to { transform: rotate(360deg); }
+    }
     .insp-lbl {
         font-family: var(--cms-font-ui);
         font-size: 11px;

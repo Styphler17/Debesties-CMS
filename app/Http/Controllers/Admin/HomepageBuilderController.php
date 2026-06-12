@@ -11,7 +11,8 @@ class HomepageBuilderController extends Controller
     public function index()
     {
         $layout = SettingsService::get('homepage_layout', '[]');
-        return view('admin.homepage-builder.index', compact('layout'));
+        $categories = \App\Models\Category::orderBy('name')->get();
+        return view('admin.homepage-builder.index', compact('layout', 'categories'));
     }
 
     public function store(Request $request)
