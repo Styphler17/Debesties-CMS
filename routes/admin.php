@@ -57,4 +57,9 @@ Route::prefix('admin')
         Route::delete('ai-visibility/logs', [AiVisibilityController::class, 'clearLogs'])->name('ai-visibility.logs.clear');
         Route::get('homepage-builder', [HomepageBuilderController::class, 'index'])->name('homepage-builder.index');
         Route::post('homepage-builder', [HomepageBuilderController::class, 'store'])->name('homepage-builder.store');
+
+        Route::prefix('ai-assistant')->name('ai-assistant.')->group(function () {
+            Route::post('generate-tags', [\App\Http\Controllers\Admin\AiAssistantController::class, 'generateTags'])->name('generate-tags');
+            Route::post('generate-outline', [\App\Http\Controllers\Admin\AiAssistantController::class, 'generateOutline'])->name('generate-outline');
+        });
     });

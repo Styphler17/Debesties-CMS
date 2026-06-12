@@ -163,6 +163,27 @@
     {{-- ══════════════════════ SIDEBAR RAIL ══════════════════════ --}}
     <div class="cms-editor-rail" style="display: flex; flex-direction: column; gap: 14px; position: sticky; top: 88px;">
 
+        {{-- AI Assistant --}}
+        <div style="background: var(--cms-surface); border: 1px solid var(--cms-border); border-radius: var(--cms-r-lg); overflow: hidden; box-shadow: var(--cms-sh-card);">
+            <div style="padding: 13px 16px; border-bottom: 1px solid var(--cms-border); font-family: var(--cms-font-ui); font-size: 14px; font-weight: 700; color: var(--cms-fg1); display: flex; align-items: center; gap: 7px; background: linear-gradient(125deg, var(--cms-ai-from), var(--cms-ai-to)); color: #fff;">
+                <i data-lucide="sparkles" style="width: 15px; height: 15px;"></i> AI Assistant
+            </div>
+            <div style="padding: 14px 16px; display: flex; flex-direction: column; gap: 11px;">
+                <button type="button" onclick="generateAiTags()"
+                        id="ai-tags-btn"
+                        style="width: 100%; height: 36px; font-family: var(--cms-font-ui); font-size: 13px; font-weight: 600; background: var(--cms-ai-soft); color: var(--cms-ai-to); border: 1.5px solid var(--cms-ai-to); border-radius: var(--cms-r-md); cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px;">
+                    <i data-lucide="tag" style="width: 14px; height: 14px;"></i>
+                    Suggest Tags
+                </button>
+                <button type="button" onclick="generateAiOutline()"
+                        id="ai-outline-btn"
+                        style="width: 100%; height: 36px; font-family: var(--cms-font-ui); font-size: 13px; font-weight: 600; background: var(--cms-ai-soft); color: var(--cms-ai-to); border: 1.5px solid var(--cms-ai-to); border-radius: var(--cms-r-md); cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px;">
+                    <i data-lucide="list" style="width: 14px; height: 14px;"></i>
+                    Draft Outline
+                </button>
+            </div>
+        </div>
+
         {{-- Publish Panel --}}
         <div style="background: var(--cms-surface); border: 1px solid var(--cms-border); border-radius: var(--cms-r-lg); overflow: hidden; box-shadow: var(--cms-sh-card);">
             <div style="padding: 13px 16px; border-bottom: 1px solid var(--cms-border); font-family: var(--cms-font-ui); font-size: 14px; font-weight: 700; color: var(--cms-fg1); display: flex; align-items: center; gap: 7px;">
@@ -369,6 +390,87 @@
             previewFeatured({ target: { files: [file] } });
         }
     }
+    function generateAiTags() {
+        const btn = document.getElementById('ai-tags-btn');
+        const title = document.getElementById('post-title').value;
+        const body = document.getElementById('post-body').innerText;
+
+        if (!title || !body) {
+            alert('Please enter a title and some content first.');
+            return;
+        }
+
+        const originalHtml = btn.innerHTML;
+        btn.disabled = true;
+        btn.innerHTML = '<i data-lucide="loader-2" class="spin" style="width: 14px; height: 14px;"></i> Working...';
+        lucide.createIcons();
+
+        fetch('{{ route('admin.ai-assistant.generate-tags') }}', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+            },
+            body: JSON.stringify({ title, body })
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                // In a real app, we might open a modal to select. 
+                // For now, let's just log and notify.
+                alert('AI Suggested Tags: ' + data.tags.join(', '));
+            }
+        })
+        .finally(() => {
+            btn.disabled = false;
+            btn.innerHTML = originalHtml;
+            lucide.createIcons();
+        });
+    }
+
+    function generateAiOutline() {
+        const btn = document.getElementById('ai-outline-btn');
+        const title = document.getElementById('post-title').value;
+
+        if (!title) {
+            alert('Please enter a title first.');
+            return;
+        }
+
+        const originalHtml = btn.innerHTML;
+        btn.disabled = true;
+        btn.innerHTML = '<i data-lucide="loader-2" class="spin" style="width: 14px; height: 14px;"></i> Working...';
+        lucide.createIcons();
+
+        fetch('{{ route('admin.ai-assistant.generate-outline') }}', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+            },
+            body: JSON.stringify({ title })
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                const body = document.getElementById('post-body');
+                let outlineHtml = '<h2>AI Suggested Outline</h2><ul>';
+                data.outline.forEach(item => {
+                    outlineHtml += `<li>${item}</li>`;
+                });
+                outlineHtml += '</ul><p>&nbsp;</p>';
+                
+                body.innerHTML = outlineHtml + body.innerHTML;
+                updateWordCount();
+            }
+        })
+        .finally(() => {
+            btn.disabled = false;
+            btn.innerHTML = originalHtml;
+            lucide.createIcons();
+        });
+    }
+
     function removeFeatured() {
         document.getElementById('featured-file').value='';
         document.getElementById('featured-preview').style.display='none';
