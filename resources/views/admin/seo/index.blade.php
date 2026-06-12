@@ -107,7 +107,7 @@
 .score--high { color: var(--cms-green); }
 .score--mid  { color: var(--cms-gold); }
 .score--low  { color: var(--cms-red); }
-.score-bar { width: var(--score-w); height: 100%; border-radius: 999px; }
+.score-bar { height: 100%; border-radius: 999px; }
 .score-bar--high { background: var(--cms-green); }
 .score-bar--mid  { background: var(--cms-gold); }
 .score-bar--low  { background: var(--cms-red); }
@@ -163,7 +163,7 @@
             @endphp
             @foreach($issues as $issue)
                 <div class="issue-card"
-                     style="{{ '--icon-bg: ' . $issue['bg'] . '; --icon-color: ' . $issue['color'] }}"
+                     style="--icon-bg: {{ $issue['bg'] }}; --icon-color: {{ $issue['color'] }};"
                      onclick="setTab('audit')"
                      onmouseover="this.style.transform='translateY(-1px)'; this.style.boxShadow='var(--cms-sh-pop)'"
                      onmouseout="this.style.transform=''; this.style.boxShadow='var(--cms-sh-card)'">
@@ -185,10 +185,10 @@
 <div id="tab-audit" style="display: none;">
     <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 14px; flex-wrap: wrap;">
         <span style="font-family: var(--cms-font-ui); font-size: 13px; color: var(--cms-fg3);">Filter:</span>
-        @foreach(['All','Missing meta','Low score'] as $filter)
-            <button onclick="filterAudit('{{ strtolower(str_replace(' ','_',$filter)) }}', this)"
-                    class="audit-filter {{ $filter === 'All' ? 'audit-filter--active' : '' }}">
-                {{ $filter }}
+        @foreach(['all' => 'All', 'missing_meta' => 'Missing meta', 'low_score' => 'Low score'] as $value => $label)
+            <button onclick="filterAudit('{{ $value }}', this)"
+                    class="audit-filter {{ $label === 'All' ? 'audit-filter--active' : '' }}">
+                {{ $label }}
             </button>
         @endforeach
     </div>
@@ -240,7 +240,7 @@
                             <div style="display: flex; align-items: center; gap: 8px;">
                                 <span class="score--{{ $scoreLevel }}" style="font-family: var(--cms-font-ui); font-size: 13px; font-weight: 700; min-width: 26px;">{{ $p['score'] }}</span>
                                 <div style="width: 50px; height: 5px; background: var(--cms-border); border-radius: 999px; overflow: hidden;">
-                                    <div class="score-bar score-bar--{{ $scoreLevel }}" style="{{ '--score-w: ' . $p['score'] . '%' }}"></div>
+                                    <div class="score-bar score-bar--{{ $scoreLevel }}" data-score-width="{{ $p['score'] }}%"></div>
                                 </div>
                             </div>
                         </td>
@@ -326,5 +326,11 @@
             else if (filter === 'low_score') row.style.display = parseInt(row.dataset.score) < 60 ? '' : 'none';
         });
     }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        document.querySelectorAll('[data-score-width]').forEach(el => {
+            el.style.width = el.getAttribute('data-score-width');
+        });
+    });
 </script>
 @endsection
