@@ -119,6 +119,26 @@
             font-size: 0.95rem;
             font-weight: 500;
             color: var(--text-muted);
+            position: relative;
+            padding-bottom: 2px;
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            transform: scaleX(0);
+            height: 1.5px;
+            bottom: 0;
+            left: 0;
+            background-color: var(--accent-gold);
+            transform-origin: bottom right;
+            transition: transform 0.25s ease-out;
+        }
+
+        .nav-link:hover::after {
+            transform: scaleX(1);
+            transform-origin: bottom left;
         }
 
         .nav-link:hover {

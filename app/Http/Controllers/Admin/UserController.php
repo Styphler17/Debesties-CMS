@@ -17,6 +17,7 @@ class UserController extends Controller
 {
     public function index(Request $request)
     {
+        $this->authorize('viewAny', User::class);
         $query = User::with('roles');
 
         if ($request->filled('search')) {
@@ -39,12 +40,14 @@ class UserController extends Controller
 
     public function create()
     {
+        $this->authorize('create', User::class);
         $roles = Role::all();
         return view('admin.users.create', compact('roles'));
     }
 
     public function store(StoreUserRequest $request)
     {
+        $this->authorize('create', User::class);
         $slug = (new GenerateSlug())->handle($request->name, 'users');
 
         $data = [
@@ -87,6 +90,7 @@ class UserController extends Controller
     public function update(UpdateUserRequest $request, string $id)
     {
         $user = User::findOrFail($id);
+        $this->authorize('update', $user);
 
         $data = [
             'name' => $request->name,
@@ -122,6 +126,7 @@ class UserController extends Controller
     public function destroy(string $id)
     {
         $user = User::findOrFail($id);
+        $this->authorize('delete', $user);
 
         if ($user->id === Auth::id()) {
             return redirect()->route('admin.users.index')->with('error', 'You cannot delete your own account.');

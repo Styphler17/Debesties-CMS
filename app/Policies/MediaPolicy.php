@@ -17,11 +17,11 @@ class MediaPolicy
 
     public function create(User $user)
     {
-        return true;
+        return $user->hasPermission('media.upload');
     }
 
     public function delete(User $user, Media $media)
     {
-        return $user->id === $media->user_id;
+        return $user->hasPermission('media.delete') || $user->id === $media->user_id;
     }
 }

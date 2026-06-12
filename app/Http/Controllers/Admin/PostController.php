@@ -20,6 +20,7 @@ class PostController extends Controller
 {
     public function index(Request $request)
     {
+        $this->authorize('viewAny', Post::class);
         $query = Post::with(['user', 'category', 'meta']);
 
         if ($request->filled('status') && $request->status !== 'all') {
@@ -73,6 +74,7 @@ class PostController extends Controller
 
     public function create()
     {
+        $this->authorize('create', Post::class);
         $categories = Category::orderBy('name')->get();
         $tags       = Tag::orderBy('name')->get();
         $users      = User::orderBy('name')->get();
@@ -82,6 +84,7 @@ class PostController extends Controller
 
     public function store(StorePostRequest $request)
     {
+        $this->authorize('create', Post::class);
         $post = (new CreatePost())->handle($request->validated(), auth()->user());
 
         return redirect()
@@ -91,11 +94,13 @@ class PostController extends Controller
 
     public function show(Post $post)
     {
+        $this->authorize('view', $post);
         return view('admin.posts.show', compact('post'));
     }
 
     public function edit(Post $post)
     {
+        $this->authorize('update', $post);
         $categories = Category::orderBy('name')->get();
         $tags       = Tag::orderBy('name')->get();
         $users      = User::orderBy('name')->get();
@@ -107,6 +112,7 @@ class PostController extends Controller
 
     public function update(UpdatePostRequest $request, Post $post)
     {
+        $this->authorize('update', $post);
         (new UpdatePost())->handle($post, $request->validated());
 
         return redirect()
@@ -116,6 +122,7 @@ class PostController extends Controller
 
     public function destroy(Post $post)
     {
+        $this->authorize('delete', $post);
         (new DeletePost())->handle($post);
 
         return redirect()
@@ -125,6 +132,7 @@ class PostController extends Controller
 
     public function publish(Post $post)
     {
+        $this->authorize('update', $post);
         (new PublishPost())->handle($post);
 
         return redirect()
@@ -134,6 +142,7 @@ class PostController extends Controller
 
     public function schedule(Request $request, Post $post)
     {
+        $this->authorize('update', $post);
         $request->validate([
             'scheduled_for' => ['required', 'date', 'after:now'],
         ]);

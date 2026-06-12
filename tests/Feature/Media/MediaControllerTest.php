@@ -21,7 +21,8 @@ class MediaControllerTest extends TestCase
         parent::setUp();
         Storage::fake('public');
 
-        $adminRole = Role::firstOrCreate(['slug' => 'super_admin'], ['name' => 'Super Admin']);
+        $this->artisan('db:seed', ['--class' => 'RolesAndPermissionsSeeder']);
+        $adminRole = Role::where('slug', 'super_admin')->firstOrFail();
         $this->admin = User::factory()->create();
         $this->admin->roles()->sync([$adminRole->id]);
     }

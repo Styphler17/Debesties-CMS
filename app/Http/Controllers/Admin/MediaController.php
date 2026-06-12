@@ -12,6 +12,7 @@ class MediaController extends Controller
 {
     public function index(Request $request)
     {
+        $this->authorize('viewAny', Media::class);
         $query = Media::latest();
 
         if ($request->filled('folder') && $request->folder !== 'All') {
@@ -30,6 +31,7 @@ class MediaController extends Controller
 
     public function store(Request $request)
     {
+        $this->authorize('create', Media::class);
         $request->validate([
             'files.*' => 'required|image|mimes:jpeg,png,gif,webp|max:10240',
             'folder' => 'nullable|string',
@@ -65,6 +67,7 @@ class MediaController extends Controller
     public function destroy(string $id)
     {
         $media = Media::findOrFail($id);
+        $this->authorize('delete', $media);
 
         try {
             (new DeleteMedia())->handle($media);

@@ -11,22 +11,21 @@ class UserPolicy
 
     public function viewAny(User $user)
     {
-        // Add authorization logic if applicable
-        return true;
+        return $user->hasPermission('users.manage');
     }
 
     public function create(User $user)
     {
-        return true;
+        return $user->hasPermission('users.manage');
     }
 
     public function update(User $currentUser, User $user)
     {
-        return $currentUser->id === $user->id;
+        return $currentUser->hasPermission('users.manage') || $currentUser->id === $user->id;
     }
 
     public function delete(User $currentUser, User $user)
     {
-        return $currentUser->id === $user->id;
+        return $currentUser->hasPermission('users.manage');
     }
 }

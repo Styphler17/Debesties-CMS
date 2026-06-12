@@ -84,6 +84,28 @@
         margin-bottom: 1.6rem;
     }
 
+    .article-body p:first-of-type::first-letter {
+        font-family: 'Playfair Display', Georgia, serif;
+        font-size: 3.5rem;
+        float: left;
+        line-height: 0.9;
+        margin-right: 0.5rem;
+        margin-top: 0.2rem;
+        font-weight: 700;
+        color: var(--accent-green);
+    }
+
+    .article-body blockquote {
+        font-family: 'Playfair Display', Georgia, serif;
+        font-size: 1.4rem;
+        font-style: italic;
+        line-height: 1.6;
+        color: var(--accent-green);
+        border-left: 3px solid var(--accent-gold);
+        padding-left: 1.5rem;
+        margin: 2.5rem 0;
+    }
+
     .article-body h2 {
         font-size: 1.8rem;
         margin: 2.5rem 0 1.2rem;

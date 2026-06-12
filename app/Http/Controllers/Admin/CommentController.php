@@ -11,6 +11,7 @@ class CommentController extends Controller
 {
     public function index(Request $request)
     {
+        $this->authorize('viewAny', \App\Models\Comment::class);
         $query = Comment::with(['user', 'post']);
 
         if ($request->filled('status') && $request->status !== 'All') {
@@ -47,6 +48,8 @@ class CommentController extends Controller
     public function update(UpdateCommentRequest $request, string $id)
     {
         $comment = Comment::findOrFail($id);
+        $this->authorize('update', $comment);
+
         $comment->update($request->validated());
 
         if ($request->wantsJson() || $request->ajax()) {
@@ -59,6 +62,8 @@ class CommentController extends Controller
     public function destroy(string $id)
     {
         $comment = Comment::findOrFail($id);
+        $this->authorize('delete', $comment);
+
         $comment->delete();
 
         if (request()->wantsJson() || request()->ajax()) {

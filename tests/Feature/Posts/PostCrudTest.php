@@ -24,7 +24,8 @@ class PostCrudTest extends TestCase
     {
         parent::setUp();
 
-        $role        = Role::create(['name' => 'Super Admin', 'slug' => 'super_admin']);
+        $this->artisan('db:seed', ['--class' => 'RolesAndPermissionsSeeder']);
+        $role        = Role::where('slug', 'super_admin')->firstOrFail();
         $this->admin = User::factory()->create();
         $this->admin->roles()->attach($role);
 

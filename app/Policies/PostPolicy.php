@@ -22,16 +22,16 @@ class PostPolicy
 
     public function create(User $user)
     {
-        return true;
+        return $user->hasPermission('posts.create');
     }
 
     public function update(User $user, Post $post)
     {
-        return $user->id === $post->user_id;
+        return $user->hasPermission('posts.edit') || $user->id === $post->user_id;
     }
 
     public function delete(User $user, Post $post)
     {
-        return $user->id === $post->user_id;
+        return $user->hasPermission('posts.delete') || $user->id === $post->user_id;
     }
 }
