@@ -4,28 +4,7 @@
 @section('page_title', 'SEO Tools')
 
 @section('content')
-@php
-    $auditPosts = [
-        ['id'=>1,'title'=>'The Elite Club: 4 Artists Who Dominated TGMAs','meta_title'=>'4 Artists Who Dominated the TGMAs | Debesties','meta_desc'=>'A deep dive into the artists who have dominated Ghana Music Awards history.','keyword'=>'TGMA winners','score'=>88],
-        ['id'=>2,'title'=>'Black Sherif: From Konongo to International Fame','meta_title'=>'','meta_desc'=>'Black Sherif biography and career timeline.','keyword'=>'Black Sherif','score'=>61],
-        ['id'=>3,'title'=>'TGMA 2024 Full Winners Announced','meta_title'=>'TGMA 2024 Winners','meta_desc'=>'','keyword'=>'','score'=>38],
-        ['id'=>4,'title'=>'Ghana Music: The Highlife Renaissance','meta_title'=>'Ghana Highlife Music Revival 2024 | Debesties','meta_desc'=>'How Highlife is making a major comeback in Ghana\'s music industry.','keyword'=>'Ghana highlife','score'=>79],
-        ['id'=>5,'title'=>'King Promise: A Year in Review','meta_title'=>'','meta_desc'=>'','keyword'=>'','score'=>22],
-        ['id'=>6,'title'=>'Celebrity Fashion Week Roundup','meta_title'=>'Ghana Celebrity Fashion Week 2024 | Debesties','meta_desc'=>'Best celebrity looks from Ghana Fashion Week 2024.','keyword'=>'Ghana celebrity fashion','score'=>91],
-    ];
 
-    $internalLinks = [
-        ['id'=>1,'title'=>'The Elite Club: 4 Artists','link_count'=>5,'suggestions'=>3],
-        ['id'=>2,'title'=>'Black Sherif Profile','link_count'=>2,'suggestions'=>6],
-        ['id'=>3,'title'=>'TGMA 2024 Winners','link_count'=>1,'suggestions'=>8],
-        ['id'=>4,'title'=>'Highlife Renaissance','link_count'=>4,'suggestions'=>2],
-        ['id'=>5,'title'=>'King Promise Review','link_count'=>0,'suggestions'=>5],
-    ];
-
-    $missingMeta = count(array_filter($auditPosts, fn($p) => empty($p['meta_title']) || empty($p['meta_desc'])));
-    $missingKeyword = count(array_filter($auditPosts, fn($p) => empty($p['keyword'])));
-    $avgScore = round(array_sum(array_column($auditPosts, 'score')) / count($auditPosts));
-@endphp
 
 <style>
 .seo-tab {

@@ -2,10 +2,14 @@
 
 namespace App\Actions\SEO;
 
+use App\Models\Post;
+use App\Services\SeoService;
+
 class BuildMetaData
 {
-    public function handle(int $postId)
+    public function handle(int $postId): array
     {
-        // Handle building SEO metadata
+        $post = Post::findOrFail($postId);
+        return SeoService::buildMeta($post);
     }
 }

@@ -9,15 +9,12 @@ class PostInternalLink extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['post_id', 'target_post_id', 'anchor_text', 'url'];
+    protected $table = 'post_internal_links';
+
+    protected $fillable = ['post_id', 'anchor_text', 'target_url', 'sort_order'];
 
     public function post()
     {
         return $this->belongsTo(Post::class, 'post_id');
-    }
-
-    public function targetPost()
-    {
-        return $this->belongsTo(Post::class, 'target_post_id');
     }
 }
