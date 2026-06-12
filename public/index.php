@@ -1,5 +1,8 @@
 <?php
 
+// Disable zlib output compression to prevent conflicts with Laravel/Symfony response buffering (e.g. on MAMP)
+ini_set('zlib.output_compression', 'Off');
+
 use Illuminate\Foundation\Application;
 use Illuminate\Http\Request;
 
