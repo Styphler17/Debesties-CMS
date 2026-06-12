@@ -1,5 +1,9 @@
 @extends('public.layouts.app')
 
+@php
+    /** @var \Illuminate\Pagination\LengthAwarePaginator $posts */
+@endphp
+
 @section('title', \App\Services\SettingsService::get('site_name', 'Debesties CMS') . ' - Home')
 
 @section('styles')
