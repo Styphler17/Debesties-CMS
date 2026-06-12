@@ -101,11 +101,9 @@
                     <div>
                         <label style="font-family: var(--cms-font-ui); font-size: 12px; font-weight: 700; color: var(--cms-fg3); text-transform: uppercase; letter-spacing: 0.04em; display: block; margin-bottom: 6px;">Timezone</label>
                         <select name="timezone" style="display: block; width: 100%; height: 42px; padding: 0 12px; font-family: var(--cms-font-ui); font-size: 13.5px; color: var(--cms-fg1); background: var(--cms-bg); border: 1.5px solid var(--cms-border); border-radius: var(--cms-r-md); cursor: pointer; outline: none;">
-                            @php $tz = \App\Services\SettingsService::get('timezone', 'CET'); @endphp
-                            <option value="GMT" {{ $tz == 'GMT' ? 'selected' : '' }}>GMT (London/Accra)</option>
-                            <option value="EST" {{ $tz == 'EST' ? 'selected' : '' }}>EST (New York)</option>
-                            <option value="CET" {{ $tz == 'CET' ? 'selected' : '' }}>CET (Paris/Berlin)</option>
-                            <option value="PST" {{ $tz == 'PST' ? 'selected' : '' }}>PST (Los Angeles)</option>
+                            @php $tz = \App\Services\SettingsService::get('timezone', 'Europe/Brussels'); @endphp
+                            <option value="Europe/Brussels" {{ $tz == 'Europe/Brussels' ? 'selected' : '' }}>Europe/Brussels (Belgium)</option>
+                            <option value="Africa/Accra" {{ $tz == 'Africa/Accra' ? 'selected' : '' }}>Africa/Accra (Ghana)</option>
                         </select>
                     </div>
 

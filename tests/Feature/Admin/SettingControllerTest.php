@@ -27,11 +27,11 @@ class SettingControllerTest extends TestCase
         $response = $this->actingAs($this->admin)
             ->post(route('admin.settings.store'), [
                 'site_name' => 'Custom Blog Name',
-                'timezone' => 'EST',
+                'timezone' => 'Europe/Brussels',
             ]);
 
         $response->assertRedirect(route('admin.settings.index'));
         $this->assertEquals('Custom Blog Name', SettingsService::get('site_name'));
-        $this->assertEquals('EST', SettingsService::get('timezone'));
+        $this->assertEquals('Europe/Brussels', SettingsService::get('timezone'));
     }
 }

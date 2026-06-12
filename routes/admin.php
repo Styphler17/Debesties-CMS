@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\AdminAuthController;
+use App\Http\Controllers\Admin\AiAssistantController;
 use App\Http\Controllers\Admin\AiVisibilityController;
 use App\Http\Controllers\Admin\AnalyticsController;
 use App\Http\Controllers\Admin\CalendarController;
@@ -10,6 +11,7 @@ use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\HomepageBuilderController;
 use App\Http\Controllers\Admin\MediaController;
 use App\Http\Controllers\Admin\MenuController;
+use App\Http\Controllers\Admin\NewsletterController;
 use App\Http\Controllers\Admin\PageController;
 use App\Http\Controllers\Admin\PostController;
 use App\Http\Controllers\Admin\RoleController;
@@ -42,8 +44,8 @@ Route::prefix('admin')
         Route::resource('users', UserController::class);
         Route::resource('roles', RoleController::class);
         Route::resource('comments', CommentController::class);
-        Route::resource('newsletters', \App\Http\Controllers\Admin\NewsletterController::class);
-        Route::post('newsletters/{newsletter}/send', [\App\Http\Controllers\Admin\NewsletterController::class, 'send'])->name('newsletters.send');
+        Route::resource('newsletters', NewsletterController::class);
+        Route::post('newsletters/{newsletter}/send', [NewsletterController::class, 'send'])->name('newsletters.send');
 
         Route::resource('pages', PageController::class);
         Route::get('calendar', [CalendarController::class, 'index'])->name('calendar.index');
@@ -61,7 +63,7 @@ Route::prefix('admin')
         Route::post('homepage-builder', [HomepageBuilderController::class, 'store'])->name('homepage-builder.store');
 
         Route::prefix('ai-assistant')->name('ai-assistant.')->group(function () {
-            Route::post('generate-tags', [\App\Http\Controllers\Admin\AiAssistantController::class, 'generateTags'])->name('generate-tags');
-            Route::post('generate-outline', [\App\Http\Controllers\Admin\AiAssistantController::class, 'generateOutline'])->name('generate-outline');
+            Route::post('generate-tags', [AiAssistantController::class, 'generateTags'])->name('generate-tags');
+            Route::post('generate-outline', [AiAssistantController::class, 'generateOutline'])->name('generate-outline');
         });
     });
