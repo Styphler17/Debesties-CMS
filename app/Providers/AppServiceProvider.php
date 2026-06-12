@@ -28,6 +28,5 @@ class AppServiceProvider extends ServiceProvider
         \Illuminate\Support\Facades\Gate::policy(\App\Models\Media::class, \App\Policies\MediaPolicy::class);
         \Illuminate\Support\Facades\Gate::policy(\App\Models\User::class, \App\Policies\UserPolicy::class);
         \Illuminate\Support\Facades\Gate::policy(\App\Models\Comment::class, \App\Policies\CommentPolicy::class);
-        \Illuminate\Support\Facades\Gate::policy(\App\Models\NewsletterCampaign::class, \App\Policies\NewsletterCampaignPolicy::class);
     }
 }

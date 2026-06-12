@@ -115,7 +115,6 @@
                             ['key' => 'tags', 'label' => 'Tags', 'icon' => 'tag', 'route' => 'admin.tags.index'],
                             ['key' => 'media', 'label' => 'Media Library', 'icon' => 'image', 'route' => 'admin.media.index'],
                             ['key' => 'comments', 'label' => 'Comments', 'icon' => 'message-square', 'route' => 'admin.comments.index', 'count' => 12],
-                            ['key' => 'newsletters', 'label' => 'Newsletters', 'icon' => 'mail', 'route' => 'admin.newsletters.index'],
                         ],
                         'Optimize' => [
                             ['key' => 'seo', 'label' => 'SEO Tools', 'icon' => 'search', 'route' => 'admin.seo.index'],
@@ -167,14 +166,11 @@
                      onmouseout="this.style.background='transparent'">
                     <!-- Initials Avatar -->
                     <div style="width: 34px; height: 34px; border-radius: 999px; background: rgba(232, 168, 0, 0.22); color: var(--cms-gold); display: flex; align-items: center; justify-content: center; font-family: var(--cms-font-ui); font-size: 13px; font-weight: 700; flex-shrink: 0; border: 1.5px solid rgba(232, 168, 0, 0.33);">
-                        @php
-                            $initials = collect(explode(' ', Auth::user()->name))->map(fn($n) => substr($n, 0, 1))->join('');
-                        @endphp
-                        {{ $initials }}
+                        AB
                     </div>
                     <div class="sidebar-footer-text" style="flex: 1; overflow: hidden;">
-                        <div style="font-family: var(--cms-font-ui); font-size: 13px; font-weight: 600; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ Auth::user()->name }}</div>
-                        <div style="font-family: var(--cms-font-ui); font-size: 11px; color: rgba(255,255,255,0.4)">{{ Auth::user()->roles->first()->name ?? 'User' }}</div>
+                        <div style="font-family: var(--cms-font-ui); font-size: 13px; font-weight: 600; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Ama Boateng</div>
+                        <div style="font-family: var(--cms-font-ui); font-size: 11px; color: rgba(255,255,255,0.4)">Admin</div>
                     </div>
                     <i data-lucide="chevron-down" class="sidebar-footer-arrow" style="width: 15px; height: 15px; color: rgba(255,255,255,0.4);"></i>
                 </div>

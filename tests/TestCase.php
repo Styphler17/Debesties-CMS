@@ -3,6 +3,7 @@
 namespace Tests;
 
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
+use Illuminate\Foundation\Http\Middleware\ValidateCsrfToken;
 
 abstract class TestCase extends BaseTestCase
 {
@@ -11,6 +12,6 @@ abstract class TestCase extends BaseTestCase
         parent::setUp();
         
         // Globally bypass CSRF in tests to avoid 419 errors
-        $this->withoutMiddleware([\Illuminate\Foundation\Http\Middleware\ValidateCsrfToken::class]);
+        $this->withoutMiddleware([ValidateCsrfToken::class]);
     }
 }

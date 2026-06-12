@@ -48,7 +48,7 @@ class PostCrudTest extends TestCase
 
         $tag = Tag::create(['name' => 'PHP', 'slug' => 'php']);
 
-        $response = $this->actingAs($this->admin)->post(route('admin.posts.store'), [
+        $response = $this->actingAs($this->admin)->postJson(route('admin.posts.store'), [
             'title'       => 'Test Post Title',
             'body'        => '<p>Post body content</p>',
             'category_id' => $this->category->id,
@@ -56,7 +56,7 @@ class PostCrudTest extends TestCase
             'status'      => 'draft',
         ]);
 
-        $response->assertRedirect();
+        $response->assertStatus(302);
 
         $this->assertDatabaseHas('posts', [
             'title'  => 'Test Post Title',
