@@ -4,34 +4,21 @@
 @section('page_title', 'Media Library')
 
 @section('content')
-@php
-    $files = [
-        ['id'=>1,'name'=>'tgma-2024-winners.jpg','type'=>'image/jpeg','size'=>'248 KB','dims'=>'1200×800','folder'=>'articles','url'=>'https://placehold.co/400x267/2D2416/E8A800?text=TGMA+2024','uploaded'=>'2h ago','alt'=>'TGMA 2024 winners on stage'],
-        ['id'=>2,'name'=>'black-sherif-profile.jpg','type'=>'image/jpeg','size'=>'184 KB','dims'=>'800×800','folder'=>'profiles','url'=>'https://placehold.co/400x400/1A1410/E8A800?text=Black+Sherif','uploaded'=>'5h ago','alt'=>'Black Sherif artist photo'],
-        ['id'=>3,'name'=>'ghana-music-awards.jpg','type'=>'image/jpeg','size'=>'312 KB','dims'=>'1440×960','folder'=>'articles','url'=>'https://placehold.co/400x267/2D2416/C8372B?text=Ghana+Awards','uploaded'=>'1d ago','alt'=>'Ghana Music Awards ceremony'],
-        ['id'=>4,'name'=>'debesties-logo.png','type'=>'image/png','size'=>'42 KB','dims'=>'512×512','folder'=>'branding','url'=>'https://placehold.co/400x400/E8A800/1A1410?text=Logo','uploaded'=>'3d ago','alt'=>'Debesties logo'],
-        ['id'=>5,'name'=>'celebrity-feature.jpg','type'=>'image/jpeg','size'=>'290 KB','dims'=>'1280×720','folder'=>'articles','url'=>'https://placehold.co/400x225/2D2416/C8C8C8?text=Celebrity+Feature','uploaded'=>'4d ago','alt'=>'Celebrity feature image'],
-        ['id'=>6,'name'=>'highlife-concert.jpg','type'=>'image/jpeg','size'=>'375 KB','dims'=>'1600×900','folder'=>'events','url'=>'https://placehold.co/400x225/1A1410/4A9EFF?text=Highlife+Concert','uploaded'=>'1w ago','alt'=>'Highlife concert crowd'],
-        ['id'=>7,'name'=>'king-promise.jpg','type'=>'image/jpeg','size'=>'210 KB','dims'=>'900×900','folder'=>'profiles','url'=>'https://placehold.co/400x400/2D2416/E8A800?text=King+Promise','uploaded'=>'1w ago','alt'=>'King Promise artist photo'],
-        ['id'=>8,'name'=>'sports-ghana.jpg','type'=>'image/jpeg','size'=>'268 KB','dims'=>'1200×800','folder'=>'articles','url'=>'https://placehold.co/400x267/1A1410/4CAF50?text=Sports+Ghana','uploaded'=>'2w ago','alt'=>'Ghana sports team'],
-    ];
-
-    $folders = ['All', 'articles', 'profiles', 'events', 'branding'];
-@endphp
 
 {{-- Toolbar --}}
 <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 16px;">
-    <div style="display: flex; align-items: center; gap: 8px; flex: 1; min-width: 200px; height: 38px; background: var(--cms-surface); border: 1.5px solid var(--cms-border); border-radius: var(--cms-r-md); padding: 0 12px;">
-        <i data-lucide="search" style="width: 15px; height: 15px; color: var(--cms-fg4); flex-shrink: 0;"></i>
-        <input placeholder="Search files…" oninput="filterMedia(this.value)"
-               style="border: none; outline: none; background: none; flex: 1; font-family: var(--cms-font-ui); font-size: 13.5px; color: var(--cms-fg1);" />
-    </div>
-    <select onchange="filterFolder(this.value)"
-            style="height: 38px; padding: 0 12px; font-family: var(--cms-font-ui); font-size: 13.5px; color: var(--cms-fg1); background: var(--cms-surface); border: 1.5px solid var(--cms-border); border-radius: var(--cms-r-md); cursor: pointer; outline: none;">
-        @foreach($folders as $f)
-            <option value="{{ $f }}">{{ ucfirst($f) }}</option>
-        @endforeach
-    </select>
+    <form method="GET" action="{{ route('admin.media.index') }}" style="display: flex; align-items: center; gap: 10px; flex: 1; flex-wrap: wrap;">
+        <div style="display: flex; align-items: center; gap: 8px; flex: 1; min-width: 200px; height: 38px; background: var(--cms-surface); border: 1.5px solid var(--cms-border); border-radius: var(--cms-r-md); padding: 0 12px;">
+            <i data-lucide="search" style="width: 15px; height: 15px; color: var(--cms-fg4); flex-shrink: 0;"></i>
+            <input name="search" value="{{ request('search') }}" placeholder="Search files…" style="border: none; outline: none; background: none; flex: 1; font-family: var(--cms-font-ui); font-size: 13.5px; color: var(--cms-fg1);" />
+        </div>
+        <select name="folder" onchange="this.form.submit()"
+                style="height: 38px; padding: 0 12px; font-family: var(--cms-font-ui); font-size: 13.5px; color: var(--cms-fg1); background: var(--cms-surface); border: 1.5px solid var(--cms-border); border-radius: var(--cms-r-md); cursor: pointer; outline: none;">
+            @foreach($folders as $f)
+                <option value="{{ $f }}" {{ request('folder', 'All') === $f ? 'selected' : '' }}>{{ ucfirst($f) }}</option>
+            @endforeach
+        </select>
+    </form>
     <div style="display: flex; gap: 0; border: 1.5px solid var(--cms-border); border-radius: var(--cms-r-md); overflow: hidden;">
         <button id="view-grid" onclick="setView('grid')"
                 style="width: 38px; height: 36px; border: none; background: var(--cms-gold); cursor: pointer; display: flex; align-items: center; justify-content: center; color: #1A1410;">
@@ -42,65 +29,55 @@
             <i data-lucide="list" style="width: 15px; height: 15px;"></i>
         </button>
     </div>
-    <div id="bulk-bar" style="display: none; align-items: center; gap: 8px;">
-        <span id="bulk-count" style="font-family: var(--cms-font-ui); font-size: 13px; color: var(--cms-fg3);">0 selected</span>
-        <button style="height: 36px; padding: 0 14px; font-family: var(--cms-font-ui); font-size: 13px; font-weight: 600; background: var(--cms-red-soft); color: var(--cms-red-deep); border: 1.5px solid rgba(200,55,43,0.2); border-radius: var(--cms-r-md); cursor: pointer;">Delete Selected</button>
-    </div>
     <button onclick="document.getElementById('file-upload-input').click()"
             style="display: inline-flex; align-items: center; gap: 7px; height: 38px; padding: 0 18px; font-family: var(--cms-font-ui); font-size: 13.5px; font-weight: 600; background: var(--cms-gold); color: #1A1410; border: none; border-radius: var(--cms-r-md); cursor: pointer;"
             onmouseover="this.style.background='#D69B00'" onmouseout="this.style.background='var(--cms-gold)'">
         <i data-lucide="upload" style="width: 15px; height: 15px;"></i>
         Upload Files
     </button>
-    <input type="file" id="file-upload-input" multiple accept="image/*" style="display: none;" onchange="handleUpload(this.files)" />
+    <form id="upload-form" method="POST" action="{{ route('admin.media.store') }}" enctype="multipart/form-data" style="display: none;">
+        @csrf
+        <input type="file" name="files[]" id="file-upload-input" multiple accept="image/*" onchange="this.form.submit()" />
+    </form>
 </div>
 
-{{-- Upload Drop Zone --}}
-<div id="drop-zone"
-     style="border: 2px dashed var(--cms-border); border-radius: var(--cms-r-lg); padding: 28px; text-align: center; margin-bottom: 16px; transition: all 200ms; cursor: pointer; background: var(--cms-surface);"
-     ondragover="event.preventDefault(); this.style.borderColor='var(--cms-gold)'; this.style.background='var(--cms-gold-soft)'"
-     ondragleave="this.style.borderColor='var(--cms-border)'; this.style.background='var(--cms-surface)'"
-     ondrop="handleDrop(event)"
-     onclick="document.getElementById('file-upload-input').click()">
-    <i data-lucide="image-plus" style="width: 28px; height: 28px; color: var(--cms-fg4); margin-bottom: 8px;"></i>
-    <div style="font-family: var(--cms-font-ui); font-size: 14px; font-weight: 600; color: var(--cms-fg2);">Drop images here or <span style="color: var(--cms-gold);">browse files</span></div>
-    <div style="font-family: var(--cms-font-ui); font-size: 12.5px; color: var(--cms-fg4); margin-top: 4px;">JPEG, PNG, WEBP, GIF — max 10MB per file</div>
-    <div id="upload-progress-area" style="margin-top: 14px;"></div>
-    <button onclick="event.stopPropagation(); document.getElementById('drop-zone').style.display='none'"
-            style="margin-top: 12px; font-family: var(--cms-font-ui); font-size: 12px; color: var(--cms-fg4); background: none; border: none; cursor: pointer; text-decoration: underline;">
-        Hide upload area
-    </button>
-</div>
+@if(session('success'))
+    <div style="background: var(--cms-green-soft); color: var(--cms-green-deep); padding: 12px 18px; border-radius: var(--cms-r-md); border: 1px solid rgba(26,138,75,0.2); margin-bottom: 16px; font-family: var(--cms-font-ui); font-size: 14px; font-weight: 600;">
+        {{ session('success') }}
+    </div>
+@endif
+@if(session('error'))
+    <div style="background: var(--cms-red-soft); color: var(--cms-red-deep); padding: 12px 18px; border-radius: var(--cms-r-md); border: 1px solid rgba(200,55,43,0.2); margin-bottom: 16px; font-family: var(--cms-font-ui); font-size: 14px; font-weight: 600;">
+        {{ session('error') }}
+    </div>
+@endif
 
 {{-- Grid View --}}
 <div id="media-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 14px;">
-    @foreach($files as $file)
-        <div class="media-card" data-name="{{ strtolower($file['name']) }}" data-folder="{{ $file['folder'] }}"
+    @forelse($files as $file)
+        <div class="media-card" data-name="{{ strtolower($file->file_name) }}" data-folder="{{ $file->folder }}"
              style="background: var(--cms-surface); border: 1.5px solid var(--cms-border); border-radius: var(--cms-r-lg); overflow: hidden; box-shadow: var(--cms-sh-card); cursor: pointer; transition: all 180ms; position: relative;"
-             onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='var(--cms-sh-pop)'; this.querySelector('.hover-overlay').style.opacity='1'"
-             onmouseout="this.style.transform=''; this.style.boxShadow='var(--cms-sh-card)'; this.querySelector('.hover-overlay').style.opacity='0'"
-             onclick="openDetail({{ $file['id'] }})">
-            {{-- Checkbox --}}
-            <div class="hover-overlay" style="position: absolute; inset: 0; opacity: 0; transition: opacity 150ms; z-index: 2; pointer-events: none;">
-                <div style="position: absolute; top: 8px; left: 8px; pointer-events: all;" onclick="event.stopPropagation()">
-                    <input type="checkbox" class="media-cb" value="{{ $file['id'] }}" onchange="updateBulk()"
-                           style="width: 18px; height: 18px; accent-color: var(--cms-gold); cursor: pointer; border-radius: 4px;" />
-                </div>
-            </div>
+             onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='var(--cms-sh-pop)';"
+             onmouseout="this.style.transform=''; this.style.boxShadow='var(--cms-sh-card)';"
+             onclick="openDetail({{ $file->id }})">
             <div style="aspect-ratio: 4/3; overflow: hidden; background: var(--cms-bg);">
-                <img src="{{ $file['url'] }}" alt="{{ $file['alt'] }}" loading="lazy"
-                     style="width: 100%; height: 100%; object-fit: cover; transition: transform 300ms;"
-                     onmouseover="this.style.transform='scale(1.04)'" onmouseout="this.style.transform=''" />
+                <img src="{{ $file->file_url }}" alt="{{ $file->alt_text }}" loading="lazy"
+                     style="width: 100%; height: 100%; object-fit: cover; transition: transform 300ms;" />
             </div>
             <div style="padding: 10px 12px;">
-                <div style="font-family: var(--cms-font-ui); font-size: 12.5px; font-weight: 600; color: var(--cms-fg1); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ $file['name'] }}</div>
+                <div style="font-family: var(--cms-font-ui); font-size: 12.5px; font-weight: 600; color: var(--cms-fg1); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ $file->file_name }}</div>
                 <div style="display: flex; align-items: center; justify-content: space-between; margin-top: 4px;">
-                    <span style="font-family: var(--cms-font-ui); font-size: 11.5px; color: var(--cms-fg4);">{{ $file['size'] }}</span>
-                    <span style="font-family: var(--cms-font-ui); font-size: 11px; color: var(--cms-fg4);">{{ $file['dims'] }}</span>
+                    <span style="font-family: var(--cms-font-ui); font-size: 11.5px; color: var(--cms-fg4);">{{ number_format($file->file_size / 1024, 0) }} KB</span>
+                    <span style="font-family: var(--cms-font-ui); font-size: 11px; color: var(--cms-fg4);">{{ $file->width }}×{{ $file->height }}</span>
                 </div>
             </div>
         </div>
-    @endforeach
+    @empty
+        <div style="grid-column: 1/-1; padding: 48px; text-align: center; background: var(--cms-surface); border: 1px dashed var(--cms-border); border-radius: var(--cms-r-lg);">
+            <i data-lucide="image-off" style="width: 32px; height: 32px; color: var(--cms-fg4); margin: 0 auto 12px;"></i>
+            <div style="font-family: var(--cms-font-ui); font-size: 15px; font-weight: 600; color: var(--cms-fg2);">No media files found</div>
+        </div>
+    @endforelse
 </div>
 
 {{-- List View --}}
@@ -108,8 +85,7 @@
     <table style="width: 100%; border-collapse: collapse;">
         <thead>
             <tr style="border-bottom: 1px solid var(--cms-border);">
-                <th style="width: 40px; padding: 10px 16px; text-align: center;"><input type="checkbox" onchange="toggleAll(this)" style="cursor: pointer; accent-color: var(--cms-gold); width: 14px; height: 14px;" /></th>
-                <th style="width: 56px; padding: 10px 0;"></th>
+                <th style="width: 56px; padding: 10px 16px;"></th>
                 <th style="padding: 10px 16px 10px 0; text-align: left; font-size: 12px; font-weight: 700; color: var(--cms-fg3); text-transform: uppercase; letter-spacing: 0.04em; font-family: var(--cms-font-ui);">Name</th>
                 <th style="padding: 10px 16px 10px 0; text-align: left; font-size: 12px; font-weight: 700; color: var(--cms-fg3); text-transform: uppercase; letter-spacing: 0.04em; font-family: var(--cms-font-ui);">Type</th>
                 <th style="padding: 10px 16px 10px 0; text-align: right; font-size: 12px; font-weight: 700; color: var(--cms-fg3); text-transform: uppercase; letter-spacing: 0.04em; font-family: var(--cms-font-ui);">Size</th>
@@ -119,42 +95,51 @@
             </tr>
         </thead>
         <tbody>
-            @foreach($files as $i => $file)
-                <tr style="border-bottom: {{ $i < count($files)-1 ? '1px solid var(--cms-border)' : 'none' }}; transition: background 100ms; cursor: pointer;"
-                    onclick="openDetail({{ $file['id'] }})"
+            @forelse($files as $i => $file)
+                <tr style="border-bottom: {{ !$loop->last ? '1px solid var(--cms-border)' : 'none' }}; transition: background 100ms; cursor: pointer;"
+                    onclick="openDetail({{ $file->id }})"
                     onmouseover="this.style.background='#FDFBF8'" onmouseout="this.style.background='transparent'">
-                    <td style="padding: 11px 16px; text-align: center;" onclick="event.stopPropagation()">
-                        <input type="checkbox" class="media-cb" value="{{ $file['id'] }}" onchange="updateBulk()" style="cursor: pointer; accent-color: var(--cms-gold); width: 14px; height: 14px;" />
-                    </td>
-                    <td style="padding: 11px 0;">
-                        <img src="{{ $file['url'] }}" alt="{{ $file['alt'] }}" style="width: 44px; height: 36px; object-fit: cover; border-radius: 5px; display: block;" />
+                    <td style="padding: 11px 16px;">
+                        <img src="{{ $file->file_url }}" alt="{{ $file->alt_text }}" style="width: 44px; height: 36px; object-fit: cover; border-radius: 5px; display: block;" />
                     </td>
                     <td style="padding: 11px 16px 11px 0;">
-                        <span style="font-family: var(--cms-font-ui); font-size: 13.5px; font-weight: 500; color: var(--cms-fg1);">{{ $file['name'] }}</span>
+                        <span style="font-family: var(--cms-font-ui); font-size: 13.5px; font-weight: 500; color: var(--cms-fg1);">{{ $file->file_name }}</span>
                     </td>
                     <td style="padding: 11px 16px 11px 0;">
-                        <span style="font-family: var(--cms-font-mono); font-size: 11.5px; color: var(--cms-fg3);">{{ $file['type'] }}</span>
+                        <span style="font-family: var(--cms-font-mono); font-size: 11.5px; color: var(--cms-fg3);">{{ $file->mime_type }}</span>
                     </td>
                     <td style="padding: 11px 16px 11px 0; text-align: right;">
-                        <span style="font-family: var(--cms-font-ui); font-size: 12.5px; color: var(--cms-fg3);">{{ $file['size'] }}</span>
+                        <span style="font-family: var(--cms-font-ui); font-size: 12.5px; color: var(--cms-fg3);">{{ number_format($file->file_size / 1024, 0) }} KB</span>
                     </td>
                     <td style="padding: 11px 16px 11px 0; text-align: center;">
-                        <span style="font-family: var(--cms-font-mono); font-size: 11.5px; color: var(--cms-fg3);">{{ $file['dims'] }}</span>
+                        <span style="font-family: var(--cms-font-mono); font-size: 11.5px; color: var(--cms-fg3);">{{ $file->width }}×{{ $file->height }}</span>
                     </td>
                     <td style="padding: 11px 16px 11px 0; text-align: right;">
-                        <span style="font-family: var(--cms-font-ui); font-size: 12px; color: var(--cms-fg4);">{{ $file['uploaded'] }}</span>
+                        <span style="font-family: var(--cms-font-ui); font-size: 12px; color: var(--cms-fg4);">{{ $file->created_at->diffForHumans() }}</span>
                     </td>
                     <td style="padding: 11px 16px;" onclick="event.stopPropagation()">
-                        <button onclick="confirmDelete({{ $file['id'] }})"
-                                style="width: 30px; height: 30px; border-radius: 6px; border: 1.5px solid rgba(200,55,43,0.2); background: var(--cms-red-soft); cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--cms-red);"
-                                onmouseover="this.style.background='#F8D5D2'" onmouseout="this.style.background='var(--cms-red-soft)'">
-                            <i data-lucide="trash-2" style="width: 13px; height: 13px;"></i>
-                        </button>
+                        <form method="POST" action="{{ route('admin.media.destroy', $file->id) }}" onsubmit="return confirm('Are you sure you want to delete this file?')">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit"
+                                    style="width: 30px; height: 30px; border-radius: 6px; border: 1.5px solid rgba(200,55,43,0.2); background: var(--cms-red-soft); cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--cms-red);"
+                                    onmouseover="this.style.background='#F8D5D2'" onmouseout="this.style.background='var(--cms-red-soft)'">
+                                <i data-lucide="trash-2" style="width: 13px; height: 13px;"></i>
+                            </button>
+                        </form>
                     </td>
                 </tr>
-            @endforeach
+            @empty
+                <tr>
+                    <td colspan="7" style="padding: 32px; text-align: center; font-family: var(--cms-font-ui); font-size: 14px; color: var(--cms-fg3);">No media files found</td>
+                </tr>
+            @endforelse
         </tbody>
     </table>
+</div>
+
+<div style="margin-top: 16px;">
+    {{ $files->links() }}
 </div>
 
 {{-- Detail Panel --}}
@@ -171,13 +156,7 @@
         <div style="display: flex; flex-direction: column; gap: 12px;">
             <div>
                 <label style="font-family: var(--cms-font-ui); font-size: 11px; font-weight: 700; color: var(--cms-fg4); text-transform: uppercase; letter-spacing: 0.06em; display: block; margin-bottom: 5px;">Alt Text</label>
-                <input id="detail-alt" type="text" style="display: block; width: 100%; height: 38px; padding: 0 10px; font-family: var(--cms-font-ui); font-size: 13px; color: var(--cms-fg1); background: var(--cms-bg); border: 1.5px solid var(--cms-border); border-radius: var(--cms-r-md); outline: none;"
-                       onfocus="this.style.borderColor='var(--cms-gold)'" onblur="this.style.borderColor='var(--cms-border)'" />
-            </div>
-            <div>
-                <label style="font-family: var(--cms-font-ui); font-size: 11px; font-weight: 700; color: var(--cms-fg4); text-transform: uppercase; letter-spacing: 0.06em; display: block; margin-bottom: 5px;">Caption</label>
-                <textarea rows="2" style="display: block; width: 100%; padding: 8px 10px; font-family: var(--cms-font-ui); font-size: 13px; color: var(--cms-fg1); background: var(--cms-bg); border: 1.5px solid var(--cms-border); border-radius: var(--cms-r-md); outline: none; resize: vertical;"
-                          onfocus="this.style.borderColor='var(--cms-gold)'" onblur="this.style.borderColor='var(--cms-border)'"></textarea>
+                <input id="detail-alt" type="text" readonly style="display: block; width: 100%; height: 38px; padding: 0 10px; font-family: var(--cms-font-ui); font-size: 13px; color: var(--cms-fg1); background: var(--cms-bg); border: 1.5px solid var(--cms-border); border-radius: var(--cms-r-md); outline: none;" />
             </div>
             <div>
                 <label style="font-family: var(--cms-font-ui); font-size: 11px; font-weight: 700; color: var(--cms-fg4); text-transform: uppercase; letter-spacing: 0.06em; display: block; margin-bottom: 5px;">File URL</label>
@@ -192,14 +171,16 @@
         </div>
     </div>
     <div style="padding: 16px 18px; border-top: 1px solid var(--cms-border); display: flex; gap: 8px; position: sticky; bottom: 0; background: var(--cms-surface);">
-        <button style="flex: 1; height: 38px; font-family: var(--cms-font-ui); font-size: 13.5px; font-weight: 600; background: var(--cms-gold); color: #1A1410; border: none; border-radius: var(--cms-r-md); cursor: pointer;"
-                onmouseover="this.style.background='#D69B00'" onmouseout="this.style.background='var(--cms-gold)'">Save Changes</button>
-        <button onclick="confirmDelete()" style="height: 38px; padding: 0 14px; font-family: var(--cms-font-ui); font-size: 13px; font-weight: 600; background: var(--cms-red-soft); color: var(--cms-red-deep); border: 1.5px solid rgba(200,55,43,0.2); border-radius: var(--cms-r-md); cursor: pointer;">Delete</button>
+        <form id="detail-delete-form" method="POST" action="" style="flex: 1;" onsubmit="return confirm('Are you sure you want to delete this file?')">
+            @csrf
+            @method('DELETE')
+            <button type="submit" style="width: 100%; height: 38px; font-family: var(--cms-font-ui); font-size: 13px; font-weight: 600; background: var(--cms-red-soft); color: var(--cms-red-deep); border: 1.5px solid rgba(200,55,43,0.2); border-radius: var(--cms-r-md); cursor: pointer;">Delete File</button>
+        </form>
     </div>
 </div>
 
 <script>
-    const mediaData = @json($files);
+    const mediaData = @json($files->items());
     let activeId = null;
 
     function setView(v) {
@@ -224,10 +205,15 @@
         activeId = id;
         const f = mediaData.find(m => m.id === id);
         if (!f) return;
-        document.getElementById('detail-img').src = f.url;
-        document.getElementById('detail-img').alt = f.alt;
-        document.getElementById('detail-alt').value = f.alt;
-        document.getElementById('detail-url').value = f.url;
+        document.getElementById('detail-img').src = f.file_url;
+        document.getElementById('detail-img').alt = f.alt_text || '';
+        document.getElementById('detail-alt').value = f.alt_text || '';
+        document.getElementById('detail-url').value = f.file_url;
+        
+        const deleteForm = document.getElementById('detail-delete-form');
+        const deleteUrl = "{{ route('admin.media.destroy', ':id') }}";
+        deleteForm.action = deleteUrl.replace(':id', id);
+
         const panel = document.getElementById('detail-panel');
         panel.style.display = 'flex';
         setTimeout(() => lucide.createIcons(), 50);
@@ -240,54 +226,5 @@
     function copyUrl() {
         navigator.clipboard.writeText(document.getElementById('detail-url').value).catch(() => {});
     }
-
-    function filterMedia(q) {
-        const lq = q.toLowerCase();
-        document.querySelectorAll('.media-card').forEach(c => c.style.display = c.dataset.name.includes(lq) ? '' : 'none');
-    }
-
-    function filterFolder(folder) {
-        document.querySelectorAll('.media-card').forEach(c => {
-            c.style.display = (folder === 'All' || c.dataset.folder === folder) ? '' : 'none';
-        });
-    }
-
-    function handleUpload(files) {
-        const area = document.getElementById('upload-progress-area');
-        area.innerHTML = '';
-        Array.from(files).forEach(f => {
-            const bar = document.createElement('div');
-            bar.style.cssText = 'margin: 6px auto; max-width: 280px; background: var(--cms-border); border-radius: 999px; height: 4px; overflow: hidden;';
-            const fill = document.createElement('div');
-            fill.style.cssText = 'height: 100%; background: var(--cms-gold); width: 0; border-radius: 999px; transition: width 600ms;';
-            bar.appendChild(fill);
-            const label = document.createElement('div');
-            label.style.cssText = 'font-family: var(--cms-font-ui); font-size: 12px; color: var(--cms-fg3); text-align: center; margin-bottom: 4px;';
-            label.textContent = f.name;
-            area.appendChild(label); area.appendChild(bar);
-            setTimeout(() => { fill.style.width = '100%'; }, 50);
-        });
-    }
-
-    function handleDrop(e) {
-        e.preventDefault();
-        this.style.borderColor = 'var(--cms-border)';
-        this.style.background = 'var(--cms-surface)';
-        handleUpload(e.dataTransfer.files);
-    }
-
-    function updateBulk() {
-        const n = document.querySelectorAll('.media-cb:checked').length;
-        const bar = document.getElementById('bulk-bar');
-        bar.style.display = n > 0 ? 'flex' : 'none';
-        document.getElementById('bulk-count').textContent = n + ' selected';
-    }
-
-    function toggleAll(master) {
-        document.querySelectorAll('.media-cb').forEach(cb => cb.checked = master.checked);
-        updateBulk();
-    }
-
-    function confirmDelete(id) { console.log('Delete media', id || activeId); }
 </script>
 @endsection
