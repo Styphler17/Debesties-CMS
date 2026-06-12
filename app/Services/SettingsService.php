@@ -11,6 +11,7 @@ class SettingsService
     {
         return Cache::remember("setting:{$key}", 3600, function () use ($key, $default) {
             $setting = Setting::where('key', $key)->first();
+
             return $setting ? $setting->value : $default;
         });
     }

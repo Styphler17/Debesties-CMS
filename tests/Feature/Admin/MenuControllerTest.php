@@ -3,9 +3,7 @@
 namespace Tests\Feature\Admin;
 
 use App\Models\Menu;
-use App\Models\MenuItem;
 use App\Models\User;
-use App\Models\Role;
 use Database\Seeders\RolesAndPermissionsSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -20,7 +18,7 @@ class MenuControllerTest extends TestCase
     {
         parent::setUp();
         $this->seed(RolesAndPermissionsSeeder::class);
-        $this->admin = User::whereHas('roles', fn($q) => $q->where('slug', 'super_admin'))->first();
+        $this->admin = User::whereHas('roles', fn ($q) => $q->where('slug', 'super_admin'))->first();
         $this->withoutMiddleware();
     }
 
@@ -39,7 +37,7 @@ class MenuControllerTest extends TestCase
     {
         $response = $this->actingAs($this->admin)
             ->postJson(route('admin.menus.store'), [
-                'name' => 'Footer Menu'
+                'name' => 'Footer Menu',
             ]);
 
         $response->assertStatus(200);
@@ -69,13 +67,13 @@ class MenuControllerTest extends TestCase
                 'url' => '/category/culture',
                 'order' => 2,
                 'indent' => 1,
-            ]
+            ],
         ];
 
         $response = $this->actingAs($this->admin)
             ->postJson(route('admin.menus.items.store', $menu), [
                 'items' => json_encode($items),
-                'location' => 'header'
+                'location' => 'header',
             ]);
 
         $response->assertStatus(200);
@@ -85,7 +83,7 @@ class MenuControllerTest extends TestCase
             'menu_id' => $menu->id,
             'title' => 'Culture',
             'order' => 2,
-            'target' => '1' 
+            'target' => '1',
         ]);
     }
 }

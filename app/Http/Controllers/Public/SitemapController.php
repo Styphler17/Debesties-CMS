@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Models\Category;
 use App\Models\Post;
 use App\Models\Tag;
+use App\Services\AiVisibilityService;
+use App\Services\SettingsService;
 use Illuminate\Support\Facades\Cache;
 
 class SitemapController extends Controller
@@ -65,10 +67,10 @@ class SitemapController extends Controller
 
             foreach ($urls as $url) {
                 $xmlLines[] = '  <url>';
-                $xmlLines[] = '    <loc>' . htmlspecialchars($url['loc']) . '</loc>';
-                $xmlLines[] = '    <lastmod>' . $url['lastmod'] . '</lastmod>';
-                $xmlLines[] = '    <changefreq>' . $url['changefreq'] . '</changefreq>';
-                $xmlLines[] = '    <priority>' . $url['priority'] . '</priority>';
+                $xmlLines[] = '    <loc>'.htmlspecialchars($url['loc']).'</loc>';
+                $xmlLines[] = '    <lastmod>'.$url['lastmod'].'</lastmod>';
+                $xmlLines[] = '    <changefreq>'.$url['changefreq'].'</changefreq>';
+                $xmlLines[] = '    <priority>'.$url['priority'].'</priority>';
                 $xmlLines[] = '  </url>';
             }
 
@@ -82,13 +84,14 @@ class SitemapController extends Controller
 
     public function robots()
     {
-        $content = \App\Services\AiVisibilityService::generateRobotsTxt();
+        $content = AiVisibilityService::generateRobotsTxt();
+
         return response($content, 200)->header('Content-Type', 'text/plain');
     }
 
     public function llms()
     {
-        if (\App\Services\SettingsService::get('ai_llms_txt_enabled', '1') !== '1') {
+        if (SettingsService::get('ai_llms_txt_enabled', '1') !== '1') {
             abort(404);
         }
 
@@ -96,15 +99,15 @@ class SitemapController extends Controller
             $content = "# Debesties CMS\n\n";
             $content .= "A premium digital publishing and creative blog platform.\n\n";
             $content .= "## Essential Links\n\n";
-            $content .= "- [Homepage](" . route('home') . ")\n";
-            $content .= "- [Sitemap](" . route('sitemap') . ")\n\n";
-            
+            $content .= '- [Homepage]('.route('home').")\n";
+            $content .= '- [Sitemap]('.route('sitemap').")\n\n";
+
             $content .= "## Recent Articles\n\n";
             $posts = Post::published()->latest()->limit(50)->get();
             foreach ($posts as $post) {
-                $content .= "- [" . $post->title . "](" . route('posts.show', $post->slug) . ")\n";
+                $content .= '- ['.$post->title.']('.route('posts.show', $post->slug).")\n";
             }
-            
+
             return $content;
         });
 

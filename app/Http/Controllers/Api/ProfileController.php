@@ -15,6 +15,7 @@ class ProfileController extends Controller
     public function show()
     {
         $user = auth()->user();
+
         return response()->json([
             'id' => $user->id,
             'name' => $user->name,
@@ -43,7 +44,7 @@ class ProfileController extends Controller
         $user->bio = $data['bio'];
         $user->newsletter = $data['newsletter'];
 
-        if (!empty($data['password'])) {
+        if (! empty($data['password'])) {
             $user->password = Hash::make($data['password']);
         }
 
@@ -58,7 +59,7 @@ class ProfileController extends Controller
                 'bio' => $user->bio,
                 'newsletter' => $user->newsletter,
                 'avatar' => $user->avatar,
-            ]
+            ],
         ]);
     }
 }

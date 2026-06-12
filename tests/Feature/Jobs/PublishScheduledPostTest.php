@@ -19,11 +19,11 @@ class PublishScheduledPostTest extends TestCase
 
         $user = User::factory()->create();
         $post = Post::create([
-            'title'        => 'Scheduled Post',
-            'slug'         => 'scheduled-post',
-            'body'         => '<p>Body</p>',
-            'user_id'      => $user->id,
-            'status'       => 'scheduled',
+            'title' => 'Scheduled Post',
+            'slug' => 'scheduled-post',
+            'body' => '<p>Body</p>',
+            'user_id' => $user->id,
+            'status' => 'scheduled',
             'scheduled_for' => now()->subMinute(),
         ]);
 
@@ -41,11 +41,11 @@ class PublishScheduledPostTest extends TestCase
 
         $user = User::factory()->create();
         $post = Post::create([
-            'title'   => 'Draft Post',
-            'slug'    => 'draft-post',
-            'body'    => '<p>Body</p>',
+            'title' => 'Draft Post',
+            'slug' => 'draft-post',
+            'body' => '<p>Body</p>',
             'user_id' => $user->id,
-            'status'  => 'draft',
+            'status' => 'draft',
         ]);
 
         (new PublishScheduledPost($post))->handle();

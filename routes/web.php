@@ -2,13 +2,15 @@
 
 use App\Http\Controllers\Public\ArticleController;
 use App\Http\Controllers\Public\AuthorController;
+use App\Http\Controllers\Public\BookmarkController;
 use App\Http\Controllers\Public\CategoryController;
 use App\Http\Controllers\Public\CommentController;
 use App\Http\Controllers\Public\HomeController;
+use App\Http\Controllers\Public\PageController;
+use App\Http\Controllers\Public\ProfileController;
 use App\Http\Controllers\Public\SearchController;
 use App\Http\Controllers\Public\SitemapController;
 use App\Http\Controllers\Public\TagController;
-use App\Http\Controllers\Public\PageController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
@@ -29,12 +31,12 @@ Route::get('/llms.txt', [SitemapController::class, 'llms'])->name('llms.txt');
 
 Route::middleware('auth')->group(function () {
     // User Profile
-    Route::get('/profile', [\App\Http\Controllers\Public\ProfileController::class, 'show'])->name('profile.show');
-    Route::post('/profile', [\App\Http\Controllers\Public\ProfileController::class, 'update'])->name('profile.update');
-    
+    Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show');
+    Route::post('/profile', [ProfileController::class, 'update'])->name('profile.update');
+
     // Bookmarks
-    Route::post('/bookmarks/{post}', [\App\Http\Controllers\Public\BookmarkController::class, 'store'])->name('bookmarks.store');
-    Route::delete('/bookmarks/{post}', [\App\Http\Controllers\Public\BookmarkController::class, 'destroy'])->name('bookmarks.destroy');
+    Route::post('/bookmarks/{post}', [BookmarkController::class, 'store'])->name('bookmarks.store');
+    Route::delete('/bookmarks/{post}', [BookmarkController::class, 'destroy'])->name('bookmarks.destroy');
 
     Route::post('/posts/{post}/comments', [CommentController::class, 'store'])->name('posts.comments.store');
 });

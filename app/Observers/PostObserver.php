@@ -35,7 +35,7 @@ class PostObserver
         DB::table('post_related')
             ->where(function ($query) use ($post) {
                 $query->where('post_id', $post->id)
-                      ->orWhere('related_post_id', $post->id);
+                    ->orWhere('related_post_id', $post->id);
             })
             ->delete();
         DB::table('post_internal_links')->where('post_id', $post->id)->delete();

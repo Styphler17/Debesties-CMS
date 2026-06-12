@@ -23,7 +23,7 @@ class CommentController extends Controller
             ->where('status', 'approved')
             ->exists();
 
-        $comment = new Comment();
+        $comment = new Comment;
         $comment->post_id = $post->id;
         $comment->user_id = $user->id;
         $comment->name = $user->name;
@@ -44,7 +44,7 @@ class CommentController extends Controller
 
         return response()->json([
             'message' => $message,
-            'comment' => $comment
+            'comment' => $comment,
         ], 201);
     }
 }

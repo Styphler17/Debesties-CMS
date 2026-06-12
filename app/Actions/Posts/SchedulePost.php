@@ -12,7 +12,7 @@ class SchedulePost
     {
         $scheduledFor = Carbon::parse($scheduledAt);
 
-        $post->status        = 'scheduled';
+        $post->status = 'scheduled';
         $post->scheduled_for = $scheduledFor;
         $post->save();
 

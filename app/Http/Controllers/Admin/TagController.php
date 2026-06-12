@@ -26,7 +26,7 @@ class TagController extends Controller
 
     public function store(StoreTagRequest $request)
     {
-        $slug = (new GenerateSlug())->handle($request->name, 'tags');
+        $slug = (new GenerateSlug)->handle($request->name, 'tags');
 
         Tag::create([
             'name' => $request->name,
@@ -52,7 +52,7 @@ class TagController extends Controller
     {
         $slug = $tag->slug;
         if ($request->name !== $tag->name) {
-            $slug = (new GenerateSlug())->handle($request->name, 'tags');
+            $slug = (new GenerateSlug)->handle($request->name, 'tags');
         }
 
         $tag->update([

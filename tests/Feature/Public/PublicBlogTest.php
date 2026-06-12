@@ -15,9 +15,13 @@ class PublicBlogTest extends TestCase
     use RefreshDatabase;
 
     private User $user;
+
     private Category $category;
+
     private Post $publishedPost;
+
     private Post $draftPost;
+
     private Tag $tag;
 
     protected function setUp(): void
@@ -25,7 +29,7 @@ class PublicBlogTest extends TestCase
         parent::setUp();
 
         $this->user = User::factory()->create(['slug' => 'test-user']);
-        
+
         $this->category = Category::create([
             'name' => 'Tech',
             'slug' => 'tech',

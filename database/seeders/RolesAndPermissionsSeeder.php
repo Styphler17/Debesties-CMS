@@ -32,7 +32,7 @@ class RolesAndPermissionsSeeder extends Seeder
             ['slug' => 'subscriber'],
             [
                 'name' => 'Subscriber',
-                'description' => 'Public registered user. Can view articles, write comments, and manage bookmarks.'
+                'description' => 'Public registered user. Can view articles, write comments, and manage bookmarks.',
             ]
         );
 
@@ -41,20 +41,20 @@ class RolesAndPermissionsSeeder extends Seeder
             ['slug' => 'super_admin'],
             [
                 'name' => 'Super Admin',
-                'description' => 'Full access to all system features, settings, users, and content.'
+                'description' => 'Full access to all system features, settings, users, and content.',
             ]
         );
         $superAdmin->permissions()->sync($created->pluck('id'));
 
         // Create the first super admin user if none exists
-        if (!User::whereHas('roles', fn($q) => $q->where('slug', 'super_admin'))->exists()) {
+        if (! User::whereHas('roles', fn ($q) => $q->where('slug', 'super_admin'))->exists()) {
             $user = User::firstOrCreate(
                 ['email' => 'admin@debesties.com'],
                 [
-                    'name'     => 'Admin',
-                    'slug'     => 'admin',
+                    'name' => 'Admin',
+                    'slug' => 'admin',
                     'password' => Hash::make('password'),
-                    'status'   => 'active',
+                    'status' => 'active',
                 ]
             );
             $user->roles()->syncWithoutDetaching([$superAdmin->id]);

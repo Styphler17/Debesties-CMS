@@ -3,8 +3,8 @@
 namespace Tests\Feature\Admin;
 
 use App\Models\Post;
-use App\Models\PostMeta;
 use App\Models\PostInternalLink;
+use App\Models\PostMeta;
 use App\Models\Role;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -15,13 +15,14 @@ class SeoControllerTest extends TestCase
     use RefreshDatabase;
 
     private User $admin;
+
     private User $subscriber;
 
     protected function setUp(): void
     {
         parent::setUp();
         $this->artisan('db:seed', ['--class' => 'RolesAndPermissionsSeeder']);
-        
+
         $this->admin = User::factory()->create();
         $this->admin->roles()->sync([Role::where('slug', 'super_admin')->first()->id]);
 
@@ -45,13 +46,13 @@ class SeoControllerTest extends TestCase
     {
         // Create posts
         $post1 = Post::factory()->create(['title' => 'Post One Without Meta']);
-        
+
         $post2 = Post::factory()->create(['title' => 'Post Two With Complete Meta']);
         PostMeta::create([
             'post_id' => $post2->id,
             'seo_title' => 'Perfect Custom SEO Title for Post Two and Beyond', // length: 50
             'meta_description' => 'This is a long enough and detailed meta description to satisfy the length audit checking mechanism completely.', // length: 110 (fails len 120-160 -> -10)
-            'focus_keyword' => 'perfect SEO title'
+            'focus_keyword' => 'perfect SEO title',
         ]);
 
         $post3 = Post::factory()->create(['title' => 'Post Three Target Link']);
@@ -60,7 +61,7 @@ class SeoControllerTest extends TestCase
         PostInternalLink::create([
             'post_id' => $post2->id,
             'anchor_text' => 'Post Three Target Link',
-            'target_url' => route('posts.show', $post3->slug)
+            'target_url' => route('posts.show', $post3->slug),
         ]);
 
         $response = $this->actingAs($this->admin)->get(route('admin.seo.index'));
@@ -68,10 +69,10 @@ class SeoControllerTest extends TestCase
         $response->assertStatus(200);
         $response->assertSee('Post One Without Meta');
         $response->assertSee('Post Two With Complete Meta');
-        
+
         // Post 1 has no meta -> score should be 20 (100 - 30 - 30 - 20)
         $response->assertSee('20');
-        
+
         // Post 2 has title (len 50 -> OK), description (len 110 -> fails 120-160 -> -10), focus keyword -> score should be 90
         $response->assertSee('90');
     }

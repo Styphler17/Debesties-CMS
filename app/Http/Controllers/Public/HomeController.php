@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Public;
 
 use App\Http\Controllers\Controller;
+use App\Models\Category;
 use App\Models\Post;
 use App\Services\SettingsService;
 
@@ -18,7 +19,7 @@ class HomeController extends Controller
             foreach ($layoutData as $widget) {
                 $type = $widget['type'] ?? '';
                 $settings = $widget['settings'] ?? [];
-                
+
                 $widgetData = [
                     'type' => $type,
                     'settings' => $settings,
@@ -27,20 +28,20 @@ class HomeController extends Controller
                 if ($type === 'grid') {
                     $limit = isset($settings['limit']) ? intval($settings['limit']) : 6;
                     $catSlug = $settings['category'] ?? 'all';
-                    
+
                     $query = Post::published()
                         ->with(['category', 'user', 'featuredImage', 'tags'])
                         ->latest('published_at');
-                        
+
                     if ($catSlug !== 'all') {
                         $query->whereHas('category', function ($q) use ($catSlug) {
                             $q->where('slug', $catSlug);
                         });
                     }
-                    
+
                     $widgetData['posts'] = $query->limit($limit)->get();
                 } elseif ($type === 'categories') {
-                    $widgetData['categories'] = \App\Models\Category::where('is_visible', true)
+                    $widgetData['categories'] = Category::where('is_visible', true)
                         ->orderBy('sort_order')
                         ->get();
                 } elseif ($type === 'strip') {
@@ -51,7 +52,7 @@ class HomeController extends Controller
                         ->limit($limit)
                         ->get();
                 }
-                
+
                 $widgets[] = $widgetData;
             }
 

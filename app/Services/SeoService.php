@@ -11,11 +11,11 @@ class SeoService
     {
         $meta = $post->meta;
 
-        $title = $meta && $meta->meta_title ? $meta->meta_title : $post->title . ' | Debesties';
+        $title = $meta && $meta->meta_title ? $meta->meta_title : $post->title.' | Debesties';
         $description = $meta && $meta->meta_description ? $meta->meta_description : ($post->excerpt ?: substr(strip_tags($post->body), 0, 160));
         $keywords = $meta && $meta->meta_keywords ? $meta->meta_keywords : '';
         $canonical = $meta && $meta->canonical_url ? $meta->canonical_url : route('posts.show', $post->slug);
-        
+
         $ogImage = $post->featuredImage ? $post->featuredImage->file_url : asset('docs/brand-files/logo-png.png');
 
         $schema = [
@@ -35,7 +35,7 @@ class SeoService
                 'logo' => [
                     '@type' => 'ImageObject',
                     'url' => asset('docs/brand-files/logo-png.png'),
-                ]
+                ],
             ],
             'description' => substr(strip_tags($description), 0, 160),
         ];
@@ -104,12 +104,12 @@ class SeoService
             // Check if there is already a link from $post to $otherPost by checking target_url
             $urlPath1 = route('posts.show', $otherPost->slug, false);
             $urlPath2 = route('posts.show', $otherPost->slug, true);
-            
+
             $exists = PostInternalLink::where('post_id', $post->id)
                 ->where(function ($query) use ($urlPath1, $urlPath2, $otherPost) {
                     $query->where('target_url', $urlPath1)
-                          ->orWhere('target_url', $urlPath2)
-                          ->orWhere('target_url', 'like', '%' . $otherPost->slug . '%');
+                        ->orWhere('target_url', $urlPath2)
+                        ->orWhere('target_url', 'like', '%'.$otherPost->slug.'%');
                 })
                 ->exists();
 
@@ -122,13 +122,13 @@ class SeoService
 
             $mentioned = false;
 
-            if (!empty($keyword)) {
+            if (! empty($keyword)) {
                 if (stripos($post->body, $keyword) !== false) {
                     $mentioned = true;
                 }
             }
 
-            if (!$mentioned && !empty($title)) {
+            if (! $mentioned && ! empty($title)) {
                 if (stripos($post->body, $title) !== false) {
                     $mentioned = true;
                 }
@@ -138,7 +138,7 @@ class SeoService
                 $suggestions[] = [
                     'target_post_id' => $otherPost->id,
                     'title' => $otherPost->title,
-                    'keyword' => $keyword
+                    'keyword' => $keyword,
                 ];
             }
         }

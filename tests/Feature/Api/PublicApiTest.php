@@ -6,7 +6,6 @@ use App\Models\Category;
 use App\Models\Post;
 use App\Models\Tag;
 use App\Models\User;
-use App\Services\SettingsService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -15,6 +14,7 @@ class PublicApiTest extends TestCase
     use RefreshDatabase;
 
     private User $user;
+
     private Category $category;
 
     protected function setUp(): void
@@ -54,7 +54,7 @@ class PublicApiTest extends TestCase
 
         $response->assertStatus(200);
         $response->assertJsonPath('slug', 'test-post-slug');
-        
+
         $post->refresh();
         $this->assertEquals(1, $post->view_count);
     }

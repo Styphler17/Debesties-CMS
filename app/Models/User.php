@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -22,9 +23,9 @@ class User extends Authenticatable
     {
         return [
             'email_verified_at' => 'datetime',
-            'last_login_at'     => 'datetime',
-            'password'          => 'hashed',
-            'newsletter'        => 'boolean',
+            'last_login_at' => 'datetime',
+            'password' => 'hashed',
+            'newsletter' => 'boolean',
         ];
     }
 
@@ -33,17 +34,17 @@ class User extends Authenticatable
         return $this->belongsToMany(Role::class, 'user_roles');
     }
 
-    public function posts(): \Illuminate\Database\Eloquent\Relations\HasMany
+    public function posts(): HasMany
     {
         return $this->hasMany(Post::class);
     }
 
-    public function bookmarks(): \Illuminate\Database\Eloquent\Relations\HasMany
+    public function bookmarks(): HasMany
     {
         return $this->hasMany(Bookmark::class);
     }
 
-    public function bookmarkedPosts(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+    public function bookmarkedPosts(): BelongsToMany
     {
         return $this->belongsToMany(Post::class, 'bookmarks');
     }
@@ -52,13 +53,13 @@ class User extends Authenticatable
     {
         static $cache = [];
 
-        $cacheKey = $this->id . ':' . $key;
+        $cacheKey = $this->id.':'.$key;
 
-        if (!array_key_exists($cacheKey, $cache)) {
+        if (! array_key_exists($cacheKey, $cache)) {
             $cache[$cacheKey] = $this->roles()
                 ->with('permissions')
                 ->get()
-                ->flatMap(fn($role) => $role->permissions)
+                ->flatMap(fn ($role) => $role->permissions)
                 ->contains('slug', $key);
         }
 

@@ -16,7 +16,7 @@ class GenerateSlugTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->action = new GenerateSlug();
+        $this->action = new GenerateSlug;
     }
 
     public function test_generates_basic_slug(): void

@@ -13,6 +13,7 @@ class PageControllerTest extends TestCase
     use RefreshDatabase;
 
     private User $admin;
+
     private Role $adminRole;
 
     protected function setUp(): void
@@ -115,7 +116,7 @@ class PageControllerTest extends TestCase
             ]);
 
         $response->assertRedirect(route('admin.pages.index'));
-        
+
         $page = $page->fresh();
         $this->assertEquals('Updated Privacy Policy', $page->title);
         $this->assertEquals('updated-privacy-policy', $page->slug);

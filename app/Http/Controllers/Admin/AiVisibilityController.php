@@ -19,10 +19,10 @@ class AiVisibilityController extends Controller
         $robotsTxt = AiVisibilityService::generateRobotsTxt();
 
         return view('admin.ai-visibility.index', compact(
-            'bots', 
-            'logs', 
-            'visibilityScore', 
-            'recommendations', 
+            'bots',
+            'logs',
+            'visibilityScore',
+            'recommendations',
             'robotsTxt'
         ));
     }
@@ -32,15 +32,15 @@ class AiVisibilityController extends Controller
         if ($request->has('bot_id')) {
             $botId = $request->bot_id;
             $blockedBots = json_decode(SettingsService::get('ai_blocked_bots', '[]'), true);
-            
+
             if (in_array($botId, $blockedBots)) {
                 $blockedBots = array_diff($blockedBots, [$botId]);
             } else {
                 $blockedBots[] = $botId;
             }
-            
+
             SettingsService::set('ai_blocked_bots', json_encode(array_values($blockedBots)));
-            
+
             return response()->json(['success' => true]);
         }
 
@@ -49,9 +49,9 @@ class AiVisibilityController extends Controller
             $settingKey = "ai_{$featureId}_enabled";
             $currentValue = SettingsService::get($settingKey, '1');
             $newValue = $currentValue === '1' ? '0' : '1';
-            
+
             SettingsService::set($settingKey, $newValue);
-            
+
             return response()->json(['success' => true]);
         }
 
@@ -61,6 +61,7 @@ class AiVisibilityController extends Controller
     public function clearLogs()
     {
         CrawlerLog::truncate();
+
         return redirect()->back()->with('success', 'Crawler logs cleared.');
     }
 }

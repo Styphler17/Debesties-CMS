@@ -9,7 +9,7 @@ class CategoryController extends Controller
 {
     public function show(Category $category)
     {
-        if (!$category->is_visible) {
+        if (! $category->is_visible) {
             abort(404);
         }
 

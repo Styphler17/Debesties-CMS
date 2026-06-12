@@ -3,16 +3,14 @@
 namespace App\Http\Controllers\Public;
 
 use App\Http\Controllers\Controller;
-use App\Models\Bookmark;
 use App\Models\Post;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class BookmarkController extends Controller
 {
     public function store($post)
     {
-        if (!$post instanceof Post) {
+        if (! $post instanceof Post) {
             $post = Post::findOrFail($post);
         }
 

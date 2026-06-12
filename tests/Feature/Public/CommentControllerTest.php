@@ -13,14 +13,15 @@ class CommentControllerTest extends TestCase
     use RefreshDatabase;
 
     private User $user;
+
     private Post $post;
 
     protected function setUp(): void
     {
         parent::setUp();
-        
+
         $this->user = User::factory()->create();
-        
+
         $this->post = Post::create([
             'user_id' => $this->user->id,
             'title' => 'Test Post',
@@ -48,7 +49,7 @@ class CommentControllerTest extends TestCase
             ]);
 
         $response->assertRedirect(route('posts.show', $this->post->slug));
-        
+
         $this->assertDatabaseHas('comments', [
             'post_id' => $this->post->id,
             'user_id' => $this->user->id,
@@ -101,7 +102,7 @@ class CommentControllerTest extends TestCase
             ]);
 
         $response->assertRedirect(route('posts.show', $this->post->slug));
-        
+
         $reply1 = Comment::where('comment', 'Reply level 1.')->firstOrFail();
         $this->assertEquals($parent->id, $reply1->parent_id);
 
@@ -112,7 +113,7 @@ class CommentControllerTest extends TestCase
             ]);
 
         $response2->assertRedirect(route('posts.show', $this->post->slug));
-        
+
         $reply2 = Comment::where('comment', 'Reply level 2 (should flatten).')->firstOrFail();
         $this->assertEquals($parent->id, $reply2->parent_id);
     }

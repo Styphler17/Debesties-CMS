@@ -29,8 +29,8 @@ class PostController extends Controller
 
         if ($request->filled('search')) {
             $query->where(function ($q) use ($request) {
-                $q->where('title', 'like', '%' . $request->search . '%')
-                  ->orWhere('body', 'like', '%' . $request->search . '%');
+                $q->where('title', 'like', '%'.$request->search.'%')
+                    ->orWhere('body', 'like', '%'.$request->search.'%');
             });
         }
 
@@ -47,26 +47,26 @@ class PostController extends Controller
         $posts = $query->paginate(25)->withQueryString();
 
         $counts = [
-            'all'       => Post::count(),
+            'all' => Post::count(),
             'published' => Post::where('status', 'published')->count(),
-            'draft'     => Post::where('status', 'draft')->count(),
-            'review'    => Post::where('status', 'review')->count(),
+            'draft' => Post::where('status', 'draft')->count(),
+            'review' => Post::where('status', 'review')->count(),
             'scheduled' => Post::where('status', 'scheduled')->count(),
         ];
 
         $categories = Category::orderBy('name')->get();
-        $authors = User::whereHas('roles', function($q) {
+        $authors = User::whereHas('roles', function ($q) {
             $q->where('slug', '!=', 'subscriber');
         })->orderBy('name')->get();
 
         $statusMeta = [
             'published' => ['label' => 'Published', 'bg' => 'var(--cms-green-soft)', 'color' => 'var(--cms-green-deep)'],
-            'draft'     => ['label' => 'Draft',     'bg' => '#F0EDE8',               'color' => 'var(--cms-fg3)'],
-            'review'    => ['label' => 'In Review', 'bg' => '#FFF6DD',               'color' => 'var(--cms-gold-deep)'],
+            'draft' => ['label' => 'Draft',     'bg' => '#F0EDE8',               'color' => 'var(--cms-fg3)'],
+            'review' => ['label' => 'In Review', 'bg' => '#FFF6DD',               'color' => 'var(--cms-gold-deep)'],
             'scheduled' => ['label' => 'Scheduled', 'bg' => 'var(--cms-blue-soft)',  'color' => 'var(--cms-blue)'],
-            'approved'  => ['label' => 'Approved',  'bg' => 'var(--cms-green-soft)', 'color' => 'var(--cms-green-deep)'],
-            'archived'  => ['label' => 'Archived',  'bg' => '#F0EDE8',               'color' => 'var(--cms-fg3)'],
-            'trash'     => ['label' => 'Trash',     'bg' => 'var(--cms-red-soft)',   'color' => 'var(--cms-red-deep)'],
+            'approved' => ['label' => 'Approved',  'bg' => 'var(--cms-green-soft)', 'color' => 'var(--cms-green-deep)'],
+            'archived' => ['label' => 'Archived',  'bg' => '#F0EDE8',               'color' => 'var(--cms-fg3)'],
+            'trash' => ['label' => 'Trash',     'bg' => 'var(--cms-red-soft)',   'color' => 'var(--cms-red-deep)'],
         ];
 
         return view('admin.posts.index', compact('posts', 'counts', 'statusMeta', 'categories', 'authors'));
@@ -76,8 +76,8 @@ class PostController extends Controller
     {
         $this->authorize('create', Post::class);
         $categories = Category::orderBy('name')->get();
-        $tags       = Tag::orderBy('name')->get();
-        $users      = User::orderBy('name')->get();
+        $tags = Tag::orderBy('name')->get();
+        $users = User::orderBy('name')->get();
 
         return view('admin.posts.create', compact('categories', 'tags', 'users'));
     }
@@ -85,7 +85,7 @@ class PostController extends Controller
     public function store(StorePostRequest $request)
     {
         $this->authorize('create', Post::class);
-        $post = (new CreatePost())->handle($request->validated(), auth()->user());
+        $post = (new CreatePost)->handle($request->validated(), auth()->user());
 
         return redirect()
             ->route('admin.posts.edit', $post)
@@ -95,6 +95,7 @@ class PostController extends Controller
     public function show(Post $post)
     {
         $this->authorize('view', $post);
+
         return view('admin.posts.show', compact('post'));
     }
 
@@ -102,8 +103,8 @@ class PostController extends Controller
     {
         $this->authorize('update', $post);
         $categories = Category::orderBy('name')->get();
-        $tags       = Tag::orderBy('name')->get();
-        $users      = User::orderBy('name')->get();
+        $tags = Tag::orderBy('name')->get();
+        $users = User::orderBy('name')->get();
 
         $post->load(['tags', 'meta', 'category']);
 
@@ -113,7 +114,7 @@ class PostController extends Controller
     public function update(UpdatePostRequest $request, Post $post)
     {
         $this->authorize('update', $post);
-        (new UpdatePost())->handle($post, $request->validated());
+        (new UpdatePost)->handle($post, $request->validated());
 
         return redirect()
             ->route('admin.posts.edit', $post)
@@ -123,7 +124,7 @@ class PostController extends Controller
     public function destroy(Post $post)
     {
         $this->authorize('delete', $post);
-        (new DeletePost())->handle($post);
+        (new DeletePost)->handle($post);
 
         return redirect()
             ->route('admin.posts.index')
@@ -133,7 +134,7 @@ class PostController extends Controller
     public function publish(Post $post)
     {
         $this->authorize('update', $post);
-        (new PublishPost())->handle($post);
+        (new PublishPost)->handle($post);
 
         return redirect()
             ->back()
@@ -147,7 +148,7 @@ class PostController extends Controller
             'scheduled_for' => ['required', 'date', 'after:now'],
         ]);
 
-        (new SchedulePost())->handle($post, $request->scheduled_for);
+        (new SchedulePost)->handle($post, $request->scheduled_for);
 
         return redirect()
             ->back()

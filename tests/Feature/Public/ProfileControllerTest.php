@@ -28,7 +28,7 @@ class ProfileControllerTest extends TestCase
     public function test_user_can_view_profile()
     {
         $user = User::factory()->create();
-        
+
         $response = $this->actingAs($user)->get(route('profile.show'));
 
         $response->assertStatus(200);
@@ -40,17 +40,17 @@ class ProfileControllerTest extends TestCase
     {
         // Disable middleware to bypass CSRF
         $this->withoutMiddleware();
-        
+
         $user = User::factory()->create([
             'name' => 'Old Name',
-            'email' => 'old@example.com'
+            'email' => 'old@example.com',
         ]);
 
         $response = $this->actingAs($user)->post(route('profile.update'), [
             'name' => 'New Name',
             'email' => 'new@example.com',
             'bio' => 'Updated bio',
-            'newsletter' => 1
+            'newsletter' => 1,
         ]);
 
         $response->assertRedirect(route('profile.show'));
@@ -67,18 +67,18 @@ class ProfileControllerTest extends TestCase
         $this->withoutMiddleware();
 
         $user = User::factory()->create([
-            'password' => Hash::make('old-password')
+            'password' => Hash::make('old-password'),
         ]);
 
         $response = $this->actingAs($user)->post(route('profile.update'), [
             'name' => $user->name,
             'email' => $user->email,
             'password' => 'new-password',
-            'password_confirmation' => 'new-password'
+            'password_confirmation' => 'new-password',
         ]);
 
         $response->assertRedirect(route('profile.show'));
-        
+
         $user->refresh();
         $this->assertTrue(Hash::check('new-password', $user->password));
     }

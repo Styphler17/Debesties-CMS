@@ -24,7 +24,7 @@ class ProfileController extends Controller
 
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email,' . $user->id],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email,'.$user->id],
             'bio' => ['nullable', 'string', 'max:500'],
             'newsletter' => ['nullable', 'boolean'],
             'password' => ['nullable', 'confirmed', Password::defaults()],

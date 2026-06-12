@@ -21,7 +21,7 @@ class Comment extends Model
         'author_email',
         'author_url',
         'content',
-        'body'
+        'body',
     ];
 
     public function getBodyAttribute()

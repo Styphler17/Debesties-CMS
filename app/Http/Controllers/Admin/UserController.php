@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Actions\SEO\GenerateSlug;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\StoreUserRequest;
 use App\Http\Requests\Admin\UpdateUserRequest;
 use App\Models\Role;
 use App\Models\User;
-use App\Actions\SEO\GenerateSlug;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -22,11 +22,11 @@ class UserController extends Controller
 
         if ($request->filled('search')) {
             $search = $request->search;
-            $query->where(fn($q) => $q->where('name', 'like', "%{$search}%")->orWhere('email', 'like', "%{$search}%"));
+            $query->where(fn ($q) => $q->where('name', 'like', "%{$search}%")->orWhere('email', 'like', "%{$search}%"));
         }
 
         if ($request->filled('role') && $request->role !== 'All') {
-            $query->whereHas('roles', fn($q) => $q->where('slug', $request->role));
+            $query->whereHas('roles', fn ($q) => $q->where('slug', $request->role));
         }
 
         $users = $query->latest()->paginate(15)->withQueryString();
@@ -42,13 +42,14 @@ class UserController extends Controller
     {
         $this->authorize('create', User::class);
         $roles = Role::all();
+
         return view('admin.users.create', compact('roles'));
     }
 
     public function store(StoreUserRequest $request)
     {
         $this->authorize('create', User::class);
-        $slug = (new GenerateSlug())->handle($request->name, 'users');
+        $slug = (new GenerateSlug)->handle($request->name, 'users');
 
         $data = [
             'name' => $request->name,
@@ -77,6 +78,7 @@ class UserController extends Controller
     public function show(string $id)
     {
         $user = User::with('roles')->findOrFail($id);
+
         return view('admin.users.show', compact('user'));
     }
 
@@ -84,6 +86,7 @@ class UserController extends Controller
     {
         $user = User::findOrFail($id);
         $roles = Role::all();
+
         return view('admin.users.edit', compact('user', 'roles'));
     }
 

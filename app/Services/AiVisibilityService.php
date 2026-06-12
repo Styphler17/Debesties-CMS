@@ -2,8 +2,8 @@
 
 namespace App\Services;
 
-use App\Models\Post;
 use App\Models\CrawlerLog;
+use App\Models\Post;
 use Illuminate\Support\Collection;
 
 class AiVisibilityService
@@ -11,7 +11,7 @@ class AiVisibilityService
     public static function getBots(): Collection
     {
         $blockedBots = json_decode(SettingsService::get('ai_blocked_bots', '[]'), true);
-        
+
         return collect([
             ['id' => 'gptbot',           'name' => 'GPTBot',            'owner' => 'OpenAI',        'icon' => '🤖'],
             ['id' => 'google-ext',       'name' => 'Google-Extended',   'owner' => 'Google',        'icon' => '🔍'],
@@ -24,6 +24,7 @@ class AiVisibilityService
             ['id' => 'bytespider',       'name' => 'Bytespider',        'owner' => 'Bytedance',     'icon' => '💃'],
         ])->map(function ($bot) use ($blockedBots) {
             $bot['blocked'] = in_array($bot['id'], $blockedBots);
+
             return $bot;
         });
     }
@@ -32,7 +33,7 @@ class AiVisibilityService
     {
         $score = 0;
         $max = 100;
-        
+
         $checks = [
             'llms_txt' => [
                 'label' => 'llms.txt present',
@@ -46,7 +47,7 @@ class AiVisibilityService
             ],
             'meta' => [
                 'label' => 'Meta optimizations',
-                'passed' => Post::whereHas('meta', function($q) {
+                'passed' => Post::whereHas('meta', function ($q) {
                     $q->whereNotNull('meta_description')->whereNotNull('focus_keyword');
                 })->count() > (Post::count() * 0.8),
                 'weight' => 30,
@@ -75,7 +76,7 @@ class AiVisibilityService
         $recommendations = collect();
 
         // Check posts missing meta
-        $missingMetaCount = Post::whereDoesntHave('meta', function($q) {
+        $missingMetaCount = Post::whereDoesntHave('meta', function ($q) {
             $q->whereNotNull('meta_description');
         })->count();
 
@@ -89,7 +90,7 @@ class AiVisibilityService
         }
 
         // Check posts missing focus keywords
-        $missingKeywordsCount = Post::whereDoesntHave('meta', function($q) {
+        $missingKeywordsCount = Post::whereDoesntHave('meta', function ($q) {
             $q->whereNotNull('focus_keyword');
         })->count();
 
@@ -140,9 +141,9 @@ class AiVisibilityService
     {
         $bots = self::getBots();
         $blocked = $bots->where('blocked', true);
-        
+
         $content = "User-agent: *\nAllow: /\n\n";
-        
+
         if ($blocked->isNotEmpty()) {
             $content .= "# AI Crawlers Blocked\n";
             foreach ($blocked as $bot) {
@@ -150,8 +151,8 @@ class AiVisibilityService
             }
         }
 
-        $content .= "Sitemap: " . config('app.url') . "/sitemap.xml";
-        
+        $content .= 'Sitemap: '.config('app.url').'/sitemap.xml';
+
         return $content;
     }
 }

@@ -28,7 +28,7 @@ class SendNewsletterBroadcast implements ShouldQueue
     {
         $campaign = NewsletterCampaign::find($this->campaignId);
 
-        if (!$campaign || $campaign->status === 'sent') {
+        if (! $campaign || $campaign->status === 'sent') {
             return;
         }
 

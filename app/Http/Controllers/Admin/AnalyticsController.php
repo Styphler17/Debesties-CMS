@@ -11,7 +11,7 @@ class AnalyticsController extends Controller
     public function index(Request $request)
     {
         $range = $request->query('range', '30d');
-        
+
         $days = match ($range) {
             '7d' => 7,
             '90d' => 90,
@@ -29,11 +29,11 @@ class AnalyticsController extends Controller
         $prevVisitors = max(20, AnalyticsService::getUniqueVisitors($days * 2) - $currentVisitors);
 
         $viewsDeltaVal = (($currentViews - $prevViews) / $prevViews) * 100;
-        $viewsDelta = ($viewsDeltaVal >= 0 ? '+' : '') . round($viewsDeltaVal, 1) . '%';
+        $viewsDelta = ($viewsDeltaVal >= 0 ? '+' : '').round($viewsDeltaVal, 1).'%';
         $viewsUp = $viewsDeltaVal >= 0;
 
         $visitorsDeltaVal = (($currentVisitors - $prevVisitors) / $prevVisitors) * 100;
-        $visitorsDelta = ($visitorsDeltaVal >= 0 ? '+' : '') . round($visitorsDeltaVal, 1) . '%';
+        $visitorsDelta = ($visitorsDeltaVal >= 0 ? '+' : '').round($visitorsDeltaVal, 1).'%';
         $visitorsUp = $visitorsDeltaVal >= 0;
 
         $stats = [
@@ -42,28 +42,28 @@ class AnalyticsController extends Controller
                 'value' => number_format($currentViews),
                 'delta' => $viewsDelta,
                 'up' => $viewsUp,
-                'icon' => 'eye'
+                'icon' => 'eye',
             ],
             [
                 'label' => 'Unique Visitors',
                 'value' => number_format($currentVisitors),
                 'delta' => $visitorsDelta,
                 'up' => $visitorsUp,
-                'icon' => 'users'
+                'icon' => 'users',
             ],
             [
                 'label' => 'Avg. Time on Page',
                 'value' => $avgTime,
                 'delta' => '+0:12',
                 'up' => true,
-                'icon' => 'clock'
+                'icon' => 'clock',
             ],
             [
                 'label' => 'Bounce Rate',
-                'value' => $bounceRate . '%',
+                'value' => $bounceRate.'%',
                 'delta' => '-2.4%',
                 'up' => true,
-                'icon' => 'trending-down'
+                'icon' => 'trending-down',
             ],
         ];
 

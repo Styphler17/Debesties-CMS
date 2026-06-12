@@ -15,7 +15,9 @@ class PublicPageTest extends TestCase
     use RefreshDatabase;
 
     private User $author;
+
     private Page $publishedPage;
+
     private Page $draftPage;
 
     protected function setUp(): void
@@ -111,16 +113,16 @@ class PublicPageTest extends TestCase
                     'subtext' => 'The ultimate design system experience.',
                     'cta_label' => 'Explore Studio',
                     'cta_link' => '/studio',
-                    'theme' => 'gold-black'
-                ]
+                    'theme' => 'gold-black',
+                ],
             ],
             [
                 'id' => 2,
                 'type' => 'strip',
                 'name' => 'Latest News Strip',
                 'settings' => [
-                    'items' => 3
-                ]
+                    'items' => 3,
+                ],
             ],
             [
                 'id' => 3,
@@ -129,16 +131,16 @@ class PublicPageTest extends TestCase
                 'settings' => [
                     'limit' => 3,
                     'category' => 'all',
-                    'style' => 'grid'
-                ]
+                    'style' => 'grid',
+                ],
             ],
             [
                 'id' => 4,
                 'type' => 'categories',
                 'name' => 'Category Showcase',
                 'settings' => [
-                    'heading' => 'Browse Our Sounds'
-                ]
+                    'heading' => 'Browse Our Sounds',
+                ],
             ],
             [
                 'id' => 5,
@@ -146,9 +148,9 @@ class PublicPageTest extends TestCase
                 'name' => 'Newsletter Signup',
                 'settings' => [
                     'placeholder' => 'Enter mailing address...',
-                    'cta' => 'Subscribe'
-                ]
-            ]
+                    'cta' => 'Subscribe',
+                ],
+            ],
         ];
 
         SettingsService::set('homepage_layout', json_encode($layoutPayload));

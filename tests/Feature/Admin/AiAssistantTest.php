@@ -2,7 +2,6 @@
 
 namespace Tests\Feature\Admin;
 
-use App\Models\Role;
 use App\Models\User;
 use Database\Seeders\RolesAndPermissionsSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -18,7 +17,7 @@ class AiAssistantTest extends TestCase
     {
         parent::setUp();
         $this->seed(RolesAndPermissionsSeeder::class);
-        $this->admin = User::whereHas('roles', fn($q) => $q->where('slug', 'super_admin'))->first();
+        $this->admin = User::whereHas('roles', fn ($q) => $q->where('slug', 'super_admin'))->first();
     }
 
     public function test_admin_can_generate_tags()
@@ -27,12 +26,12 @@ class AiAssistantTest extends TestCase
         $response = $this->actingAs($this->admin)
             ->postJson(route('admin.ai-assistant.generate-tags'), [
                 'title' => 'Test Post Title',
-                'body' => 'This is the body content of the test post.'
+                'body' => 'This is the body content of the test post.',
             ]);
 
         $response->assertStatus(200);
         $response->assertJson([
-            'success' => true
+            'success' => true,
         ]);
         $this->assertIsArray($response->json('tags'));
     }
@@ -42,12 +41,12 @@ class AiAssistantTest extends TestCase
         $this->withoutMiddleware();
         $response = $this->actingAs($this->admin)
             ->postJson(route('admin.ai-assistant.generate-outline'), [
-                'title' => 'The Future of Music'
+                'title' => 'The Future of Music',
             ]);
 
         $response->assertStatus(200);
         $response->assertJson([
-            'success' => true
+            'success' => true,
         ]);
         $this->assertIsArray($response->json('outline'));
         $this->assertStringContainsString('Future of Music', $response->json('outline')[0]);
@@ -58,11 +57,11 @@ class AiAssistantTest extends TestCase
         // Don't bypass middleware here to let auth catch it
         $response = $this->postJson(route('admin.ai-assistant.generate-tags'), [
             'title' => 'Title',
-            'body' => 'Body'
+            'body' => 'Body',
         ]);
 
-        // Laravel 11 returns 401 for JSON requests without auth, 
-        // but if CSRF is first it might return 419. 
+        // Laravel 11 returns 401 for JSON requests without auth,
+        // but if CSRF is first it might return 419.
         // Let's ensure it's not 200.
         $this->assertTrue($response->status() !== 200);
     }

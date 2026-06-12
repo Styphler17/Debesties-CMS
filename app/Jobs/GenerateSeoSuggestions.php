@@ -15,9 +15,7 @@ class GenerateSeoSuggestions implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    public function __construct(public readonly Post $post)
-    {
-    }
+    public function __construct(public readonly Post $post) {}
 
     public function handle(): void
     {
@@ -35,7 +33,7 @@ class GenerateSeoSuggestions implements ShouldQueue
             ['post_id' => $post->id],
             [
                 'meta_description' => $metaDescription,
-                'focus_keyword'    => $focusKeyword,
+                'focus_keyword' => $focusKeyword,
             ]
         );
     }

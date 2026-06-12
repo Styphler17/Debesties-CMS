@@ -2,8 +2,8 @@
 
 namespace App\Services;
 
-use App\Models\Post;
 use App\Models\CrawlerLog;
+use App\Models\Post;
 use Illuminate\Support\Collection;
 
 class AnalyticsService
@@ -12,8 +12,9 @@ class AnalyticsService
     {
         $postViews = Post::sum('view_count');
         $crawlerCount = CrawlerLog::where('created_at', '>=', now()->subDays($days))->count();
-        
+
         $baseViews = (int) ($postViews * ($days / 30.0));
+
         return max(100, $baseViews + $crawlerCount);
     }
 
@@ -22,8 +23,9 @@ class AnalyticsService
         $uniqueIPs = CrawlerLog::where('created_at', '>=', now()->subDays($days))
             ->distinct('ip_address')
             ->count('ip_address');
-            
+
         $totalViews = self::getTotalViews($days);
+
         return max($uniqueIPs, (int) ($totalViews * 0.35));
     }
 
@@ -33,6 +35,7 @@ class AnalyticsService
         $seconds = (int) (($avgBodyLength / 1000) * 180 + ($days % 15));
         $minutes = intdiv($seconds, 60);
         $remSeconds = $seconds % 60;
+
         return "{$minutes}m {$remSeconds}s";
     }
 
@@ -49,12 +52,12 @@ class AnalyticsService
             ->get()
             ->map(function ($post, $index) use ($days) {
                 $views = (int) ($post->view_count * ($days / 30.0));
-                
+
                 $trend = [];
                 for ($i = 0; $i < 7; $i++) {
                     $trend[] = max(2, (int) (($views / 7) * (0.6 + 0.8 * abs(sin($index + $i)))));
                 }
-                
+
                 return [
                     'rank' => $index + 1,
                     'id' => $post->id,
@@ -70,18 +73,18 @@ class AnalyticsService
     public static function getTrafficSources(int $days): array
     {
         $totalLogs = CrawlerLog::where('created_at', '>=', now()->subDays($days))->count();
-        
+
         if ($totalLogs > 0) {
             $botCounts = CrawlerLog::where('created_at', '>=', now()->subDays($days))
                 ->selectRaw('bot_name, count(*) as count')
                 ->groupBy('bot_name')
                 ->pluck('count', 'bot_name')
                 ->toArray();
-                
+
             $sources = [];
             $colors = ['var(--cms-gold)', 'var(--cms-blue)', '#9B59B6', 'var(--cms-green)', '#E74C3C'];
             $colorIndex = 0;
-            
+
             foreach ($botCounts as $bot => $count) {
                 $pct = (int) round(($count / $totalLogs) * 100);
                 $sources[] = [
@@ -91,16 +94,17 @@ class AnalyticsService
                 ];
                 $colorIndex++;
             }
-            
-            usort($sources, fn($a, $b) => $b['pct'] <=> $a['pct']);
+
+            usort($sources, fn ($a, $b) => $b['pct'] <=> $a['pct']);
+
             return $sources;
         }
-        
+
         return [
-            ['label'=>'Organic Search','pct'=>54,'color'=>'var(--cms-gold)'],
-            ['label'=>'Direct',        'pct'=>21,'color'=>'var(--cms-blue)'],
-            ['label'=>'Social Media',  'pct'=>16,'color'=>'#9B59B6'],
-            ['label'=>'Referral',      'pct'=>9, 'color'=>'var(--cms-green)'],
+            ['label' => 'Organic Search', 'pct' => 54, 'color' => 'var(--cms-gold)'],
+            ['label' => 'Direct',        'pct' => 21, 'color' => 'var(--cms-blue)'],
+            ['label' => 'Social Media',  'pct' => 16, 'color' => '#9B59B6'],
+            ['label' => 'Referral',      'pct' => 9, 'color' => 'var(--cms-green)'],
         ];
     }
 
@@ -140,7 +144,7 @@ class AnalyticsService
 
         $barCount = $days === 7 ? 7 : 30;
         $interval = $days === 7 ? 1 : ($days === 30 ? 1 : 3);
-        
+
         $chartBars = [];
         for ($i = $barCount - 1; $i >= 0; $i--) {
             $views = 0;
@@ -148,7 +152,7 @@ class AnalyticsService
                 $dayOffset = $i * $interval + $j;
                 $date = now()->subDays($dayOffset)->format('Y-m-d');
                 $views += $dailyCrawlerVisits[$date] ?? 0;
-                $views += ($postViews > 0 ? (int)(($postViews / ($days ?: 1)) * (0.8 + 0.4 * sin($dayOffset))) : 0);
+                $views += ($postViews > 0 ? (int) (($postViews / ($days ?: 1)) * (0.8 + 0.4 * sin($dayOffset))) : 0);
             }
             $chartBars[] = max(5, (int) $views);
         }

@@ -14,9 +14,7 @@ class PublishScheduledPost implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    public function __construct(public readonly Post $post)
-    {
-    }
+    public function __construct(public readonly Post $post) {}
 
     public function handle(): void
     {
@@ -27,6 +25,6 @@ class PublishScheduledPost implements ShouldQueue
             return;
         }
 
-        (new PublishPost())->handle($this->post);
+        (new PublishPost)->handle($this->post);
     }
 }

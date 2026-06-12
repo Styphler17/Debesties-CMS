@@ -10,6 +10,7 @@ class SuggestInternalLinks
     public function handle(int $postId): array
     {
         $post = Post::findOrFail($postId);
+
         return SeoService::suggestInternalLinks($post);
     }
 }

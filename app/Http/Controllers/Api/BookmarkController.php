@@ -38,9 +38,10 @@ class BookmarkController extends Controller
 
         if ($exists) {
             $user->bookmarks()->where('post_id', $postId)->delete();
+
             return response()->json([
                 'bookmarked' => false,
-                'message' => 'Bookmark removed.'
+                'message' => 'Bookmark removed.',
             ]);
         }
 
@@ -50,7 +51,7 @@ class BookmarkController extends Controller
 
         return response()->json([
             'bookmarked' => true,
-            'message' => 'Bookmark added.'
+            'message' => 'Bookmark added.',
         ]);
     }
 }

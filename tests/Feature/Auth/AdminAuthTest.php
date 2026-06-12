@@ -16,6 +16,7 @@ class AdminAuthTest extends TestCase
         $role = Role::create(['name' => 'Super Admin', 'slug' => 'super_admin']);
         $user = User::factory()->create(['password' => bcrypt('password')]);
         $user->roles()->attach($role);
+
         return $user;
     }
 
@@ -24,6 +25,7 @@ class AdminAuthTest extends TestCase
         $role = Role::create(['name' => 'Subscriber', 'slug' => 'subscriber']);
         $user = User::factory()->create(['password' => bcrypt('password')]);
         $user->roles()->attach($role);
+
         return $user;
     }
 
@@ -39,7 +41,7 @@ class AdminAuthTest extends TestCase
         $user = $this->createAdminUser();
 
         $response = $this->post('/admin/login', [
-            'email'    => $user->email,
+            'email' => $user->email,
             'password' => 'password',
         ]);
 
@@ -52,7 +54,7 @@ class AdminAuthTest extends TestCase
         $user = $this->createAdminUser();
 
         $response = $this->post('/admin/login', [
-            'email'    => $user->email,
+            'email' => $user->email,
             'password' => 'wrong-password',
         ]);
 
@@ -66,7 +68,7 @@ class AdminAuthTest extends TestCase
         $user = $this->createSubscriberUser();
 
         $response = $this->post('/admin/login', [
-            'email'    => $user->email,
+            'email' => $user->email,
             'password' => 'password',
         ]);
 

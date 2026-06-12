@@ -20,7 +20,7 @@ class MediaController extends Controller
         }
 
         if ($request->filled('search')) {
-            $query->where('file_name', 'like', '%' . $request->search . '%');
+            $query->where('file_name', 'like', '%'.$request->search.'%');
         }
 
         $files = $query->paginate(24)->withQueryString();
@@ -42,7 +42,7 @@ class MediaController extends Controller
 
         if ($request->hasFile('files')) {
             foreach ($request->file('files') as $file) {
-                $media = (new UploadMedia())->handle($file, auth()->user(), $folder);
+                $media = (new UploadMedia)->handle($file, auth()->user(), $folder);
                 $uploaded[] = [
                     'id' => $media->id,
                     'name' => $media->file_name,
@@ -61,6 +61,7 @@ class MediaController extends Controller
     public function show(string $id)
     {
         $media = Media::findOrFail($id);
+
         return response()->json($media);
     }
 
@@ -70,8 +71,8 @@ class MediaController extends Controller
         $this->authorize('delete', $media);
 
         try {
-            (new DeleteMedia())->handle($media);
-            
+            (new DeleteMedia)->handle($media);
+
             if (request()->wantsJson() || request()->ajax()) {
                 return response()->json(['success' => true, 'message' => 'Media deleted successfully.']);
             }

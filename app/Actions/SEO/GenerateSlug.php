@@ -14,7 +14,7 @@ class GenerateSlug
         $counter = 2;
 
         while (DB::table($table)->where('slug', $slug)->exists()) {
-            $slug = $base . '-' . $counter;
+            $slug = $base.'-'.$counter;
             $counter++;
         }
 

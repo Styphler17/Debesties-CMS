@@ -11,7 +11,7 @@ class CommentController extends Controller
 {
     public function index(Request $request)
     {
-        $this->authorize('viewAny', \App\Models\Comment::class);
+        $this->authorize('viewAny', Comment::class);
         $query = Comment::with(['user', 'post']);
 
         if ($request->filled('status') && $request->status !== 'All') {
@@ -36,12 +36,14 @@ class CommentController extends Controller
     public function show(string $id)
     {
         $comment = Comment::with(['user', 'post'])->findOrFail($id);
+
         return response()->json($comment);
     }
 
     public function edit(string $id)
     {
         $comment = Comment::findOrFail($id);
+
         return view('admin.comments.edit', compact('comment'));
     }
 

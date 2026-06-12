@@ -13,6 +13,7 @@ class RoleControllerTest extends TestCase
     use RefreshDatabase;
 
     private User $admin;
+
     private Role $adminRole;
 
     protected function setUp(): void

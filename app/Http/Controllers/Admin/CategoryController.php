@@ -31,15 +31,15 @@ class CategoryController extends Controller
 
     public function store(StoreCategoryRequest $request)
     {
-        $slug = (new GenerateSlug())->handle($request->name, 'categories');
+        $slug = (new GenerateSlug)->handle($request->name, 'categories');
 
         Category::create([
-            'name'        => $request->name,
-            'slug'        => $slug,
+            'name' => $request->name,
+            'slug' => $slug,
             'description' => $request->description,
-            'parent_id'   => $request->parent_id,
-            'sort_order'  => $request->sort_order ?? 0,
-            'is_visible'  => $request->boolean('is_visible', true),
+            'parent_id' => $request->parent_id,
+            'sort_order' => $request->sort_order ?? 0,
+            'is_visible' => $request->boolean('is_visible', true),
         ]);
 
         return redirect()
@@ -67,16 +67,16 @@ class CategoryController extends Controller
         $slug = $category->slug;
 
         if ($request->name !== $category->name) {
-            $slug = (new GenerateSlug())->handle($request->name, 'categories');
+            $slug = (new GenerateSlug)->handle($request->name, 'categories');
         }
 
         $category->update([
-            'name'        => $request->name,
-            'slug'        => $slug,
+            'name' => $request->name,
+            'slug' => $slug,
             'description' => $request->description,
-            'parent_id'   => $request->parent_id,
-            'sort_order'  => $request->sort_order ?? 0,
-            'is_visible'  => $request->boolean('is_visible', true),
+            'parent_id' => $request->parent_id,
+            'sort_order' => $request->sort_order ?? 0,
+            'is_visible' => $request->boolean('is_visible', true),
         ]);
 
         return redirect()

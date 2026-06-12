@@ -20,16 +20,16 @@ class SchedulePostTest extends TestCase
 
         $user = User::factory()->create();
         $post = Post::create([
-            'title'   => 'Future Post',
-            'slug'    => 'future-post',
-            'body'    => '<p>Body</p>',
+            'title' => 'Future Post',
+            'slug' => 'future-post',
+            'body' => '<p>Body</p>',
             'user_id' => $user->id,
-            'status'  => 'draft',
+            'status' => 'draft',
         ]);
 
         $scheduledAt = now()->addDays(3)->toDateTimeString();
 
-        (new SchedulePost())->handle($post, $scheduledAt);
+        (new SchedulePost)->handle($post, $scheduledAt);
 
         $post->refresh();
         $this->assertSame('scheduled', $post->status);
@@ -42,14 +42,14 @@ class SchedulePostTest extends TestCase
 
         $user = User::factory()->create();
         $post = Post::create([
-            'title'   => 'Future Post',
-            'slug'    => 'future-post',
-            'body'    => '<p>Body</p>',
+            'title' => 'Future Post',
+            'slug' => 'future-post',
+            'body' => '<p>Body</p>',
             'user_id' => $user->id,
-            'status'  => 'draft',
+            'status' => 'draft',
         ]);
 
-        (new SchedulePost())->handle($post, now()->addDays(1)->toDateTimeString());
+        (new SchedulePost)->handle($post, now()->addDays(1)->toDateTimeString());
 
         Queue::assertPushed(PublishScheduledPost::class, function ($job) use ($post) {
             return $job->post->id === $post->id;

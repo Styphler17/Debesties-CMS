@@ -28,16 +28,16 @@ class RegisterController extends Controller
     {
         $baseSlug = Str::slug($request->name);
         do {
-            $slug = $baseSlug . '-' . Str::random(4);
+            $slug = $baseSlug.'-'.Str::random(4);
         } while (User::where('slug', $slug)->exists());
 
         $user = User::create([
-            'name'       => $request->name,
-            'slug'       => $slug,
-            'email'      => $request->email,
-            'password'   => Hash::make($request->password),
+            'name' => $request->name,
+            'slug' => $slug,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
             'newsletter' => true,
-            'status'     => 'active',
+            'status' => 'active',
         ]);
 
         $subscriberRole = Role::where('slug', 'subscriber')->first();

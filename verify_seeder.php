@@ -1,15 +1,21 @@
 <?php
-require __DIR__ . '/vendor/autoload.php';
-$app = require_once __DIR__ . '/bootstrap/app.php';
-$app->make(\Illuminate\Contracts\Console\Kernel::class)->bootstrap();
 
-$permissions = \App\Models\Permission::all();
-echo "Permissions created: " . $permissions->count() . "\n";
-$permissions->each(fn($p) => echo "  - " . $p->slug . "\n");
+use App\Models\Permission;
+use App\Models\Role;
+use App\Models\User;
+use Illuminate\Contracts\Console\Kernel;
 
-$roles = \App\Models\Role::all();
-echo "\nRoles created: " . $roles->count() . "\n";
-$roles->each(fn($r) => echo "  - " . $r->slug . " (" . $r->permissions->count() . " permissions)\n");
+require __DIR__.'/vendor/autoload.php';
+$app = require_once __DIR__.'/bootstrap/app.php';
+$app->make(Kernel::class)->bootstrap();
 
-$admin = \App\Models\User::where('email', 'admin@debesties.com')->first();
-echo "\nAdmin user: " . ($admin ? $admin->email . " with role: " . $admin->roles->first()->slug : 'NOT FOUND') . "\n";
+$permissions = Permission::all();
+echo 'Permissions created: '.$permissions->count()."\n";
+$permissions->each(fn ($p) => print ('  - '.$p->slug."\n"));
+
+$roles = Role::all();
+echo "\nRoles created: ".$roles->count()."\n";
+$roles->each(fn ($r) => print ('  - '.$r->slug.' ('.$r->permissions->count()." permissions)\n"));
+
+$admin = User::where('email', 'admin@debesties.com')->first();
+echo "\nAdmin user: ".($admin ? $admin->email.' with role: '.$admin->roles->first()->slug : 'NOT FOUND')."\n";

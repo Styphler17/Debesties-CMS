@@ -29,7 +29,7 @@ class BookmarkControllerTest extends TestCase
         $response->assertStatus(302);
         $this->assertDatabaseHas('bookmarks', [
             'user_id' => $user->id,
-            'post_id' => $post->id
+            'post_id' => $post->id,
         ]);
     }
 
@@ -44,7 +44,7 @@ class BookmarkControllerTest extends TestCase
         $response->assertStatus(302);
         $this->assertDatabaseMissing('bookmarks', [
             'user_id' => $user->id,
-            'post_id' => $post->id
+            'post_id' => $post->id,
         ]);
     }
 

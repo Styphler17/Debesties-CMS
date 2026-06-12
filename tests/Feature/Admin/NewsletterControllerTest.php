@@ -18,6 +18,7 @@ class NewsletterControllerTest extends TestCase
     use RefreshDatabase;
 
     private User $admin;
+
     private User $subscriber;
 
     protected function setUp(): void
@@ -62,7 +63,7 @@ class NewsletterControllerTest extends TestCase
 
         $campaign = NewsletterCampaign::firstOrFail();
         $response->assertRedirect(route('admin.newsletters.show', $campaign));
-        
+
         $this->assertDatabaseHas('newsletter_campaigns', [
             'subject' => 'Weekly Pulse',
             'body' => 'Welcome to the pulse of technology.',
@@ -135,7 +136,7 @@ class NewsletterControllerTest extends TestCase
         $response = $this->actingAs($this->admin)->post(route('admin.newsletters.send', $campaign));
 
         $response->assertRedirect(route('admin.newsletters.show', $campaign));
-        
+
         $campaign->refresh();
         $this->assertEquals('sending', $campaign->status);
 

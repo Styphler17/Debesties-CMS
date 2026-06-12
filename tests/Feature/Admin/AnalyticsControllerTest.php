@@ -14,13 +14,14 @@ class AnalyticsControllerTest extends TestCase
     use RefreshDatabase;
 
     private User $admin;
+
     private User $subscriber;
 
     protected function setUp(): void
     {
         parent::setUp();
         $this->artisan('db:seed', ['--class' => 'RolesAndPermissionsSeeder']);
-        
+
         $this->admin = User::factory()->create();
         $this->admin->roles()->sync([Role::where('slug', 'super_admin')->first()->id]);
 
@@ -45,12 +46,12 @@ class AnalyticsControllerTest extends TestCase
         // Create posts with views
         Post::factory()->create([
             'title' => 'Top Visited Premium Topic',
-            'view_count' => 1000
+            'view_count' => 1000,
         ]);
-        
+
         Post::factory()->create([
             'title' => 'Second Best Topic',
-            'view_count' => 500
+            'view_count' => 500,
         ]);
 
         // Create crawler log
@@ -60,7 +61,7 @@ class AnalyticsControllerTest extends TestCase
             'ip_address' => '127.0.0.1',
             'path' => 'posts/some-slug',
             'status_code' => '200',
-            'created_at' => now()->subDays(2)
+            'created_at' => now()->subDays(2),
         ]);
 
         $response = $this->actingAs($this->admin)->get(route('admin.analytics.index'));
@@ -68,7 +69,7 @@ class AnalyticsControllerTest extends TestCase
         $response->assertStatus(200);
         $response->assertSee('Top Visited Premium Topic');
         $response->assertSee('Second Best Topic');
-        
+
         // Total Views should be post views (1500) + crawler count (1) = 1501.
         // Formatted as: 1,501
         $response->assertSee('1,501');
@@ -78,7 +79,7 @@ class AnalyticsControllerTest extends TestCase
     {
         Post::factory()->create([
             'title' => 'Any Topic',
-            'view_count' => 300
+            'view_count' => 300,
         ]);
 
         // Access 7d range

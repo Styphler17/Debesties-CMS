@@ -12,15 +12,15 @@ class SearchController extends Controller
     {
         $query = $request->input('q');
 
-        if (!$request->has('q') || strlen($query) < 2) {
+        if (! $request->has('q') || strlen($query) < 2) {
             return redirect()->back()->with('error', 'Search query must be at least 2 characters.');
         }
 
         $posts = Post::published()
             ->with(['category', 'user', 'featuredImage', 'tags'])
             ->where(function ($q) use ($query) {
-                $q->where('title', 'like', '%' . $query . '%')
-                  ->orWhere('body', 'like', '%' . $query . '%');
+                $q->where('title', 'like', '%'.$query.'%')
+                    ->orWhere('body', 'like', '%'.$query.'%');
             })
             ->latest('published_at')
             ->paginate(6)

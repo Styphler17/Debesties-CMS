@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Category;
 use App\Services\SettingsService;
 use Illuminate\Http\Request;
 
@@ -11,7 +12,8 @@ class HomepageBuilderController extends Controller
     public function index()
     {
         $layout = SettingsService::get('homepage_layout', '[]');
-        $categories = \App\Models\Category::orderBy('name')->get();
+        $categories = Category::orderBy('name')->get();
+
         return view('admin.homepage-builder.index', compact('layout', 'categories'));
     }
 

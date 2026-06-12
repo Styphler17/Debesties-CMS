@@ -20,7 +20,7 @@ class TagCrudTest extends TestCase
     {
         parent::setUp();
 
-        $role        = Role::create(['name' => 'Super Admin', 'slug' => 'super_admin']);
+        $role = Role::create(['name' => 'Super Admin', 'slug' => 'super_admin']);
         $this->admin = User::factory()->create();
         $this->admin->roles()->attach($role);
     }
@@ -46,7 +46,7 @@ class TagCrudTest extends TestCase
         ]);
 
         $this->assertDatabaseHas('tags', [
-            'id'   => $tag->id,
+            'id' => $tag->id,
             'name' => 'New Name',
             'slug' => 'new-name',
         ]);
@@ -56,13 +56,13 @@ class TagCrudTest extends TestCase
     {
         Queue::fake();
 
-        $tag  = Tag::create(['name' => 'To Delete', 'slug' => 'to-delete']);
+        $tag = Tag::create(['name' => 'To Delete', 'slug' => 'to-delete']);
         $post = Post::create([
-            'title'   => 'Tagged Post',
-            'slug'    => 'tagged-post',
-            'body'    => '<p>Body</p>',
+            'title' => 'Tagged Post',
+            'slug' => 'tagged-post',
+            'body' => '<p>Body</p>',
             'user_id' => $this->admin->id,
-            'status'  => 'draft',
+            'status' => 'draft',
         ]);
         $post->tags()->attach($tag->id);
 

@@ -20,7 +20,7 @@ class CategoryCrudTest extends TestCase
     {
         parent::setUp();
 
-        $role        = Role::create(['name' => 'Super Admin', 'slug' => 'super_admin']);
+        $role = Role::create(['name' => 'Super Admin', 'slug' => 'super_admin']);
         $this->admin = User::factory()->create();
         $this->admin->roles()->attach($role);
     }
@@ -28,7 +28,7 @@ class CategoryCrudTest extends TestCase
     public function test_admin_can_create_category_with_auto_slug(): void
     {
         $this->actingAs($this->admin)->post(route('admin.categories.store'), [
-            'name'       => 'Music Awards',
+            'name' => 'Music Awards',
             'sort_order' => 1,
             'is_visible' => true,
         ]);
@@ -46,12 +46,12 @@ class CategoryCrudTest extends TestCase
         $category = Category::create(['name' => 'Busy Cat', 'slug' => 'busy-cat']);
 
         Post::create([
-            'title'       => 'A Post',
-            'slug'        => 'a-post',
-            'body'        => '<p>Body</p>',
-            'user_id'     => $this->admin->id,
+            'title' => 'A Post',
+            'slug' => 'a-post',
+            'body' => '<p>Body</p>',
+            'user_id' => $this->admin->id,
             'category_id' => $category->id,
-            'status'      => 'draft',
+            'status' => 'draft',
         ]);
 
         $response = $this->actingAs($this->admin)
@@ -64,8 +64,8 @@ class CategoryCrudTest extends TestCase
     public function test_deleting_category_reassigns_children_to_grandparent(): void
     {
         $grandparent = Category::create(['name' => 'Top Level', 'slug' => 'top-level']);
-        $parent      = Category::create(['name' => 'Middle', 'slug' => 'middle', 'parent_id' => $grandparent->id]);
-        $child       = Category::create(['name' => 'Leaf', 'slug' => 'leaf', 'parent_id' => $parent->id]);
+        $parent = Category::create(['name' => 'Middle', 'slug' => 'middle', 'parent_id' => $grandparent->id]);
+        $child = Category::create(['name' => 'Leaf', 'slug' => 'leaf', 'parent_id' => $parent->id]);
 
         $this->actingAs($this->admin)
             ->delete(route('admin.categories.destroy', $parent));

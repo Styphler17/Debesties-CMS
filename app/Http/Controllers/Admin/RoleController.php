@@ -2,13 +2,12 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Actions\SEO\GenerateSlug;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\StoreRoleRequest;
 use App\Http\Requests\Admin\UpdateRoleRequest;
 use App\Models\Permission;
 use App\Models\Role;
-use App\Actions\SEO\GenerateSlug;
-use Illuminate\Http\Request;
 
 class RoleController extends Controller
 {
@@ -22,7 +21,7 @@ class RoleController extends Controller
 
     public function store(StoreRoleRequest $request)
     {
-        $slug = (new GenerateSlug())->handle($request->name, 'roles');
+        $slug = (new GenerateSlug)->handle($request->name, 'roles');
 
         $role = Role::create([
             'name' => $request->name,
@@ -58,7 +57,7 @@ class RoleController extends Controller
                     'name' => $role->name,
                     'description' => $role->description,
                     'permissions_matrix' => $role->permissions->pluck('id'),
-                ]
+                ],
             ]);
         }
 
@@ -73,6 +72,7 @@ class RoleController extends Controller
             if (request()->wantsJson() || request()->ajax()) {
                 return response()->json(['success' => false, 'message' => 'System roles cannot be deleted.'], 422);
             }
+
             return redirect()->route('admin.roles.index')->with('error', 'System roles cannot be deleted.');
         }
 
@@ -80,6 +80,7 @@ class RoleController extends Controller
             if (request()->wantsJson() || request()->ajax()) {
                 return response()->json(['success' => false, 'message' => 'Cannot delete role: It is currently assigned to users.'], 422);
             }
+
             return redirect()->route('admin.roles.index')->with('error', 'Cannot delete role: It is currently assigned to users.');
         }
 

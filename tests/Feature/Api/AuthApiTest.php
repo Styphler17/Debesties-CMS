@@ -14,6 +14,7 @@ class AuthApiTest extends TestCase
     use RefreshDatabase;
 
     private User $user;
+
     private string $password = 'secret123';
 
     protected function setUp(): void
@@ -35,7 +36,7 @@ class AuthApiTest extends TestCase
 
         $response->assertStatus(200);
         $response->assertJsonStructure(['user', 'token']);
-        
+
         $this->user->refresh();
         $this->assertNotNull($this->user->api_token);
     }

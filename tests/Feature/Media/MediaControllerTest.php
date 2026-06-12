@@ -2,7 +2,7 @@
 
 namespace Tests\Feature\Media;
 
-use App\Models\Media;
+use App\Actions\Media\UploadMedia;
 use App\Models\Role;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -50,7 +50,7 @@ class MediaControllerTest extends TestCase
     public function test_admin_can_delete_media_via_controller()
     {
         $file = UploadedFile::fake()->image('cover.png', 800, 600);
-        $media = (new \App\Actions\Media\UploadMedia())->handle($file, $this->admin);
+        $media = (new UploadMedia)->handle($file, $this->admin);
 
         $response = $this->actingAs($this->admin)
             ->delete(route('admin.media.destroy', $media->id));

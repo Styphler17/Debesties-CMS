@@ -2,8 +2,8 @@
 
 namespace App\Observers;
 
-use App\Models\Comment;
 use App\Models\ActivityLog;
+use App\Models\Comment;
 
 class CommentObserver
 {

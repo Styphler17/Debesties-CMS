@@ -17,7 +17,7 @@ class UpdateRoleRequest extends FormRequest
         $roleId = is_object($role) ? $role->id : $role;
 
         return [
-            'name' => 'required|string|max:255|unique:roles,name,' . $roleId,
+            'name' => 'required|string|max:255|unique:roles,name,'.$roleId,
             'permissions' => 'nullable|array',
             'permissions.*' => 'exists:permissions,id',
         ];

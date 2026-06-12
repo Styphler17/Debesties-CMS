@@ -26,7 +26,7 @@ class AiAssistantController extends Controller
 
         return response()->json([
             'success' => true,
-            'tags' => $tags
+            'tags' => $tags,
         ]);
     }
 
@@ -40,7 +40,7 @@ class AiAssistantController extends Controller
 
         return response()->json([
             'success' => true,
-            'outline' => $outline
+            'outline' => $outline,
         ]);
     }
 }

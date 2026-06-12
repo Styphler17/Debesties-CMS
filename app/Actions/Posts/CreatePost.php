@@ -11,17 +11,17 @@ class CreatePost
 {
     public function handle(array $data, User $user): Post
     {
-        $slug = (new GenerateSlug())->handle($data['title'], 'posts');
+        $slug = (new GenerateSlug)->handle($data['title'], 'posts');
 
         $post = Post::create([
-            'user_id'           => $user->id,
-            'title'             => $data['title'],
-            'slug'              => $slug,
-            'subtitle'          => $data['subtitle'] ?? null,
-            'excerpt'           => $data['excerpt'] ?? null,
-            'body'              => $data['body'],
-            'status'            => $data['status'] ?? 'draft',
-            'category_id'       => $data['category_id'] ?? null,
+            'user_id' => $user->id,
+            'title' => $data['title'],
+            'slug' => $slug,
+            'subtitle' => $data['subtitle'] ?? null,
+            'excerpt' => $data['excerpt'] ?? null,
+            'body' => $data['body'],
+            'status' => $data['status'] ?? 'draft',
+            'category_id' => $data['category_id'] ?? null,
             'featured_image_id' => $data['featured_image_id'] ?? null,
         ]);
 

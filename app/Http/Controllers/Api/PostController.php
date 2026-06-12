@@ -37,7 +37,7 @@ class PostController extends Controller
             $search = $request->q;
             $query->where(function ($q) use ($search) {
                 $q->where('title', 'like', "%{$search}%")
-                  ->orWhere('body', 'like', "%{$search}%");
+                    ->orWhere('body', 'like', "%{$search}%");
             });
         }
 
@@ -58,7 +58,7 @@ class PostController extends Controller
                 'tags:id,name,slug',
                 'comments' => function ($q) {
                     $q->where('status', 'approved')->orderBy('created_at', 'desc');
-                }
+                },
             ])
             ->where('slug', $slug)
             ->firstOrFail();

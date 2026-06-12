@@ -9,8 +9,8 @@ use App\Models\MenuItem;
 use App\Models\Page;
 use App\Models\Post;
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Str;
 
 class MenuController extends Controller
 {
@@ -42,7 +42,7 @@ class MenuController extends Controller
 
     public function saveItems(Request $request, $menu)
     {
-        if (!$menu instanceof Menu) {
+        if (! $menu instanceof Menu) {
             $menu = Menu::findOrFail($menu);
         }
 

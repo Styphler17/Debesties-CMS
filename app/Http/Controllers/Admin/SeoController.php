@@ -33,12 +33,12 @@ class SeoController extends Controller
             ];
         })->toArray();
 
-        $avgScore = count($auditPosts) > 0 
-            ? (int) round(array_sum(array_column($auditPosts, 'score')) / count($auditPosts)) 
+        $avgScore = count($auditPosts) > 0
+            ? (int) round(array_sum(array_column($auditPosts, 'score')) / count($auditPosts))
             : 0;
 
-        $missingMeta = count(array_filter($auditPosts, fn($p) => empty($p['meta_title']) || empty($p['meta_desc'])));
-        $missingKeyword = count(array_filter($auditPosts, fn($p) => empty($p['keyword'])));
+        $missingMeta = count(array_filter($auditPosts, fn ($p) => empty($p['meta_title']) || empty($p['meta_desc'])));
+        $missingKeyword = count(array_filter($auditPosts, fn ($p) => empty($p['keyword'])));
 
         return view('admin.seo.index', compact('auditPosts', 'internalLinks', 'avgScore', 'missingMeta', 'missingKeyword'));
     }

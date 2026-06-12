@@ -16,11 +16,11 @@ class Post extends Model
     protected $guarded = [];
 
     protected $casts = [
-        'published_at'  => 'datetime',
+        'published_at' => 'datetime',
         'scheduled_for' => 'datetime',
-        'faq'           => 'array',
-        'sources'       => 'array',
-        'key_facts'     => 'array',
+        'faq' => 'array',
+        'sources' => 'array',
+        'key_facts' => 'array',
     ];
 
     public function user()
@@ -50,7 +50,7 @@ class Post extends Model
 
     public function featuredImage()
     {
-        return $this->belongsTo(\App\Models\Media::class, 'featured_image_id');
+        return $this->belongsTo(Media::class, 'featured_image_id');
     }
 
     public function scopePublished($query)

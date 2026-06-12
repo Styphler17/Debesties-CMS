@@ -29,9 +29,9 @@ class PublicAuthTest extends TestCase
         Queue::fake();
 
         $response = $this->post('/register', [
-            'name'                  => 'Test User',
-            'email'                 => 'test@example.com',
-            'password'              => 'password123',
+            'name' => 'Test User',
+            'email' => 'test@example.com',
+            'password' => 'password123',
             'password_confirmation' => 'password123',
         ]);
 
@@ -46,9 +46,9 @@ class PublicAuthTest extends TestCase
         User::factory()->create(['email' => 'taken@example.com']);
 
         $response = $this->post('/register', [
-            'name'                  => 'New User',
-            'email'                 => 'taken@example.com',
-            'password'              => 'password123',
+            'name' => 'New User',
+            'email' => 'taken@example.com',
+            'password' => 'password123',
             'password_confirmation' => 'password123',
         ]);
 
@@ -66,7 +66,7 @@ class PublicAuthTest extends TestCase
         $user = User::factory()->create(['password' => bcrypt('password')]);
 
         $response = $this->post('/login', [
-            'email'    => $user->email,
+            'email' => $user->email,
             'password' => 'password',
         ]);
 
@@ -79,7 +79,7 @@ class PublicAuthTest extends TestCase
         $user = User::factory()->create(['password' => bcrypt('password')]);
 
         $this->post('/login', [
-            'email'    => $user->email,
+            'email' => $user->email,
             'password' => 'wrong',
         ])->assertSessionHasErrors('email');
 
@@ -105,9 +105,9 @@ class PublicAuthTest extends TestCase
         Queue::fake();
 
         $this->post('/register', [
-            'name'                  => 'Test User',
-            'email'                 => 'test@example.com',
-            'password'              => 'password123',
+            'name' => 'Test User',
+            'email' => 'test@example.com',
+            'password' => 'password123',
             'password_confirmation' => 'password123',
         ]);
 

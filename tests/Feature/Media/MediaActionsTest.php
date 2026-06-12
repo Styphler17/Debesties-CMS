@@ -4,7 +4,6 @@ namespace Tests\Feature\Media;
 
 use App\Actions\Media\DeleteMedia;
 use App\Actions\Media\UploadMedia;
-use App\Models\Media;
 use App\Models\Post;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -27,7 +26,7 @@ class MediaActionsTest extends TestCase
         $user = User::factory()->create();
         $file = UploadedFile::fake()->image('photo.jpg', 600, 400);
 
-        $media = (new UploadMedia())->handle($file, $user);
+        $media = (new UploadMedia)->handle($file, $user);
 
         $this->assertDatabaseHas('media', [
             'id' => $media->id,
@@ -42,16 +41,16 @@ class MediaActionsTest extends TestCase
     {
         $user = User::factory()->create();
         $file = UploadedFile::fake()->image('photo.jpg', 600, 400);
-        $media = (new UploadMedia())->handle($file, $user);
-        
+        $media = (new UploadMedia)->handle($file, $user);
+
         $fileName = basename($media->file_path);
-        
+
         // Touch variant dummy files to simulate job
         Storage::disk('public')->put("uploads/thumb/{$fileName}", 'thumb');
         Storage::disk('public')->put("uploads/medium/{$fileName}", 'medium');
         Storage::disk('public')->put("uploads/large/{$fileName}", 'large');
 
-        (new DeleteMedia())->handle($media);
+        (new DeleteMedia)->handle($media);
 
         $this->assertDatabaseMissing('media', ['id' => $media->id]);
         Storage::disk('public')->assertMissing($media->file_path);
@@ -62,7 +61,7 @@ class MediaActionsTest extends TestCase
     {
         $user = User::factory()->create();
         $file = UploadedFile::fake()->image('photo.jpg', 600, 400);
-        $media = (new UploadMedia())->handle($file, $user);
+        $media = (new UploadMedia)->handle($file, $user);
 
         Post::create([
             'user_id' => $user->id,
@@ -74,6 +73,6 @@ class MediaActionsTest extends TestCase
         ]);
 
         $this->expectException(\Exception::class);
-        (new DeleteMedia())->handle($media);
+        (new DeleteMedia)->handle($media);
     }
 }

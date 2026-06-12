@@ -20,8 +20,11 @@ class PostActionsTest extends TestCase
     use RefreshDatabase;
 
     private User $user;
+
     private Category $category;
+
     private Tag $tag1;
+
     private Tag $tag2;
 
     protected function setUp(): void
@@ -30,25 +33,25 @@ class PostActionsTest extends TestCase
 
         Queue::fake();
 
-        $this->user     = User::factory()->create();
+        $this->user = User::factory()->create();
         $this->category = Category::create(['name' => 'Tech', 'slug' => 'tech']);
-        $this->tag1     = Tag::create(['name' => 'PHP', 'slug' => 'php']);
-        $this->tag2     = Tag::create(['name' => 'Laravel', 'slug' => 'laravel']);
+        $this->tag1 = Tag::create(['name' => 'PHP', 'slug' => 'php']);
+        $this->tag2 = Tag::create(['name' => 'Laravel', 'slug' => 'laravel']);
     }
 
     public function test_create_generates_slug_creates_post_meta_and_syncs_tags(): void
     {
-        $post = (new CreatePost())->handle([
-            'title'       => 'Hello World',
-            'body'        => '<p>Content here</p>',
+        $post = (new CreatePost)->handle([
+            'title' => 'Hello World',
+            'body' => '<p>Content here</p>',
             'category_id' => $this->category->id,
-            'tags'        => [$this->tag1->id, $this->tag2->id],
-            'status'      => 'draft',
+            'tags' => [$this->tag1->id, $this->tag2->id],
+            'status' => 'draft',
         ], $this->user);
 
         $this->assertDatabaseHas('posts', [
-            'title'   => 'Hello World',
-            'slug'    => 'hello-world',
+            'title' => 'Hello World',
+            'slug' => 'hello-world',
             'user_id' => $this->user->id,
         ]);
 
@@ -64,9 +67,9 @@ class PostActionsTest extends TestCase
     {
         Post::create(['title' => 'Hello World', 'slug' => 'hello-world', 'body' => 'x', 'user_id' => $this->user->id, 'status' => 'draft']);
 
-        $post = (new CreatePost())->handle([
-            'title'  => 'Hello World',
-            'body'   => '<p>Different post</p>',
+        $post = (new CreatePost)->handle([
+            'title' => 'Hello World',
+            'body' => '<p>Different post</p>',
             'status' => 'draft',
         ], $this->user);
 
@@ -76,17 +79,17 @@ class PostActionsTest extends TestCase
     public function test_update_regenerates_slug_when_title_changes(): void
     {
         $post = Post::create([
-            'title'   => 'Original Title',
-            'slug'    => 'original-title',
-            'body'    => '<p>Body</p>',
+            'title' => 'Original Title',
+            'slug' => 'original-title',
+            'body' => '<p>Body</p>',
             'user_id' => $this->user->id,
-            'status'  => 'draft',
+            'status' => 'draft',
         ]);
         PostMeta::create(['post_id' => $post->id]);
 
-        $updated = (new UpdatePost())->handle($post, [
+        $updated = (new UpdatePost)->handle($post, [
             'title' => 'Updated Title',
-            'body'  => '<p>Body</p>',
+            'body' => '<p>Body</p>',
         ]);
 
         $this->assertSame('updated-title', $updated->fresh()->slug);
@@ -95,17 +98,17 @@ class PostActionsTest extends TestCase
     public function test_update_does_not_regenerate_slug_when_title_unchanged(): void
     {
         $post = Post::create([
-            'title'   => 'Original Title',
-            'slug'    => 'original-title',
-            'body'    => '<p>Body</p>',
+            'title' => 'Original Title',
+            'slug' => 'original-title',
+            'body' => '<p>Body</p>',
             'user_id' => $this->user->id,
-            'status'  => 'draft',
+            'status' => 'draft',
         ]);
         PostMeta::create(['post_id' => $post->id]);
 
-        $updated = (new UpdatePost())->handle($post, [
+        $updated = (new UpdatePost)->handle($post, [
             'title' => 'Original Title',
-            'body'  => '<p>Updated body</p>',
+            'body' => '<p>Updated body</p>',
         ]);
 
         $this->assertSame('original-title', $updated->fresh()->slug);
@@ -114,19 +117,19 @@ class PostActionsTest extends TestCase
     public function test_update_resyncs_tags(): void
     {
         $post = Post::create([
-            'title'   => 'Tagged Post',
-            'slug'    => 'tagged-post',
-            'body'    => '<p>Body</p>',
+            'title' => 'Tagged Post',
+            'slug' => 'tagged-post',
+            'body' => '<p>Body</p>',
             'user_id' => $this->user->id,
-            'status'  => 'draft',
+            'status' => 'draft',
         ]);
         PostMeta::create(['post_id' => $post->id]);
         $post->tags()->attach([$this->tag1->id]);
 
-        (new UpdatePost())->handle($post, [
+        (new UpdatePost)->handle($post, [
             'title' => 'Tagged Post',
-            'body'  => '<p>Body</p>',
-            'tags'  => [$this->tag2->id],
+            'body' => '<p>Body</p>',
+            'tags' => [$this->tag2->id],
         ]);
 
         $this->assertDatabaseMissing('post_tags', ['post_id' => $post->id, 'tag_id' => $this->tag1->id]);
@@ -136,14 +139,14 @@ class PostActionsTest extends TestCase
     public function test_delete_soft_deletes_post(): void
     {
         $post = Post::create([
-            'title'   => 'To Delete',
-            'slug'    => 'to-delete',
-            'body'    => '<p>Body</p>',
+            'title' => 'To Delete',
+            'slug' => 'to-delete',
+            'body' => '<p>Body</p>',
             'user_id' => $this->user->id,
-            'status'  => 'draft',
+            'status' => 'draft',
         ]);
 
-        (new DeletePost())->handle($post);
+        (new DeletePost)->handle($post);
 
         $this->assertSoftDeleted('posts', ['id' => $post->id]);
     }
@@ -151,14 +154,14 @@ class PostActionsTest extends TestCase
     public function test_publish_sets_status_published_and_published_at(): void
     {
         $post = Post::create([
-            'title'   => 'To Publish',
-            'slug'    => 'to-publish',
-            'body'    => '<p>Body</p>',
+            'title' => 'To Publish',
+            'slug' => 'to-publish',
+            'body' => '<p>Body</p>',
             'user_id' => $this->user->id,
-            'status'  => 'draft',
+            'status' => 'draft',
         ]);
 
-        (new PublishPost())->handle($post);
+        (new PublishPost)->handle($post);
 
         $post->refresh();
         $this->assertSame('published', $post->status);

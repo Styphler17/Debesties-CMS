@@ -2,6 +2,19 @@
 
 namespace App\Providers;
 
+use App\Models\Comment;
+use App\Models\Media;
+use App\Models\Post;
+use App\Models\User;
+use App\Observers\CommentObserver;
+use App\Observers\MediaObserver;
+use App\Observers\PostObserver;
+use App\Observers\UserObserver;
+use App\Policies\CommentPolicy;
+use App\Policies\MediaPolicy;
+use App\Policies\PostPolicy;
+use App\Policies\UserPolicy;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -19,14 +32,14 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        \App\Models\User::observe(\App\Observers\UserObserver::class);
-        \App\Models\Media::observe(\App\Observers\MediaObserver::class);
-        \App\Models\Post::observe(\App\Observers\PostObserver::class);
-        \App\Models\Comment::observe(\App\Observers\CommentObserver::class);
+        User::observe(UserObserver::class);
+        Media::observe(MediaObserver::class);
+        Post::observe(PostObserver::class);
+        Comment::observe(CommentObserver::class);
 
-        \Illuminate\Support\Facades\Gate::policy(\App\Models\Post::class, \App\Policies\PostPolicy::class);
-        \Illuminate\Support\Facades\Gate::policy(\App\Models\Media::class, \App\Policies\MediaPolicy::class);
-        \Illuminate\Support\Facades\Gate::policy(\App\Models\User::class, \App\Policies\UserPolicy::class);
-        \Illuminate\Support\Facades\Gate::policy(\App\Models\Comment::class, \App\Policies\CommentPolicy::class);
+        Gate::policy(Post::class, PostPolicy::class);
+        Gate::policy(Media::class, MediaPolicy::class);
+        Gate::policy(User::class, UserPolicy::class);
+        Gate::policy(Comment::class, CommentPolicy::class);
     }
 }

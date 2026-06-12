@@ -18,6 +18,7 @@ class PostCrudTest extends TestCase
     use RefreshDatabase;
 
     private User $admin;
+
     private Category $category;
 
     protected function setUp(): void
@@ -25,7 +26,7 @@ class PostCrudTest extends TestCase
         parent::setUp();
 
         $this->artisan('db:seed', ['--class' => 'RolesAndPermissionsSeeder']);
-        $role        = Role::where('slug', 'super_admin')->firstOrFail();
+        $role = Role::where('slug', 'super_admin')->firstOrFail();
         $this->admin = User::factory()->create();
         $this->admin->roles()->attach($role);
 
@@ -49,18 +50,18 @@ class PostCrudTest extends TestCase
         $tag = Tag::create(['name' => 'PHP', 'slug' => 'php']);
 
         $response = $this->actingAs($this->admin)->postJson(route('admin.posts.store'), [
-            'title'       => 'Test Post Title',
-            'body'        => '<p>Post body content</p>',
+            'title' => 'Test Post Title',
+            'body' => '<p>Post body content</p>',
             'category_id' => $this->category->id,
-            'tags'        => [$tag->id],
-            'status'      => 'draft',
+            'tags' => [$tag->id],
+            'status' => 'draft',
         ]);
 
         $response->assertStatus(302);
 
         $this->assertDatabaseHas('posts', [
-            'title'  => 'Test Post Title',
-            'slug'   => 'test-post-title',
+            'title' => 'Test Post Title',
+            'slug' => 'test-post-title',
             'status' => 'draft',
         ]);
 
@@ -74,24 +75,24 @@ class PostCrudTest extends TestCase
         Queue::fake();
 
         $post = Post::create([
-            'title'   => 'Original Title',
-            'slug'    => 'original-title',
-            'body'    => '<p>Body</p>',
+            'title' => 'Original Title',
+            'slug' => 'original-title',
+            'body' => '<p>Body</p>',
             'user_id' => $this->admin->id,
-            'status'  => 'draft',
+            'status' => 'draft',
         ]);
         PostMeta::create(['post_id' => $post->id]);
 
         $this->actingAs($this->admin)->put(route('admin.posts.update', $post), [
-            'title'       => 'Updated Title',
-            'body'        => '<p>Updated body</p>',
+            'title' => 'Updated Title',
+            'body' => '<p>Updated body</p>',
             'category_id' => $this->category->id,
         ]);
 
         $this->assertDatabaseHas('posts', [
-            'id'    => $post->id,
+            'id' => $post->id,
             'title' => 'Updated Title',
-            'slug'  => 'updated-title',
+            'slug' => 'updated-title',
         ]);
     }
 
@@ -100,17 +101,17 @@ class PostCrudTest extends TestCase
         Queue::fake();
 
         $post = Post::create([
-            'title'   => 'Same Title',
-            'slug'    => 'same-title',
-            'body'    => '<p>Body</p>',
+            'title' => 'Same Title',
+            'slug' => 'same-title',
+            'body' => '<p>Body</p>',
             'user_id' => $this->admin->id,
-            'status'  => 'draft',
+            'status' => 'draft',
         ]);
         PostMeta::create(['post_id' => $post->id]);
 
         $this->actingAs($this->admin)->put(route('admin.posts.update', $post), [
-            'title'       => 'Same Title',
-            'body'        => '<p>Different body</p>',
+            'title' => 'Same Title',
+            'body' => '<p>Different body</p>',
             'category_id' => $this->category->id,
         ]);
 
@@ -122,11 +123,11 @@ class PostCrudTest extends TestCase
         Queue::fake();
 
         $post = Post::create([
-            'title'   => 'To Be Deleted',
-            'slug'    => 'to-be-deleted',
-            'body'    => '<p>Body</p>',
+            'title' => 'To Be Deleted',
+            'slug' => 'to-be-deleted',
+            'body' => '<p>Body</p>',
             'user_id' => $this->admin->id,
-            'status'  => 'draft',
+            'status' => 'draft',
         ]);
 
         $this->actingAs($this->admin)
@@ -140,11 +141,11 @@ class PostCrudTest extends TestCase
         Queue::fake();
 
         $post = Post::create([
-            'title'   => 'To Be Published',
-            'slug'    => 'to-be-published',
-            'body'    => '<p>Body</p>',
+            'title' => 'To Be Published',
+            'slug' => 'to-be-published',
+            'body' => '<p>Body</p>',
             'user_id' => $this->admin->id,
-            'status'  => 'draft',
+            'status' => 'draft',
         ]);
 
         $this->actingAs($this->admin)
@@ -160,11 +161,11 @@ class PostCrudTest extends TestCase
         Queue::fake();
 
         $post = Post::create([
-            'title'   => 'To Be Scheduled',
-            'slug'    => 'to-be-scheduled',
-            'body'    => '<p>Body</p>',
+            'title' => 'To Be Scheduled',
+            'slug' => 'to-be-scheduled',
+            'body' => '<p>Body</p>',
             'user_id' => $this->admin->id,
-            'status'  => 'draft',
+            'status' => 'draft',
         ]);
 
         $scheduledFor = now()->addDays(2)->format('Y-m-d H:i:s');

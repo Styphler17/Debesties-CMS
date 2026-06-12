@@ -25,7 +25,7 @@ class AdminAuthController extends Controller
         $credentials = $request->only('email', 'password');
         $remember = $request->boolean('remember_me');
 
-        if (!Auth::attempt($credentials, $remember)) {
+        if (! Auth::attempt($credentials, $remember)) {
             return back()->withErrors([
                 'email' => 'These credentials do not match our records.',
             ])->onlyInput('email');
@@ -34,7 +34,7 @@ class AdminAuthController extends Controller
         $user = Auth::user();
         $hasAdminRole = $user->roles()->where('slug', '!=', 'subscriber')->exists();
 
-        if (!$hasAdminRole) {
+        if (! $hasAdminRole) {
             Auth::logout();
             $request->session()->invalidate();
             $request->session()->regenerateToken();

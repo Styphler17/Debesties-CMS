@@ -9,7 +9,7 @@ class PublishPost
 {
     public function handle(Post $post): void
     {
-        $post->status       = 'published';
+        $post->status = 'published';
         $post->published_at = Carbon::now();
         $post->save();
     }

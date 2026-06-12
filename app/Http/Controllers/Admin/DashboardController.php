@@ -7,7 +7,6 @@ use App\Models\ActivityLog;
 use App\Models\Category;
 use App\Models\Comment;
 use App\Models\Post;
-use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 
 class DashboardController extends Controller

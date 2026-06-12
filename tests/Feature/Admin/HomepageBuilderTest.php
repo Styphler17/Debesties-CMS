@@ -13,6 +13,7 @@ class HomepageBuilderTest extends TestCase
     use RefreshDatabase;
 
     private User $admin;
+
     private Role $adminRole;
 
     protected function setUp(): void
@@ -51,19 +52,19 @@ class HomepageBuilderTest extends TestCase
                 'settings' => [
                     'headline' => 'Test headline',
                     'subtext' => 'Test subtext',
-                ]
-            ]
+                ],
+            ],
         ]);
 
         $response = $this->actingAs($this->admin)
             ->postJson(route('admin.homepage-builder.store'), [
-                'layout' => $layoutPayload
+                'layout' => $layoutPayload,
             ]);
 
         $response->assertStatus(200);
         $response->assertJson([
             'success' => true,
-            'message' => 'Homepage layout configuration saved successfully ✓'
+            'message' => 'Homepage layout configuration saved successfully ✓',
         ]);
 
         $this->assertEquals($layoutPayload, SettingsService::get('homepage_layout'));
@@ -79,9 +80,9 @@ class HomepageBuilderTest extends TestCase
                 'settings' => [
                     'headline' => 'Dynamic Hero headline',
                     'subtext' => 'Dynamic subtext',
-                    'theme' => 'gold-black'
-                ]
-            ]
+                    'theme' => 'gold-black',
+                ],
+            ],
         ]);
 
         SettingsService::set('homepage_layout', $layoutPayload);

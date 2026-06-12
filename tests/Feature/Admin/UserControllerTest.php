@@ -16,7 +16,9 @@ class UserControllerTest extends TestCase
     use RefreshDatabase;
 
     private User $admin;
+
     private Role $adminRole;
+
     private Role $subscriberRole;
 
     protected function setUp(): void
@@ -55,12 +57,12 @@ class UserControllerTest extends TestCase
             ]);
 
         $response->assertRedirect(route('admin.users.index'));
-        
+
         $user = User::where('email', 'john@example.com')->firstOrFail();
-        
+
         $this->assertTrue(Hash::check('secret123', $user->password));
         $this->assertEquals('john-doe', $user->slug);
-        
+
         // Assert default subscriber role attached via UserObserver
         $this->assertTrue($user->roles->contains($this->subscriberRole->id));
     }
@@ -81,9 +83,9 @@ class UserControllerTest extends TestCase
             ]);
 
         $response->assertRedirect(route('admin.users.index'));
-        
+
         $user = User::where('email', 'jane@example.com')->firstOrFail();
-        
+
         $this->assertNotNull($user->avatar);
         $this->assertTrue($user->roles->contains($editorRole->id));
         $this->assertFalse($user->roles->contains($this->subscriberRole->id)); // Overridden
@@ -104,7 +106,7 @@ class UserControllerTest extends TestCase
             ]);
 
         $response->assertRedirect(route('admin.users.index'));
-        
+
         $user = $user->fresh();
         $this->assertEquals('Updated Name', $user->name);
         $this->assertEquals('updated@example.com', $user->email);
@@ -120,14 +122,14 @@ class UserControllerTest extends TestCase
 
         $response->assertRedirect(route('admin.users.index'));
         $response->assertSessionHas('error', 'You cannot delete your own account.');
-        
+
         $this->assertDatabaseHas('users', ['id' => $this->admin->id, 'deleted_at' => null]);
     }
 
     public function test_admin_can_delete_other_user_reassigning_posts_and_soft_deleting(): void
     {
         $user = User::factory()->create();
-        
+
         // Author some posts
         $post = Post::create([
             'user_id' => $user->id,
@@ -142,7 +144,7 @@ class UserControllerTest extends TestCase
 
         $response->assertRedirect(route('admin.users.index'));
         $response->assertSessionHas('success', 'User deleted successfully.');
-        
+
         // Assert user soft deleted
         $this->assertSoftDeleted('users', ['id' => $user->id]);
 
