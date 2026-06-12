@@ -4,59 +4,17 @@
 @section('page_title', 'Roles & Permissions')
 
 @section('content')
-@php
-    $roles = [
-        [
-            'id' => 1,
-            'name' => 'Administrator',
-            'slug' => 'administrator',
-            'description' => 'Full access to all system features, settings, users, and content.',
-            'users_count' => 1,
-            'permissions' => [
-                'posts' => ['read' => true, 'write' => true, 'delete' => true],
-                'users' => ['read' => true, 'write' => true, 'delete' => true],
-                'settings' => ['read' => true, 'write' => true, 'delete' => true],
-                'comments' => ['read' => true, 'write' => true, 'delete' => true],
-            ],
-            'cannot_delete' => true,
-        ],
-        [
-            'id' => 2,
-            'name' => 'Editor',
-            'slug' => 'editor',
-            'description' => 'Can review, modify, and publish any posts. Limited settings configuration.',
-            'users_count' => 2,
-            'permissions' => [
-                'posts' => ['read' => true, 'write' => true, 'delete' => true],
-                'users' => ['read' => true, 'write' => false, 'delete' => false],
-                'settings' => ['read' => false, 'write' => false, 'delete' => false],
-                'comments' => ['read' => true, 'write' => true, 'delete' => true],
-            ],
-            'cannot_delete' => false,
-        ],
-        [
-            'id' => 3,
-            'name' => 'Author',
-            'slug' => 'author',
-            'description' => 'Can create, edit, and manage their own articles and view public metrics.',
-            'users_count' => 2,
-            'permissions' => [
-                'posts' => ['read' => true, 'write' => true, 'delete' => false],
-                'users' => ['read' => false, 'write' => false, 'delete' => false],
-                'settings' => ['read' => false, 'write' => false, 'delete' => false],
-                'comments' => ['read' => false, 'write' => false, 'delete' => false],
-            ],
-            'cannot_delete' => false,
-        ],
-    ];
 
-    $permissionLabels = [
-        'posts' => 'Manage Posts',
-        'users' => 'Manage Users',
-        'settings' => 'Manage Settings',
-        'comments' => 'Manage Comments',
-    ];
-@endphp
+@if(session('success'))
+    <div style="background: var(--cms-green-soft); color: var(--cms-green-deep); padding: 12px 18px; border-radius: var(--cms-r-md); border: 1px solid rgba(26,138,75,0.2); margin-bottom: 16px; font-family: var(--cms-font-ui); font-size: 14px; font-weight: 600;">
+        {{ session('success') }}
+    </div>
+@endif
+@if(session('error'))
+    <div style="background: var(--cms-red-soft); color: var(--cms-red-deep); padding: 12px 18px; border-radius: var(--cms-r-md); border: 1px solid rgba(200,55,43,0.2); margin-bottom: 16px; font-family: var(--cms-font-ui); font-size: 14px; font-weight: 600;">
+        {{ session('error') }}
+    </div>
+@endif
 
 <div style="display: grid; grid-template-columns: 320px 1fr; gap: 24px; align-items: start;">
     
@@ -74,37 +32,40 @@
 
         <div id="role-cards-container" style="display: flex; flex-direction: column; gap: 10px;">
             @foreach($roles as $role)
+                @php
+                    $isSystemRole = in_array($role->slug, ['super_admin', 'subscriber']);
+                @endphp
                 <div class="role-card" 
-                     id="role-card-{{ $role['id'] }}" 
-                     onclick="selectRole({{ $role['id'] }})"
-                     data-role-id="{{ $role['id'] }}"
-                     data-name="{{ $role['name'] }}"
-                     data-description="{{ $role['description'] }}"
-                     data-cannot-delete="{{ $role['cannot_delete'] ? 'true' : 'false' }}"
-                     data-permissions='@json($role['permissions'])'
+                     id="role-card-{{ $role->id }}" 
+                     onclick="selectRole({{ $role->id }})"
+                     data-role-id="{{ $role->id }}"
+                     data-name="{{ $role->name }}"
+                     data-description="{{ $role->description ?: 'No description provided.' }}"
+                     data-cannot-delete="{{ $isSystemRole ? 'true' : 'false' }}"
+                     data-permissions='@json($role->permissions->pluck('id'))'
                      style="background: var(--cms-surface); border: 1.5px solid {{ $loop->first ? 'var(--cms-gold)' : 'var(--cms-border)' }}; border-radius: var(--cms-r-lg); padding: 16px; cursor: pointer; transition: all 150ms; position: relative;"
                      onmouseover="if(this.style.borderColor!=='var(--cms-gold)') this.style.borderColor='var(--cms-border-st)'"
                      onmouseout="if(this.style.borderColor!=='var(--cms-gold)') this.style.borderColor='var(--cms-border)'">
                     
-                    @if($role['cannot_delete'])
+                    @if($isSystemRole)
                         <span style="position: absolute; top: 16px; right: 16px; font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 999px; background: var(--cms-bg); color: var(--cms-fg3); border: 1px solid var(--cms-border);">SYSTEM</span>
                     @endif
 
                     <div style="font-family: var(--cms-font-ui); font-size: 14.5px; font-weight: 700; color: var(--cms-fg1); margin-bottom: 4px;" class="role-card-name">
-                        {{ $role['name'] }}
+                        {{ $role->name }}
                     </div>
                     
                     <div style="font-family: var(--cms-font-ui); font-size: 12.5px; color: var(--cms-fg3); line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; margin-bottom: 12px;" class="role-card-desc">
-                        {{ $role['description'] }}
+                        {{ $role->description ?: 'No description provided.' }}
                     </div>
 
                     <div style="display: flex; align-items: center; justify-content: space-between; border-top: 1px solid var(--cms-border); padding-top: 10px; margin-top: 8px;">
                         <span style="font-size: 12px; font-weight: 500; color: var(--cms-fg4);" class="role-card-users">
-                            <i data-lucide="users" style="width: 12px; height: 12px; vertical-align: -1px; margin-right: 4px;"></i>{{ $role['users_count'] }} user{{ $role['users_count'] !== 1 ? 's' : '' }}
+                            <i data-lucide="users" style="width: 12px; height: 12px; vertical-align: -1px; margin-right: 4px;"></i>{{ $role->users_count }} user{{ $role->users_count !== 1 ? 's' : '' }}
                         </span>
 
-                        @if(!$role['cannot_delete'])
-                            <button onclick="event.stopPropagation(); confirmDeleteRole({{ $role['id'] }}, '{{ $role['name'] }}')" 
+                        @if(!$isSystemRole)
+                            <button onclick="event.stopPropagation(); confirmDeleteRole({{ $role->id }}, '{{ $role->name }}')" 
                                     style="border: none; background: transparent; cursor: pointer; color: var(--cms-red); display: flex; padding: 4px; border-radius: 4px;"
                                     onmouseover="this.style.background='var(--cms-red-soft)'"
                                     onmouseout="this.style.background='transparent'">
@@ -126,7 +87,7 @@
                 <div style="flex: 1;">
                     <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 6px;">
                         <h2 id="active-role-name" style="font-family: var(--cms-font-disp); font-size: 24px; font-weight: 700; color: var(--cms-fg1); cursor: pointer; border-bottom: 1px dashed var(--cms-border-st); padding-bottom: 2px;" onclick="startEditRoleName()" title="Click to edit role name">
-                            Administrator
+                            Super Admin
                         </h2>
                         <input id="active-role-name-input" type="text" style="display: none; font-family: var(--cms-font-disp); font-size: 24px; font-weight: 700; color: var(--cms-fg1); background: var(--cms-bg); border: 1.5px solid var(--cms-gold); border-radius: var(--cms-r-md); padding: 2px 8px; outline: none; width: 300px;" onblur="finishEditRoleName()" onkeydown="if(event.key === 'Enter') finishEditRoleName()" />
                         <button class="edit-pencil-btn" onclick="startEditRoleName()" style="border: none; background: none; cursor: pointer; color: var(--cms-fg4); display: flex; padding: 4px; border-radius: 4px;" onmouseover="this.style.color='var(--cms-fg2)'" onmouseout="this.style.color='var(--cms-fg4)'">
@@ -134,7 +95,7 @@
                         </button>
                     </div>
                     <div id="active-role-desc" style="font-family: var(--cms-font-ui); font-size: 13.5px; color: var(--cms-fg3); line-height: 1.5; cursor: pointer;" onclick="startEditRoleDesc()" title="Click to edit description">
-                        Full access to all system features, settings, users, and content.
+                        Full access to all system features.
                     </div>
                     <textarea id="active-role-desc-input" style="display: none; font-family: var(--cms-font-ui); font-size: 13.5px; color: var(--cms-fg1); background: var(--cms-bg); border: 1.5px solid var(--cms-gold); border-radius: var(--cms-r-md); padding: 6px 10px; outline: none; width: 100%; height: 60px; resize: none; margin-top: 4px;" onblur="finishEditRoleDesc()" onkeydown="if(event.key === 'Enter') { event.preventDefault(); finishEditRoleDesc(); }"></textarea>
                 </div>
@@ -154,27 +115,19 @@
                 <table style="width: 100%; border-collapse: collapse; background: var(--cms-surface);">
                     <thead>
                         <tr style="background: var(--cms-bg); border-bottom: 1px solid var(--cms-border);">
-                            <th style="padding: 14px 20px; text-align: left; font-family: var(--cms-font-ui); font-size: 12px; font-weight: 700; color: var(--cms-fg3); text-transform: uppercase; letter-spacing: 0.04em;">Module / Group</th>
-                            <th style="padding: 14px 20px; text-align: center; font-family: var(--cms-font-ui); font-size: 12px; font-weight: 700; color: var(--cms-fg3); text-transform: uppercase; letter-spacing: 0.04em; width: 120px;">Read</th>
-                            <th style="padding: 14px 20px; text-align: center; font-family: var(--cms-font-ui); font-size: 12px; font-weight: 700; color: var(--cms-fg3); text-transform: uppercase; letter-spacing: 0.04em; width: 120px;">Write</th>
-                            <th style="padding: 14px 20px; text-align: center; font-family: var(--cms-font-ui); font-size: 12px; font-weight: 700; color: var(--cms-fg3); text-transform: uppercase; letter-spacing: 0.04em; width: 120px;">Delete</th>
+                            <th style="padding: 14px 20px; text-align: left; font-family: var(--cms-font-ui); font-size: 12px; font-weight: 700; color: var(--cms-fg3); text-transform: uppercase; letter-spacing: 0.04em;">Permission Name</th>
+                            <th style="padding: 14px 20px; text-align: center; font-family: var(--cms-font-ui); font-size: 12px; font-weight: 700; color: var(--cms-fg3); text-transform: uppercase; letter-spacing: 0.04em; width: 120px;">Allowed</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach($permissionLabels as $key => $label)
-                            <tr style="border-bottom: 1px solid var(--cms-border);" class="permission-row" data-key="{{ $key }}">
+                        @foreach($permissions as $permission)
+                            <tr style="border-bottom: 1px solid var(--cms-border);" class="permission-row" data-id="{{ $permission->id }}">
                                 <td style="padding: 16px 20px;">
-                                    <div style="font-family: var(--cms-font-ui); font-size: 14px; font-weight: 600; color: var(--cms-fg1);">{{ $label }}</div>
-                                    <div style="font-family: var(--cms-font-ui); font-size: 12px; color: var(--cms-fg4); margin-top: 1px;">Access rules for {{ strtolower($label) }} functionality.</div>
+                                    <div style="font-family: var(--cms-font-ui); font-size: 14px; font-weight: 600; color: var(--cms-fg1);">{{ $permission->name }}</div>
+                                    <div style="font-family: var(--cms-font-ui); font-size: 12px; color: var(--cms-fg4); margin-top: 1px;">Grant access to the <code>{{ $permission->slug }}</code> capability.</div>
                                 </td>
                                 <td style="padding: 16px 20px; text-align: center;">
-                                    <input type="checkbox" class="perm-cb" data-action="read" style="cursor: pointer; accent-color: var(--cms-gold); width: 16px; height: 16px;" />
-                                </td>
-                                <td style="padding: 16px 20px; text-align: center;">
-                                    <input type="checkbox" class="perm-cb" data-action="write" style="cursor: pointer; accent-color: var(--cms-gold); width: 16px; height: 16px;" />
-                                </td>
-                                <td style="padding: 16px 20px; text-align: center;">
-                                    <input type="checkbox" class="perm-cb" data-action="delete" style="cursor: pointer; accent-color: var(--cms-gold); width: 16px; height: 16px;" />
+                                    <input type="checkbox" class="perm-cb" value="{{ $permission->id }}" style="cursor: pointer; accent-color: var(--cms-gold); width: 18px; height: 18px;" />
                                 </td>
                             </tr>
                         @endforeach
@@ -186,7 +139,7 @@
         {{-- Actions --}}
         <div style="display: flex; align-items: center; justify-content: space-between; margin-top: 24px;">
             <div id="status-hint-text" style="font-family: var(--cms-font-ui); font-size: 13px; color: var(--cms-fg3);">
-                * Settings are saved locally for previewing purposes.
+                * System roles are locked and cannot be edited.
             </div>
             
             <button onclick="savePermissions()" id="save-permissions-btn"
@@ -264,12 +217,11 @@
 </div>
 
 <script>
-    let activeRoleId = 1;
+    let activeRoleId = {{ $roles->first() ? $roles->first()->id : 1 }};
     let deleteRoleId = null;
-    let nextRoleId = 4;
 
     document.addEventListener("DOMContentLoaded", () => {
-        selectRole(1);
+        selectRole(activeRoleId);
     });
 
     function selectRole(id) {
@@ -287,7 +239,7 @@
         const name = activeCard.dataset.name;
         const description = activeCard.dataset.description;
         const cannotDelete = activeCard.dataset.cannotDelete === 'true';
-        const permissions = JSON.parse(activeCard.dataset.permissions);
+        const permissions = JSON.parse(activeCard.dataset.permissions); // Array of checked permission IDs
 
         // Update main texts
         document.getElementById('active-role-name').textContent = name;
@@ -312,15 +264,10 @@
         }
 
         // Set checkboxes
-        document.querySelectorAll('.permission-row').forEach(row => {
-            const key = row.dataset.key;
-            const rowPerms = permissions[key] || { read: false, write: false, delete: false };
-
-            row.querySelectorAll('.perm-cb').forEach(cb => {
-                const action = cb.dataset.action;
-                cb.checked = !!rowPerms[action];
-                cb.disabled = cannotDelete;
-            });
+        document.querySelectorAll('.perm-cb').forEach(cb => {
+            const permId = parseInt(cb.value);
+            cb.checked = permissions.includes(permId);
+            cb.disabled = cannotDelete;
         });
 
         lucide.createIcons();
@@ -348,7 +295,7 @@
         const pencil = document.querySelector('.edit-pencil-btn');
 
         const newName = input.value.trim();
-        if (newName) {
+        if (newName && newName !== h2.textContent.trim()) {
             h2.textContent = newName;
             
             // Sync with card
@@ -356,6 +303,7 @@
             if (activeCard) {
                 activeCard.dataset.name = newName;
                 activeCard.querySelector('.role-card-name').textContent = newName;
+                savePermissions(); // Save name changes directly
             }
         }
 
@@ -383,7 +331,7 @@
         const textarea = document.getElementById('active-role-desc-input');
 
         const newDesc = textarea.value.trim();
-        if (newDesc) {
+        if (newDesc && newDesc !== descDiv.textContent.trim()) {
             descDiv.textContent = newDesc;
 
             // Sync with card
@@ -391,6 +339,7 @@
             if (activeCard) {
                 activeCard.dataset.description = newDesc;
                 activeCard.querySelector('.role-card-desc').textContent = newDesc;
+                savePermissions(); // Save description changes directly
             }
         }
 
@@ -398,37 +347,60 @@
         descDiv.style.display = 'block';
     }
 
-    // Save permissions logic
+    // Save permissions and role details via AJAX
     function savePermissions() {
         const activeCard = document.getElementById(`role-card-${activeRoleId}`);
         if (!activeCard || activeCard.dataset.cannotDelete === 'true') return;
 
-        let permissions = {};
-        document.querySelectorAll('.permission-row').forEach(row => {
-            const key = row.dataset.key;
-            permissions[key] = {
-                read: row.querySelector('.perm-cb[data-action="read"]').checked,
-                write: row.querySelector('.perm-cb[data-action="write"]').checked,
-                delete: row.querySelector('.perm-cb[data-action="delete"]').checked
-            };
+        let permissions = [];
+        document.querySelectorAll('.perm-cb:checked').forEach(cb => {
+            permissions.push(parseInt(cb.value));
         });
 
-        activeCard.dataset.permissions = JSON.stringify(permissions);
-
-        // Show a nice temporary success state
         const saveBtn = document.getElementById('save-permissions-btn');
         const originalText = saveBtn.innerHTML;
-        saveBtn.style.background = 'var(--cms-green)';
-        saveBtn.style.color = '#fff';
-        saveBtn.innerHTML = '<i data-lucide="check" style="width: 16px; height: 16px;"></i> Saved!';
-        lucide.createIcons();
+        saveBtn.disabled = true;
 
-        setTimeout(() => {
-            saveBtn.style.background = 'var(--cms-gold)';
-            saveBtn.style.color = '#1A1410';
-            saveBtn.innerHTML = originalText;
-            lucide.createIcons();
-        }, 1500);
+        fetch(`/admin/roles/${activeRoleId}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify({
+                _method: 'PUT',
+                name: activeCard.dataset.name,
+                description: activeCard.dataset.description,
+                permissions: permissions
+            })
+        })
+        .then(res => res.json())
+        .then(data => {
+            saveBtn.disabled = false;
+            if (data.success) {
+                activeCard.dataset.permissions = JSON.stringify(data.role.permissions_matrix);
+                
+                // Show temporary success state
+                saveBtn.style.background = 'var(--cms-green)';
+                saveBtn.style.color = '#fff';
+                saveBtn.innerHTML = '<i data-lucide="check" style="width: 16px; height: 16px;"></i> Saved!';
+                lucide.createIcons();
+
+                setTimeout(() => {
+                    saveBtn.style.background = 'var(--cms-gold)';
+                    saveBtn.style.color = '#1A1410';
+                    saveBtn.innerHTML = originalText;
+                    lucide.createIcons();
+                }, 1500);
+            } else {
+                alert(data.message || 'Error saving permissions');
+            }
+        })
+        .catch(() => {
+            saveBtn.disabled = false;
+            alert('An error occurred while saving.');
+        });
     }
 
     // Modal Add Role
@@ -455,52 +427,29 @@
             return;
         }
 
-        const id = nextRoleId++;
-        const defaultPermissions = {
-            posts: { read: true, write: false, delete: false },
-            users: { read: false, write: false, delete: false },
-            settings: { read: false, write: false, delete: false },
-            comments: { read: true, write: false, delete: false }
-        };
-
-        const container = document.getElementById('role-cards-container');
-        
-        const newCard = document.createElement('div');
-        newCard.className = 'role-card';
-        newCard.id = `role-card-${id}`;
-        newCard.onclick = () => selectRole(id);
-        newCard.dataset.roleId = id;
-        newCard.dataset.name = name;
-        newCard.dataset.description = desc || "No description provided.";
-        newCard.dataset.cannotDelete = "false";
-        newCard.dataset.permissions = JSON.stringify(defaultPermissions);
-        newCard.style.cssText = "background: var(--cms-surface); border: 1.5px solid var(--cms-border); border-radius: var(--cms-r-lg); padding: 16px; cursor: pointer; transition: all 150ms; position: relative;";
-        newCard.onmouseover = () => { if(newCard.style.borderColor !== 'var(--cms-gold)') newCard.style.borderColor = 'var(--cms-border-st)'; };
-        newCard.onmouseout = () => { if(newCard.style.borderColor !== 'var(--cms-gold)') newCard.style.borderColor = 'var(--cms-border)'; };
-
-        newCard.innerHTML = `
-            <div style="font-family: var(--cms-font-ui); font-size: 14.5px; font-weight: 700; color: var(--cms-fg1); margin-bottom: 4px;" class="role-card-name">
-                ${name}
-            </div>
-            <div style="font-family: var(--cms-font-ui); font-size: 12.5px; color: var(--cms-fg3); line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; margin-bottom: 12px;" class="role-card-desc">
-                ${desc || "No description provided."}
-            </div>
-            <div style="display: flex; align-items: center; justify-content: space-between; border-top: 1px solid var(--cms-border); padding-top: 10px; margin-top: 8px;">
-                <span style="font-size: 12px; font-weight: 500; color: var(--cms-fg4);" class="role-card-users">
-                    <i data-lucide="users" style="width: 12px; height: 12px; vertical-align: -1px; margin-right: 4px;"></i>0 users
-                </span>
-                <button onclick="event.stopPropagation(); confirmDeleteRole(${id}, '${name}')" 
-                        style="border: none; background: transparent; cursor: pointer; color: var(--cms-red); display: flex; padding: 4px; border-radius: 4px;"
-                        onmouseover="this.style.background='var(--cms-red-soft)'"
-                        onmouseout="this.style.background='transparent'">
-                    <i data-lucide="trash-2" style="width: 14px; height: 14px;"></i>
-                </button>
-            </div>
-        `;
-
-        container.appendChild(newCard);
-        closeAddRoleModal();
-        selectRole(id);
+        fetch('{{ route("admin.roles.store") }}', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify({
+                name: name,
+                description: desc
+            })
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                window.location.reload();
+            } else {
+                alert(data.message || 'Error creating role');
+            }
+        })
+        .catch(() => {
+            alert('An error occurred.');
+        });
     }
 
     // Modal Delete Role
@@ -519,19 +468,28 @@
     function submitDeleteRole() {
         if (!deleteRoleId) return;
         
-        const card = document.getElementById(`role-card-${deleteRoleId}`);
-        if (card) {
-            card.remove();
-        }
-
-        closeDeleteRole();
-        
-        // Select first role
-        const firstCard = document.querySelector('.role-card');
-        if (firstCard) {
-            const firstId = parseInt(firstCard.dataset.roleId);
-            selectRole(firstId);
-        }
+        fetch(`/admin/roles/${deleteRoleId}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify({
+                _method: 'DELETE'
+            })
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                window.location.reload();
+            } else {
+                alert(data.message || 'Error deleting role');
+            }
+        })
+        .catch(() => {
+            alert('An error occurred.');
+        });
     }
 </script>
 @endsection
