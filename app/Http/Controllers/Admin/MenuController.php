@@ -10,6 +10,7 @@ use App\Models\Page;
 use App\Models\Post;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Cache;
 
 class MenuController extends Controller
 {
@@ -17,7 +18,7 @@ class MenuController extends Controller
     {
         $menus = Menu::with('items')->get();
         $categories = Category::all();
-        $pages = Page::all();
+        $pages = Page::published()->get();
         $posts = Post::published()->get();
 
         return view('admin.menus.index', compact('menus', 'categories', 'pages', 'posts'));
@@ -50,6 +51,8 @@ class MenuController extends Controller
             'items' => 'required|json',
         ]);
 
+        $oldLocation = $menu->location;
+
         if ($request->filled('location')) {
             $menu->update(['location' => $request->location]);
         }
@@ -57,7 +60,6 @@ class MenuController extends Controller
         $items = json_decode($request->items, true);
 
         // Simple approach: delete existing items and recreate
-        // In a more complex scenario, we would use a library for nested sets or update existing items
         $menu->items()->delete();
 
         foreach ($items as $index => $item) {
@@ -66,10 +68,14 @@ class MenuController extends Controller
                 'title' => $item['title'],
                 'url' => $item['url'],
                 'order' => $index,
-                'parent_id' => null, // We are using target to store indentation for now as per the plan
-                'target' => $item['indent'] ?? 0,
+                'parent_id' => null, // Simplified flat tree representation with indentation layout support
+                'target' => $item['indent'] ?? 0, // Map indentation level into target column
             ]);
         }
+
+        // Bust cache for both old location and new location
+        Cache::forget("menu:location:{$oldLocation}");
+        Cache::forget("menu:location:{$menu->location}");
 
         return response()->json(['success' => true]);
     }

@@ -8,6 +8,23 @@
 {{-- Toast Container --}}
 <div id="toast-container" style="position: fixed; bottom: 24px; right: 24px; z-index: 999; display: flex; flex-direction: column; gap: 8px;"></div>
 
+<style>
+.menu-list-card {
+    background: var(--cms-surface);
+    border: 1px solid var(--cms-border);
+    border-radius: var(--cms-r-lg);
+    padding: 14px;
+    cursor: pointer;
+    transition: all 120ms;
+}
+.menu-list-card.active {
+    border: 1.5px solid var(--cms-gold) !important;
+}
+.location-assigned {
+    color: var(--cms-gold-deep);
+}
+</style>
+
 <div style="display: grid; grid-template-columns: 280px 1fr; gap: 24px; align-items: start;">
     
     {{-- Left Panel: Menus List --}}
@@ -22,10 +39,9 @@
 
         <div id="menus-list-container" style="display: flex; flex-direction: column; gap: 10px;">
             @foreach($menus as $menu)
-                <div class="menu-list-card {{ $loop->first ? 'active' : '' }}" onclick="selectMenu({{ $menu->id }}, this)"
-                     style="background: var(--cms-surface); border: {{ $loop->first ? '1.5px solid var(--cms-gold)' : '1px solid var(--cms-border)' }}; border-radius: var(--cms-r-lg); padding: 14px; cursor: pointer; transition: all 120ms;">
+                <div class="menu-list-card {{ $loop->first ? 'active' : '' }}" data-menu-id="{{ $menu->id }}" onclick="selectMenu(this.getAttribute('data-menu-id'), this)">
                     <div style="font-family: var(--cms-font-ui); font-size: 14px; font-weight: 700; color: var(--cms-fg1);">{{ $menu->name }}</div>
-                    <div style="font-size: 11.5px; color: var(--cms-fg3); margin-top: 4px;">Location: <strong style="{{ $menu->location !== 'none' ? 'color:var(--cms-gold-deep)' : '' }}">{{ $menu->location === 'header' ? 'Header Main' : ($menu->location === 'footer' ? 'Footer Left' : 'Unassigned') }}</strong></div>
+                    <div style="font-size: 11.5px; color: var(--cms-fg3); margin-top: 4px;">Location: <strong class="{{ $menu->location !== 'none' ? 'location-assigned' : '' }}">{{ $menu->location === 'header' ? 'Header Main' : ($menu->location === 'footer' ? 'Footer Left' : 'Unassigned') }}</strong></div>
                     <div style="font-size: 11.5px; color: var(--cms-fg4); margin-top: 2px;">{{ $menu->items->count() }} items • Updated {{ $menu->updated_at->diffForHumans() }}</div>
                 </div>
             @endforeach
@@ -144,43 +160,44 @@
     </div>
 </div>
 
+<div id="menu-editor-data" data-active-menu-id="{{ $menus->count() > 0 ? $menus->first()->id : '' }}"></div>
+
+<script type="application/json" id="menus-data">
+    {!! json_encode(collect($menus)->keyBy('id')->map(function($menu) {
+        return [
+            'name' => $menu->name,
+            'location' => $menu->location,
+            'items' => collect($menu->items)->map(function($item) {
+                return [
+                    'id' => $item->id,
+                    'title' => $item->title,
+                    'type' => 'custom',
+                    'url' => $item->url,
+                    'indent' => (int) ($item->target ?? 0)
+                ];
+            })->all()
+        ];
+    })->all()) !!}
+</script>
+
+<script type="application/json" id="references-data">
+    {!! json_encode([
+        "page" => collect($pages)->map(fn($page) => ['title' => $page->title, 'url' => route('pages.show', $page->slug)])->all(),
+        "category" => collect($categories)->map(fn($category) => ['title' => $category->name, 'url' => route('categories.show', $category->slug)])->all(),
+        "post" => collect($posts)->map(fn($post) => ['title' => $post->title, 'url' => route('posts.show', $post->slug)])->all()
+    ]) !!}
+</script>
+
 <script>
-    let activeMenuId = {{ $menus->count() > 0 ? $menus->first()->id : 'null' }};
+    const editorData = document.getElementById('menu-editor-data');
+    let activeMenuId = editorData && editorData.dataset.activeMenuId ? parseInt(editorData.dataset.activeMenuId) : null;
     let nextItemId = 1000; // Offset for new items
 
-    // Seed Data structure from backend
-    const menusData = {
-        @foreach($menus as $menu)
-        {{ $menu->id }}: {
-            name: "{{ $menu->name }}",
-            location: "{{ $menu->location }}",
-            items: [
-                @foreach($menu->items as $item)
-                { id: {{ $item->id }}, title: "{{ $item->title }}", type: "custom", url: "{{ $item->url }}", indent: {{ $item->target ?? 0 }} },
-                @endforeach
-            ]
-        },
-        @endforeach
-    };
+    // Seed Data structure from backend parsed from script blocks
+    const menusData = JSON.parse(document.getElementById('menus-data').textContent);
 
-    // References mapping for selectors from backend
-    const references = {
-        page: [
-            @foreach($pages as $page)
-            { title: "{{ $page->title }}", url: "{{ route('pages.show', $page->slug) }}" },
-            @endforeach
-        ],
-        category: [
-            @foreach($categories as $category)
-            { title: "{{ $category->name }}", url: "{{ route('categories.show', $category->slug) }}" },
-            @endforeach
-        ],
-        post: [
-            @foreach($posts as $post)
-            { title: "{{ $post->title }}", url: "{{ route('posts.show', $post->slug) }}" },
-            @endforeach
-        ]
-    };
+    // References mapping for selectors from backend parsed from script blocks
+    const references = JSON.parse(document.getElementById('references-data').textContent);
 
     document.addEventListener("DOMContentLoaded", () => {
         if (activeMenuId) {
