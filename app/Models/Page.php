@@ -16,4 +16,9 @@ class Page extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function scopePublished($query)
+    {
+        return $query->where('status', 'published');
+    }
 }

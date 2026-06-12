@@ -14,9 +14,8 @@ return new class extends Migration
             $table->foreignId('parent_id')->nullable()->constrained('menu_items')->onDelete('set null');
             $table->string('title');
             $table->string('url');
-            $table->enum('type', ['custom', 'page', 'category', 'tag', 'post']);
-            $table->unsignedBigInteger('reference_id')->nullable();
-            $table->integer('sort_order')->default(0);
+            $table->string('target')->nullable();
+            $table->integer('order')->default(0);
             $table->timestamps();
         });
     }

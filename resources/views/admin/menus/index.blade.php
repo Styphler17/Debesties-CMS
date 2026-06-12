@@ -21,19 +21,14 @@
         </div>
 
         <div id="menus-list-container" style="display: flex; flex-direction: column; gap: 10px;">
-            <div class="menu-list-card active" onclick="selectMenu(1, this)"
-                 style="background: var(--cms-surface); border: 1.5px solid var(--cms-gold); border-radius: var(--cms-r-lg); padding: 14px; cursor: pointer; transition: all 120ms;">
-                <div style="font-family: var(--cms-font-ui); font-size: 14px; font-weight: 700; color: var(--cms-fg1);">Primary Header Navigation</div>
-                <div style="font-size: 11.5px; color: var(--cms-fg3); margin-top: 4px;">Location: <strong style="color:var(--cms-gold-deep)">Header Main</strong></div>
-                <div style="font-size: 11.5px; color: var(--cms-fg4); margin-top: 2px;">6 items • Updated 1d ago</div>
-            </div>
-
-            <div class="menu-list-card" onclick="selectMenu(2, this)"
-                 style="background: var(--cms-surface); border: 1.5px solid var(--cms-border); border-radius: var(--cms-r-lg); padding: 14px; cursor: pointer; transition: all 120ms;">
-                <div style="font-family: var(--cms-font-ui); font-size: 14px; font-weight: 700; color: var(--cms-fg1);">Footer Quick Links</div>
-                <div style="font-size: 11.5px; color: var(--cms-fg3); margin-top: 4px;">Location: <strong>Footer Left</strong></div>
-                <div style="font-size: 11.5px; color: var(--cms-fg4); margin-top: 2px;">3 items • Updated 3d ago</div>
-            </div>
+            @foreach($menus as $menu)
+                <div class="menu-list-card {{ $loop->first ? 'active' : '' }}" onclick="selectMenu({{ $menu->id }}, this)"
+                     style="background: var(--cms-surface); border: {{ $loop->first ? '1.5px solid var(--cms-gold)' : '1px solid var(--cms-border)' }}; border-radius: var(--cms-r-lg); padding: 14px; cursor: pointer; transition: all 120ms;">
+                    <div style="font-family: var(--cms-font-ui); font-size: 14px; font-weight: 700; color: var(--cms-fg1);">{{ $menu->name }}</div>
+                    <div style="font-size: 11.5px; color: var(--cms-fg3); margin-top: 4px;">Location: <strong style="{{ $menu->location !== 'none' ? 'color:var(--cms-gold-deep)' : '' }}">{{ $menu->location === 'header' ? 'Header Main' : ($menu->location === 'footer' ? 'Footer Left' : 'Unassigned') }}</strong></div>
+                    <div style="font-size: 11.5px; color: var(--cms-fg4); margin-top: 2px;">{{ $menu->items->count() }} items • Updated {{ $menu->updated_at->diffForHumans() }}</div>
+                </div>
+            @endforeach
         </div>
     </div>
 
@@ -150,56 +145,48 @@
 </div>
 
 <script>
-    let activeMenuId = 1;
-    let nextItemId = 10;
-    let nextMenuId = 3;
+    let activeMenuId = {{ $menus->count() > 0 ? $menus->first()->id : 'null' }};
+    let nextItemId = 1000; // Offset for new items
 
-    // Seed Data structure
+    // Seed Data structure from backend
     const menusData = {
-        1: {
-            name: "Primary Header Navigation",
-            location: "header",
+        @foreach($menus as $menu)
+        {{ $menu->id }}: {
+            name: "{{ $menu->name }}",
+            location: "{{ $menu->location }}",
             items: [
-                { id: 1, title: "Home", type: "page", url: "/", indent: 0 },
-                { id: 2, title: "Features", type: "page", url: "/features", indent: 0 },
-                { id: 3, title: "Categories", type: "category", url: "/category/all", indent: 0 },
-                { id: 4, title: "Music & Beats", type: "category", url: "/category/music", indent: 1 },
-                { id: 5, title: "Culture & Life", type: "category", url: "/category/culture", indent: 1 },
-                { id: 6, title: "Contact Us", type: "custom", url: "/contact", indent: 0 }
+                @foreach($menu->items as $item)
+                { id: {{ $item->id }}, title: "{{ $item->title }}", type: "custom", url: "{{ $item->url }}", indent: {{ $item->target ?? 0 }} },
+                @endforeach
             ]
         },
-        2: {
-            name: "Footer Quick Links",
-            location: "footer",
-            items: [
-                { id: 7, title: "About Studio", type: "page", url: "/about", indent: 0 },
-                { id: 8, title: "Advertise", type: "page", url: "/advertise", indent: 0 },
-                { id: 9, title: "Privacy Statement", type: "custom", url: "/privacy", indent: 0 }
-            ]
-        }
+        @endforeach
     };
 
-    // References mapping for selectors
+    // References mapping for selectors from backend
     const references = {
         page: [
-            { title: "Home Page", url: "/" },
-            { title: "About Us", url: "/about" },
-            { title: "Advertise", url: "/advertise" },
-            { title: "Gallery", url: "/gallery" }
+            @foreach($pages as $page)
+            { title: "{{ $page->title }}", url: "{{ route('pages.show', $page->slug) }}" },
+            @endforeach
         ],
         category: [
-            { title: "Music & Beats", url: "/category/music" },
-            { title: "Culture & Life", url: "/category/culture" },
-            { title: "Fashion Trends", url: "/category/fashion" }
+            @foreach($categories as $category)
+            { title: "{{ $category->name }}", url: "{{ route('categories.show', $category->slug) }}" },
+            @endforeach
         ],
         post: [
-            { title: "The Elite Club: Artists Domination", url: "/posts/elite-club" },
-            { title: "10 Tips for Web Vitals Optimization", url: "/posts/web-vitals" }
+            @foreach($posts as $post)
+            { title: "{{ $post->title }}", url: "{{ route('posts.show', $post->slug) }}" },
+            @endforeach
         ]
     };
 
     document.addEventListener("DOMContentLoaded", () => {
-        renderMenuTree();
+        if (activeMenuId) {
+            const firstCard = document.querySelector('.menu-list-card');
+            if (firstCard) selectMenu(activeMenuId, firstCard);
+        }
         toggleLinkSource();
     });
 
@@ -210,16 +197,19 @@
         document.querySelectorAll('.menu-list-card').forEach(el => {
             el.classList.remove('active');
             el.style.borderColor = 'var(--cms-border)';
+            el.style.borderWidth = '1px';
         });
         cardElement.classList.add('active');
         cardElement.style.borderColor = 'var(--cms-gold)';
+        cardElement.style.borderWidth = '1.5px';
 
         // Update titles
         const menu = menusData[id];
-        document.getElementById('menu-editor-title').textContent = menu.name;
-        document.getElementById('menu-location-select').value = menu.location;
-
-        renderMenuTree();
+        if (menu) {
+            document.getElementById('menu-editor-title').textContent = menu.name;
+            document.getElementById('menu-location-select').value = menu.location;
+            renderMenuTree();
+        }
     }
 
     function toggleLinkSource() {
@@ -237,12 +227,14 @@
             
             // Populate selector
             selectElement.innerHTML = '';
-            references[type].forEach(ref => {
-                const opt = document.createElement('option');
-                opt.value = ref.url;
-                opt.textContent = ref.title;
-                selectElement.appendChild(opt);
-            });
+            if (references[type]) {
+                references[type].forEach(ref => {
+                    const opt = document.createElement('option');
+                    opt.value = ref.url;
+                    opt.textContent = ref.title;
+                    selectElement.appendChild(opt);
+                });
+            }
         }
     }
 
@@ -250,6 +242,11 @@
     function renderMenuTree() {
         const container = document.getElementById('tree-container');
         container.innerHTML = '';
+
+        if (!activeMenuId || !menusData[activeMenuId]) {
+            container.innerHTML = `<div style="padding: 40px; text-align: center; color: var(--cms-fg4);">Select a menu to start editing.</div>`;
+            return;
+        }
 
         const items = menusData[activeMenuId].items;
 
@@ -271,7 +268,7 @@
             div.style.position = 'relative';
             
             // Indentation spacing
-            const indentPixels = item.indent * 24;
+            const indentPixels = (item.indent || 0) * 24;
             div.style.paddingLeft = `${indentPixels}px`;
 
             // Draw line connector for nested items
@@ -284,16 +281,14 @@
 
             div.innerHTML = `
                 ${connectorHtml}
-                <div style="flex: 1; display: flex; align-items: center; justify-content: space-between; background: var(--cms-surface); border: 1.5px solid var(--cms-border); border-radius: var(--cms-r-md); padding: 10px 14px; min-height: 48px; box-shadow: 0 1px 2px rgba(0,0,0,0.01);">
-                    <div style="display: flex; align-items: center; gap: 8px;">
-                        <i data-lucide="grip-vertical" style="width: 14px; height: 14px; color: var(--cms-fg4); cursor: move;"></i>
-                        <span style="font-family: var(--cms-font-ui); font-size: 13.5px; font-weight: 600; color: var(--cms-fg1);">${item.title}</span>
-                        <span style="font-size: 10.5px; font-weight: 700; color: var(--cms-fg3); text-transform: uppercase; background: var(--cms-bg); padding: 1px 6px; border-radius: 999px;">${item.type}</span>
-                        <span style="font-family: var(--cms-font-mono); font-size: 11px; color: var(--cms-fg4); overflow: hidden; text-overflow: ellipsis; max-width: 200px;">${item.url}</span>
+                <div style="flex: 1; display: flex; align-items: center; justify-content: space-between; background: var(--cms-surface); border: 1.5px solid var(--cms-border); border-radius: var(--cms-r-md); padding: 10px 14px; min-height: 48px; box-shadow: 0 1px 2px rgba(0,0,0,0.01); margin-bottom: 4px;">
+                    <div style="display: flex; align-items: center; gap: 8px; min-width: 0;">
+                        <i data-lucide="grip-vertical" style="width: 14px; height: 14px; color: var(--cms-fg4); cursor: move; flex-shrink: 0;"></i>
+                        <span style="font-family: var(--cms-font-ui); font-size: 13.5px; font-weight: 600; color: var(--cms-fg1); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${item.title}</span>
+                        <span style="font-family: var(--cms-font-mono); font-size: 11px; color: var(--cms-fg4); overflow: hidden; text-overflow: ellipsis; max-width: 180px;">${item.url}</span>
                     </div>
 
-                    <div style="display: flex; align-items: center; gap: 4px;">
-                        {{-- Indentation Controls --}}
+                    <div style="display: flex; align-items: center; gap: 4px; flex-shrink: 0;">
                         <button onclick="adjustIndent(${index}, -1)" title="Outdent" style="width: 24px; height: 24px; border: none; background: transparent; cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--cms-fg3); border-radius: 4px;" onmouseover="this.style.background='var(--cms-bg)'" onmouseout="this.style.background='transparent'">
                             <i data-lucide="arrow-left" style="width: 12px; height: 12px;"></i>
                         </button>
@@ -301,7 +296,6 @@
                             <i data-lucide="arrow-right" style="width: 12px; height: 12px;"></i>
                         </button>
                         <span style="width: 1px; height: 16px; background: var(--cms-border); margin: 0 4px;"></span>
-                        {{-- Delete --}}
                         <button onclick="deleteItem(${index})" title="Delete Link" style="width: 24px; height: 24px; border: none; background: transparent; cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--cms-red); border-radius: 4px;" onmouseover="this.style.background='var(--cms-red-soft)'" onmouseout="this.style.background='transparent'">
                             <i data-lucide="trash-2" style="width: 12px; height: 12px;"></i>
                         </button>
@@ -316,20 +310,15 @@
 
     function adjustIndent(index, amount) {
         const items = menusData[activeMenuId].items;
+        let newIndent = (items[index].indent || 0) + amount;
         
-        let newIndent = items[index].indent + amount;
-        
-        // Boundaries: 0 to 2 indentation levels
         if (newIndent < 0) newIndent = 0;
         if (newIndent > 2) newIndent = 2;
 
-        // Prevent indents without a parent
         if (index === 0) newIndent = 0;
         else {
-            const prevIndent = items[index - 1].indent;
-            if (newIndent > prevIndent + 1) {
-                newIndent = prevIndent + 1;
-            }
+            const prevIndent = items[index - 1].indent || 0;
+            if (newIndent > prevIndent + 1) newIndent = prevIndent + 1;
         }
 
         items[index].indent = newIndent;
@@ -342,6 +331,11 @@
     }
 
     function addMenuItem() {
+        if (!activeMenuId) {
+            alert('Please select or create a menu first.');
+            return;
+        }
+
         const titleInput = document.getElementById('new-item-title');
         const typeSelect = document.getElementById('new-item-type');
         
@@ -361,9 +355,7 @@
         }
 
         const items = menusData[activeMenuId].items;
-        
-        // Find default indent matching the last item
-        const defaultIndent = items.length > 0 ? items[items.length - 1].indent : 0;
+        const defaultIndent = items.length > 0 ? (items[items.length - 1].indent || 0) : 0;
 
         items.push({
             id: nextItemId++,
@@ -373,13 +365,11 @@
             indent: defaultIndent
         });
 
-        // Clear title field
         titleInput.value = '';
         renderMenuTree();
         showToast(`"${title}" added to menu structure.`);
     }
 
-    // Modal Add Menu
     function openCreateMenuModal() {
         document.getElementById('create-menu-modal').style.display = 'flex';
         document.getElementById('new-menu-name').value = '';
@@ -390,61 +380,95 @@
         document.getElementById('create-menu-modal').style.display = 'none';
     }
 
-    function submitCreateMenu() {
+    async function submitCreateMenu() {
         const nameInput = document.getElementById('new-menu-name');
         const name = nameInput.value.trim();
         if (!name) return;
 
-        const id = nextMenuId++;
-        menusData[id] = {
-            name: name,
-            location: "none",
-            items: []
-        };
+        try {
+            const response = await fetch("{{ route('admin.menus.store') }}", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                },
+                body: JSON.stringify({ name: name })
+            });
 
-        const container = document.getElementById('menus-list-container');
-        const card = document.createElement('div');
-        card.className = 'menu-list-card';
-        card.onclick = () => selectMenu(id, card);
-        card.style.cssText = "background: var(--cms-surface); border: 1.5px solid var(--cms-border); border-radius: var(--cms-r-lg); padding: 14px; cursor: pointer; transition: all 120ms;";
-        card.innerHTML = `
-            <div style="font-family: var(--cms-font-ui); font-size: 14px; font-weight: 700; color: var(--cms-fg1);">${name}</div>
-            <div style="font-size: 11.5px; color: var(--cms-fg3); margin-top: 4px;">Location: <strong>Unassigned</strong></div>
-            <div style="font-size: 11.5px; color: var(--cms-fg4); margin-top: 2px;">0 items • Created just now</div>
-        `;
-        
-        container.appendChild(card);
-        closeCreateMenuModal();
-        selectMenu(id, card);
-    }
+            const data = await response.json();
+            if (data.success) {
+                const id = data.menu.id;
+                menusData[id] = {
+                    name: data.menu.name,
+                    location: data.menu.location,
+                    items: []
+                };
 
-    // Save AJAC simulation
-    function saveMenuStructure() {
-        const location = document.getElementById('menu-location-select').value;
-        menusData[activeMenuId].location = location;
-
-        const activeCard = document.querySelector('.menu-list-card.active');
-        if (activeCard) {
-            // Update location label inside left panel card
-            const locationStr = location === 'header' ? 'Header Main' : (location === 'footer' ? 'Footer Left' : 'Unassigned');
-            activeCard.querySelector('strong').textContent = locationStr;
+                const container = document.getElementById('menus-list-container');
+                const card = document.createElement('div');
+                card.className = 'menu-list-card';
+                card.onclick = () => selectMenu(id, card);
+                card.style.cssText = "background: var(--cms-surface); border: 1px solid var(--cms-border); border-radius: var(--cms-r-lg); padding: 14px; cursor: pointer; transition: all 120ms;";
+                card.innerHTML = `
+                    <div style="font-family: var(--cms-font-ui); font-size: 14px; font-weight: 700; color: var(--cms-fg1);">${data.menu.name}</div>
+                    <div style="font-size: 11.5px; color: var(--cms-fg3); margin-top: 4px;">Location: <strong>Unassigned</strong></div>
+                    <div style="font-size: 11.5px; color: var(--cms-fg4); margin-top: 2px;">0 items • Created just now</div>
+                `;
+                
+                container.appendChild(card);
+                closeCreateMenuModal();
+                selectMenu(id, card);
+                showToast("Menu created successfully.");
+            }
+        } catch (error) {
+            console.error('Error creating menu:', error);
+            alert('Failed to create menu.');
         }
-
-        showToast("Menu layout and link tree saved successfully ✓");
     }
 
-    // Toast Generator
+    async function saveMenuStructure() {
+        if (!activeMenuId) return;
+
+        const location = document.getElementById('menu-location-select').value;
+        const items = menusData[activeMenuId].items;
+
+        try {
+            const url = "{{ route('admin.menus.items.store', ':id') }}".replace(':id', activeMenuId);
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                },
+                body: JSON.stringify({
+                    location: location,
+                    items: JSON.stringify(items)
+                })
+            });
+
+            const data = await response.json();
+            if (data.success) {
+                menusData[activeMenuId].location = location;
+                const activeCard = document.querySelector('.menu-list-card.active');
+                if (activeCard) {
+                    const locationStr = location === 'header' ? 'Header Main' : (location === 'footer' ? 'Footer Left' : 'Unassigned');
+                    activeCard.querySelector('strong').textContent = locationStr;
+                }
+                showToast("Menu layout and link tree saved successfully ✓");
+            }
+        } catch (error) {
+            console.error('Error saving menu:', error);
+            alert('Failed to save menu structure.');
+        }
+    }
+
     function showToast(message) {
         const container = document.getElementById('toast-container');
-        
         const toast = document.createElement('div');
         toast.style.cssText = "background: #17120D; border: 1.5px solid var(--cms-gold); border-radius: var(--cms-r-md); padding: 12px 20px; color: #fff; font-family: var(--cms-font-ui); font-size: 13.5px; font-weight: 600; display: flex; align-items: center; gap: 8px; box-shadow: var(--cms-sh-pop); animation: dsPop 180ms ease; min-width: 280px;";
         toast.innerHTML = `<i data-lucide="check-circle" style="width: 16px; height: 16px; color: var(--cms-gold); flex-shrink: 0;"></i> <span>${message}</span>`;
-        
         container.appendChild(toast);
         lucide.createIcons();
-
-        // Auto remove toast
         setTimeout(() => {
             toast.style.animation = "dsFade 200ms ease reverse";
             toast.style.opacity = "0";

@@ -25,9 +25,17 @@ Route::get('/pages/{page:slug}', [PageController::class, 'show'])->name('pages.s
 
 Route::get('/sitemap.xml', [SitemapController::class, 'index'])->name('sitemap');
 
-Route::post('/posts/{post}/comments', [CommentController::class, 'store'])
-    ->name('posts.comments.store')
-    ->middleware('auth');
+Route::middleware('auth')->group(function () {
+    // User Profile
+    Route::get('/profile', [\App\Http\Controllers\Public\ProfileController::class, 'show'])->name('profile.show');
+    Route::post('/profile', [\App\Http\Controllers\Public\ProfileController::class, 'update'])->name('profile.update');
+    
+    // Bookmarks
+    Route::post('/bookmarks/{post}', [\App\Http\Controllers\Public\BookmarkController::class, 'store'])->name('bookmarks.store');
+    Route::delete('/bookmarks/{post}', [\App\Http\Controllers\Public\BookmarkController::class, 'destroy'])->name('bookmarks.destroy');
+
+    Route::post('/posts/{post}/comments', [CommentController::class, 'store'])->name('posts.comments.store');
+});
 
 Route::get('/{post:slug}', [ArticleController::class, 'show'])
     ->name('posts.show')

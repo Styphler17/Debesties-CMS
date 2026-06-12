@@ -47,7 +47,10 @@ Route::prefix('admin')
         Route::get('calendar', [CalendarController::class, 'index'])->name('calendar.index');
         Route::get('analytics', [AnalyticsController::class, 'index'])->name('analytics.index');
         Route::get('menus', [MenuController::class, 'index'])->name('menus.index');
+        Route::post('menus', [MenuController::class, 'store'])->name('menus.store');
+        Route::post('menus/{menu}/items', [MenuController::class, 'saveItems'])->name('menus.items.store');
         Route::get('settings', [SettingController::class, 'index'])->name('settings.index');
+        Route::post('settings', [SettingController::class, 'store'])->name('settings.store');
         Route::get('seo', [SeoController::class, 'index'])->name('seo.index');
         Route::get('ai-visibility', [AiVisibilityController::class, 'index'])->name('ai-visibility.index');
         Route::get('homepage-builder', [HomepageBuilderController::class, 'index'])->name('homepage-builder.index');

@@ -22,9 +22,8 @@ class PostFactory extends Factory
             'title' => $title,
             'slug' => Str::slug($title),
             'excerpt' => $this->faker->paragraph(),
-            'content' => $this->faker->paragraphs(3, true),
-            'status' => 'publish',
-            'visibility' => 'public',
+            'body' => $this->faker->paragraphs(3, true),
+            'status' => 'published',
             'published_at' => now(),
         ];
     }

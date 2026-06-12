@@ -8,6 +8,42 @@
 {{-- Toast Container --}}
 <div id="toast-container" style="position: fixed; bottom: 24px; right: 24px; z-index: 999; display: flex; flex-direction: column; gap: 8px;"></div>
 
+<style>
+.robots-btn {
+    flex: 1;
+    height: 38px;
+    border-radius: var(--cms-r-md);
+    cursor: pointer;
+    font-family: var(--cms-font-ui);
+    font-size: 13px;
+    transition: all 120ms;
+}
+#robots-index-btn.active {
+    border: 1.5px solid var(--cms-gold) !important;
+    background: var(--cms-gold-soft) !important;
+    color: var(--cms-gold-deep) !important;
+    font-weight: 700 !important;
+}
+#robots-index-btn:not(.active) {
+    border: 1.5px solid var(--cms-border) !important;
+    background: var(--cms-surface) !important;
+    color: var(--cms-fg3) !important;
+    font-weight: 600 !important;
+}
+#robots-noindex-btn.active {
+    border: 1.5px solid var(--cms-red) !important;
+    background: var(--cms-red-soft) !important;
+    color: var(--cms-red-deep) !important;
+    font-weight: 700 !important;
+}
+#robots-noindex-btn:not(.active) {
+    border: 1.5px solid var(--cms-border) !important;
+    background: var(--cms-surface) !important;
+    color: var(--cms-fg3) !important;
+    font-weight: 600 !important;
+}
+</style>
+
 <div style="max-width: 800px; margin: 0 auto; display: flex; flex-direction: column; gap: 16px;">
 
     {{-- Section 1: General Settings --}}
@@ -26,11 +62,13 @@
         </header>
 
         <div class="accordion-content" id="content-general" style="border-top: 1px solid var(--cms-border); padding: 24px; display: block;">
-            <form onsubmit="saveSection(event, 'General')">
+            <form action="{{ route('admin.settings.store') }}" method="POST">
+                @csrf
+                <input type="hidden" name="settings_form_type" value="general">
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px;">
                     <div style="grid-column: span 2;">
                         <label style="font-family: var(--cms-font-ui); font-size: 12px; font-weight: 700; color: var(--cms-fg3); text-transform: uppercase; letter-spacing: 0.04em; display: block; margin-bottom: 6px;">Site Name</label>
-                        <input type="text" value="Debesties Studio" required
+                        <input type="text" name="site_name" value="{{ \App\Services\SettingsService::get('site_name', 'Debesties Studio') }}" required
                                style="display: block; width: 100%; height: 42px; padding: 0 12px; font-family: var(--cms-font-ui); font-size: 13.5px; color: var(--cms-fg1); background: var(--cms-bg); border: 1.5px solid var(--cms-border); border-radius: var(--cms-r-md); outline: none;"
                                onfocus="this.style.borderColor='var(--cms-gold)'; this.style.boxShadow='0 0 0 3px rgba(232,168,0,0.13)'"
                                onblur="this.style.borderColor='var(--cms-border)'; this.style.boxShadow='none'" />
@@ -38,23 +76,23 @@
                     
                     <div style="grid-column: span 2;">
                         <label style="font-family: var(--cms-font-ui); font-size: 12px; font-weight: 700; color: var(--cms-fg3); text-transform: uppercase; letter-spacing: 0.04em; display: block; margin-bottom: 6px;">Tagline / Site Description</label>
-                        <textarea style="display: block; width: 100%; height: 72px; padding: 10px 12px; font-family: var(--cms-font-ui); font-size: 13.5px; color: var(--cms-fg1); background: var(--cms-bg); border: 1.5px solid var(--cms-border); border-radius: var(--cms-r-md); outline: none; resize: none;"
+                        <textarea name="site_description" style="display: block; width: 100%; height: 72px; padding: 10px 12px; font-family: var(--cms-font-ui); font-size: 13.5px; color: var(--cms-fg1); background: var(--cms-bg); border: 1.5px solid var(--cms-border); border-radius: var(--cms-r-md); outline: none; resize: none;"
                                   onfocus="this.style.borderColor='var(--cms-gold)'; this.style.boxShadow='0 0 0 3px rgba(232,168,0,0.13)'"
-                                  onblur="this.style.borderColor='var(--cms-border)'; this.style.boxShadow='none'">A premium digital publishing and creative blog CMS platform.</textarea>
+                                  onblur="this.style.borderColor='var(--cms-border)'; this.style.boxShadow='none'">{{ \App\Services\SettingsService::get('site_description', 'A premium digital publishing and creative blog CMS platform.') }}</textarea>
                     </div>
 
                     <div>
                         <label style="font-family: var(--cms-font-ui); font-size: 12px; font-weight: 700; color: var(--cms-fg3); text-transform: uppercase; letter-spacing: 0.04em; display: block; margin-bottom: 6px;">Site URL</label>
                         <div style="display: flex; align-items: center; background: var(--cms-bg); border: 1.5px solid var(--cms-border); border-radius: var(--cms-r-md); overflow: hidden; height: 42px;">
                             <span style="font-family: var(--cms-font-ui); font-size: 13px; color: var(--cms-fg4); padding: 0 12px; background: rgba(0,0,0,0.02); height: 100%; display: flex; align-items: center; border-right: 1.5px solid var(--cms-border);">https://</span>
-                            <input type="text" value="debesties.com"
+                            <input type="text" name="site_url" value="{{ \App\Services\SettingsService::get('site_url', 'debesties.com') }}"
                                    style="border: none; outline: none; background: transparent; flex: 1; padding: 0 12px; font-family: var(--cms-font-ui); font-size: 13.5px; color: var(--cms-fg1);" />
                         </div>
                     </div>
 
                     <div>
                         <label style="font-family: var(--cms-font-ui); font-size: 12px; font-weight: 700; color: var(--cms-fg3); text-transform: uppercase; letter-spacing: 0.04em; display: block; margin-bottom: 6px;">System Email Address</label>
-                        <input type="email" value="hello@debesties.com" required
+                        <input type="email" name="system_email" value="{{ \App\Services\SettingsService::get('system_email', 'hello@debesties.com') }}" required
                                style="display: block; width: 100%; height: 42px; padding: 0 12px; font-family: var(--cms-font-ui); font-size: 13.5px; color: var(--cms-fg1); background: var(--cms-bg); border: 1.5px solid var(--cms-border); border-radius: var(--cms-r-md); outline: none;"
                                onfocus="this.style.borderColor='var(--cms-gold)'; this.style.boxShadow='0 0 0 3px rgba(232,168,0,0.13)'"
                                onblur="this.style.borderColor='var(--cms-border)'; this.style.boxShadow='none'" />
@@ -62,17 +100,18 @@
 
                     <div>
                         <label style="font-family: var(--cms-font-ui); font-size: 12px; font-weight: 700; color: var(--cms-fg3); text-transform: uppercase; letter-spacing: 0.04em; display: block; margin-bottom: 6px;">Timezone</label>
-                        <select style="display: block; width: 100%; height: 42px; padding: 0 12px; font-family: var(--cms-font-ui); font-size: 13.5px; color: var(--cms-fg1); background: var(--cms-bg); border: 1.5px solid var(--cms-border); border-radius: var(--cms-r-md); cursor: pointer; outline: none;">
-                            <option value="GMT">GMT (London/Accra)</option>
-                            <option value="EST">EST (New York)</option>
-                            <option value="CET" selected>CET (Paris/Berlin)</option>
-                            <option value="PST">PST (Los Angeles)</option>
+                        <select name="timezone" style="display: block; width: 100%; height: 42px; padding: 0 12px; font-family: var(--cms-font-ui); font-size: 13.5px; color: var(--cms-fg1); background: var(--cms-bg); border: 1.5px solid var(--cms-border); border-radius: var(--cms-r-md); cursor: pointer; outline: none;">
+                            @php $tz = \App\Services\SettingsService::get('timezone', 'CET'); @endphp
+                            <option value="GMT" {{ $tz == 'GMT' ? 'selected' : '' }}>GMT (London/Accra)</option>
+                            <option value="EST" {{ $tz == 'EST' ? 'selected' : '' }}>EST (New York)</option>
+                            <option value="CET" {{ $tz == 'CET' ? 'selected' : '' }}>CET (Paris/Berlin)</option>
+                            <option value="PST" {{ $tz == 'PST' ? 'selected' : '' }}>PST (Los Angeles)</option>
                         </select>
                     </div>
 
                     <div>
                         <label style="font-family: var(--cms-font-ui); font-size: 12px; font-weight: 700; color: var(--cms-fg3); text-transform: uppercase; letter-spacing: 0.04em; display: block; margin-bottom: 6px;">Posts Per Page (Admin list)</label>
-                        <input type="number" value="15" min="5" max="100"
+                        <input type="number" name="posts_per_page" value="{{ \App\Services\SettingsService::get('posts_per_page', '15') }}" min="5" max="100"
                                style="display: block; width: 100%; height: 42px; padding: 0 12px; font-family: var(--cms-font-ui); font-size: 13.5px; color: var(--cms-fg1); background: var(--cms-bg); border: 1.5px solid var(--cms-border); border-radius: var(--cms-r-md); outline: none;"
                                onfocus="this.style.borderColor='var(--cms-gold)'; this.style.boxShadow='0 0 0 3px rgba(232,168,0,0.13)'"
                                onblur="this.style.borderColor='var(--cms-border)'; this.style.boxShadow='none'" />
@@ -107,11 +146,13 @@
         </header>
 
         <div class="accordion-content" id="content-seo" style="border-top: 1px solid var(--cms-border); padding: 24px; display: none;">
-            <form onsubmit="saveSection(event, 'SEO Defaults')">
+            <form action="{{ route('admin.settings.store') }}" method="POST">
+                @csrf
+                <input type="hidden" name="settings_form_type" value="seo">
                 <div style="display: flex; flex-direction: column; gap: 20px; margin-bottom: 20px;">
                     <div>
                         <label style="font-family: var(--cms-font-ui); font-size: 12px; font-weight: 700; color: var(--cms-fg3); text-transform: uppercase; letter-spacing: 0.04em; display: block; margin-bottom: 6px;">Default Meta Title Template</label>
-                        <input type="text" id="seo-title-template" value="{title} — Debesties Studio"
+                        <input type="text" name="default_meta_title" id="seo-title-template" value="{{ \App\Services\SettingsService::get('default_meta_title', '{title} — Debesties Studio') }}"
                                style="display: block; width: 100%; height: 42px; padding: 0 12px; font-family: var(--cms-font-ui); font-size: 13.5px; color: var(--cms-fg1); background: var(--cms-bg); border: 1.5px solid var(--cms-border); border-radius: var(--cms-r-md); outline: none; margin-bottom: 6px;"
                                onfocus="this.style.borderColor='var(--cms-gold)'; this.style.boxShadow='0 0 0 3px rgba(232,168,0,0.13)'"
                                onblur="this.style.borderColor='var(--cms-border)'; this.style.boxShadow='none'" />
@@ -123,9 +164,9 @@
 
                     <div>
                         <label style="font-family: var(--cms-font-ui); font-size: 12px; font-weight: 700; color: var(--cms-fg3); text-transform: uppercase; letter-spacing: 0.04em; display: block; margin-bottom: 6px;">Default Meta Description</label>
-                        <textarea style="display: block; width: 100%; height: 72px; padding: 10px 12px; font-family: var(--cms-font-ui); font-size: 13.5px; color: var(--cms-fg1); background: var(--cms-bg); border: 1.5px solid var(--cms-border); border-radius: var(--cms-r-md); outline: none; resize: none;"
+                        <textarea name="default_meta_description" style="display: block; width: 100%; height: 72px; padding: 10px 12px; font-family: var(--cms-font-ui); font-size: 13.5px; color: var(--cms-fg1); background: var(--cms-bg); border: 1.5px solid var(--cms-border); border-radius: var(--cms-r-md); outline: none; resize: none;"
                                   onfocus="this.style.borderColor='var(--cms-gold)'; this.style.boxShadow='0 0 0 3px rgba(232,168,0,0.13)'"
-                                  onblur="this.style.borderColor='var(--cms-border)'; this.style.boxShadow='none'">Discover the latest trends in art, entertainment, technology, and culture at Debesties Studio.</textarea>
+                                  onblur="this.style.borderColor='var(--cms-border)'; this.style.boxShadow='none'">{{ \App\Services\SettingsService::get('default_meta_description', 'Discover the latest trends in art, entertainment, technology, and culture at Debesties Studio.') }}</textarea>
                     </div>
 
                     <div>
@@ -148,13 +189,15 @@
 
                     <div>
                         <label style="font-family: var(--cms-font-ui); font-size: 12px; font-weight: 700; color: var(--cms-fg3); text-transform: uppercase; letter-spacing: 0.04em; display: block; margin-bottom: 6px;">Default Robots Meta Tag</label>
+                        @php
+                            $robotsIndex = \App\Services\SettingsService::get('robots_index', '1');
+                        @endphp
+                        <input type="hidden" name="robots_index" id="robots-index-input" value="{{ $robotsIndex }}" />
                         <div style="display: flex; gap: 8px;">
-                            <button type="button" id="robots-index-btn" onclick="toggleRobots(true)"
-                                    style="flex: 1; height: 38px; border-radius: var(--cms-r-md); border: 1.5px solid var(--cms-gold); background: var(--cms-gold-soft); color: var(--cms-gold-deep); font-family: var(--cms-font-ui); font-size: 13px; font-weight: 700; cursor: pointer;">
+                            <button type="button" id="robots-index-btn" onclick="toggleRobots(true)" class="robots-btn {{ $robotsIndex == '1' ? 'active' : '' }}">
                                 Index, Follow
                             </button>
-                            <button type="button" id="robots-noindex-btn" onclick="toggleRobots(false)"
-                                    style="flex: 1; height: 38px; border-radius: var(--cms-r-md); border: 1.5px solid var(--cms-border); background: var(--cms-surface); color: var(--cms-fg3); font-family: var(--cms-font-ui); font-size: 13px; font-weight: 600; cursor: pointer;">
+                            <button type="button" id="robots-noindex-btn" onclick="toggleRobots(false)" class="robots-btn {{ $robotsIndex == '0' ? 'active' : '' }}">
                                 Noindex, Nofollow
                             </button>
                         </div>
@@ -189,26 +232,34 @@
         </header>
 
         <div class="accordion-content" id="content-media" style="border-top: 1px solid var(--cms-border); padding: 24px; display: none;">
-            <form onsubmit="saveSection(event, 'Media')">
+            <form action="{{ route('admin.settings.store') }}" method="POST">
+                @csrf
+                <input type="hidden" name="settings_form_type" value="media">
                 <div style="display: flex; flex-direction: column; gap: 20px; margin-bottom: 20px;">
                     
                     {{-- Max Upload Limit --}}
+                    @php
+                        $maxUploadSize = \App\Services\SettingsService::get('max_upload_size', '20');
+                    @endphp
                     <div>
                         <div style="display: flex; justify-content: space-between; margin-bottom: 6px;">
                             <label style="font-family: var(--cms-font-ui); font-size: 12px; font-weight: 700; color: var(--cms-fg3); text-transform: uppercase; letter-spacing: 0.04em;">Max File Upload Size</label>
-                            <span id="max-size-val" style="font-family: var(--cms-font-ui); font-size: 13px; font-weight: 700; color: var(--cms-fg1);">20 MB</span>
+                            <span id="max-size-val" style="font-family: var(--cms-font-ui); font-size: 13px; font-weight: 700; color: var(--cms-fg1);">{{ $maxUploadSize }} MB</span>
                         </div>
-                        <input type="range" min="2" max="100" value="20" oninput="document.getElementById('max-size-val').textContent = this.value + ' MB'"
+                        <input type="range" name="max_upload_size" min="2" max="100" value="{{ $maxUploadSize }}" oninput="document.getElementById('max-size-val').textContent = this.value + ' MB'"
                                style="width: 100%; accent-color: var(--cms-gold); height: 6px; border-radius: 999px; cursor: pointer; display: block;" />
                     </div>
 
                     {{-- Compress Quality slider --}}
+                    @php
+                        $compressionQuality = \App\Services\SettingsService::get('image_compression_quality', '82');
+                    @endphp
                     <div>
                         <div style="display: flex; justify-content: space-between; margin-bottom: 6px;">
                             <label style="font-family: var(--cms-font-ui); font-size: 12px; font-weight: 700; color: var(--cms-fg3); text-transform: uppercase; letter-spacing: 0.04em;">Image Compression Quality</label>
-                            <span id="compression-val" style="font-family: var(--cms-font-ui); font-size: 13px; font-weight: 700; color: var(--cms-green);">82% (High Quality)</span>
+                            <span id="compression-val" style="font-family: var(--cms-font-ui); font-size: 13px; font-weight: 700; color: var(--cms-green);">{{ $compressionQuality }}%</span>
                         </div>
-                        <input type="range" min="50" max="100" value="82" oninput="updateCompressionLabel(this.value)"
+                        <input type="range" name="image_compression_quality" min="50" max="100" value="{{ $compressionQuality }}" oninput="updateCompressionLabel(this.value)"
                                style="width: 100%; accent-color: var(--cms-gold); height: 6px; border-radius: 999px; cursor: pointer; display: block;" />
                     </div>
 
@@ -216,10 +267,16 @@
                     <div>
                         <label style="font-family: var(--cms-font-ui); font-size: 12px; font-weight: 700; color: var(--cms-fg3); text-transform: uppercase; letter-spacing: 0.04em; display: block; margin-bottom: 10px;">Allowed File Formats</label>
                         <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;">
+                            @php
+                                $allowedFormats = json_decode(\App\Services\SettingsService::get('allowed_formats', '["JPEG","PNG","WEBP","GIF","PDF","MP4"]'), true);
+                                if (!is_array($allowedFormats)) {
+                                    $allowedFormats = ["JPEG","PNG","WEBP","GIF","PDF","MP4"];
+                                }
+                            @endphp
                             @foreach(['JPEG','PNG','WEBP','GIF','PDF','MP4'] as $ext)
                                 <label style="display: flex; align-items: center; gap: 8px; font-family: var(--cms-font-ui); font-size: 13.5px; color: var(--cms-fg1); padding: 10px; border-radius: var(--cms-r-md); border: 1.5px solid var(--cms-border); background: var(--cms-bg); cursor: pointer; user-select: none;"
                                        onmouseover="this.style.borderColor='var(--cms-border-st)'" onmouseout="this.style.borderColor='var(--cms-border)'">
-                                    <input type="checkbox" checked style="accent-color: var(--cms-gold); cursor: pointer; width: 14px; height: 14px;" />
+                                    <input type="checkbox" name="allowed_formats[]" value="{{ $ext }}" {{ in_array($ext, $allowedFormats) ? 'checked' : '' }} style="accent-color: var(--cms-gold); cursor: pointer; width: 14px; height: 14px;" />
                                     {{ $ext }}
                                 </label>
                             @endforeach
@@ -244,7 +301,7 @@
 
 <script>
     let activeAccordion = 'general';
-    let isRobotsIndex = true;
+    let isRobotsIndex = document.getElementById('robots-index-input') ? document.getElementById('robots-index-input').value === '1' : true;
 
     function toggleAccordion(key) {
         const content = document.getElementById(`content-${key}`);
@@ -283,29 +340,21 @@
     // Robots switch logic
     function toggleRobots(shouldIndex) {
         isRobotsIndex = shouldIndex;
+        const indexInput = document.getElementById('robots-index-input');
+        if (indexInput) {
+            indexInput.value = shouldIndex ? '1' : '0';
+        }
         const indexBtn = document.getElementById('robots-index-btn');
         const noindexBtn = document.getElementById('robots-noindex-btn');
 
-        if (shouldIndex) {
-            indexBtn.style.border = '1.5px solid var(--cms-gold)';
-            indexBtn.style.background = 'var(--cms-gold-soft)';
-            indexBtn.style.color = 'var(--cms-gold-deep)';
-            indexBtn.style.fontWeight = '700';
-
-            noindexBtn.style.border = '1.5px solid var(--cms-border)';
-            noindexBtn.style.background = 'var(--cms-surface)';
-            noindexBtn.style.color = 'var(--cms-fg3)';
-            noindexBtn.style.fontWeight = '600';
-        } else {
-            noindexBtn.style.border = '1.5px solid var(--cms-red)';
-            noindexBtn.style.background = 'var(--cms-red-soft)';
-            noindexBtn.style.color = 'var(--cms-red-deep)';
-            noindexBtn.style.fontWeight = '700';
-
-            indexBtn.style.border = '1.5px solid var(--cms-border)';
-            indexBtn.style.background = 'var(--cms-surface)';
-            indexBtn.style.color = 'var(--cms-fg3)';
-            indexBtn.style.fontWeight = '600';
+        if (indexBtn && noindexBtn) {
+            if (shouldIndex) {
+                indexBtn.classList.add('active');
+                noindexBtn.classList.remove('active');
+            } else {
+                indexBtn.classList.remove('active');
+                noindexBtn.classList.add('active');
+            }
         }
     }
 
@@ -335,34 +384,19 @@
         }
     }
 
-    // Save Section AJAX Simulation
-    function saveSection(e, sectionName) {
-        e.preventDefault();
-        
-        const btn = e.target.querySelector('button[type="submit"]');
-        const originalHtml = btn.innerHTML;
-
-        // Spinner / saving state
-        btn.disabled = true;
-        btn.innerHTML = `<span style="display:inline-block; width:12px; height:12px; border:2px solid rgba(0,0,0,0.15); border-top-color:#1A1410; border-radius:50%; animation:dsSpin 600ms linear infinite; margin-right:6px;"></span> Saving…`;
-
-        setTimeout(() => {
-            btn.disabled = false;
-            btn.innerHTML = originalHtml;
-            showToast(`${sectionName} Settings saved successfully ✓`);
-        }, 800);
-    }
-
     // Toast Generator
     function showToast(message) {
         const container = document.getElementById('toast-container');
+        if (!container) return;
         
         const toast = document.createElement('div');
         toast.style.cssText = "background: #17120D; border: 1.5px solid var(--cms-gold); border-radius: var(--cms-r-md); padding: 12px 20px; color: #fff; font-family: var(--cms-font-ui); font-size: 13.5px; font-weight: 600; display: flex; align-items: center; gap: 8px; box-shadow: var(--cms-sh-pop); animation: dsPop 180ms ease; min-width: 280px;";
         toast.innerHTML = `<i data-lucide="check-circle" style="width: 16px; height: 16px; color: var(--cms-gold); flex-shrink: 0;"></i> <span>${message}</span>`;
         
         container.appendChild(toast);
-        lucide.createIcons();
+        if (window.lucide) {
+            lucide.createIcons();
+        }
 
         // Auto remove toast
         setTimeout(() => {
@@ -372,4 +406,12 @@
         }, 3000);
     }
 </script>
+
+@if(session('success'))
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        showToast("{{ session('success') }}");
+    });
+</script>
+@endif
 @endsection

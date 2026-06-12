@@ -38,6 +38,16 @@ class User extends Authenticatable
         return $this->hasMany(Post::class);
     }
 
+    public function bookmarks(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(Bookmark::class);
+    }
+
+    public function bookmarkedPosts(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+    {
+        return $this->belongsToMany(Post::class, 'bookmarks');
+    }
+
     public function hasPermission(string $key): bool
     {
         static $cache = [];

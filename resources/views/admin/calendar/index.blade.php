@@ -12,20 +12,6 @@
     $firstDay = $now->copy()->startOfMonth()->dayOfWeek; // 0=Sun
     $daysInMonth = $now->daysInMonth;
 
-    $posts = [
-        ['id'=>1,'title'=>'TGMA 2024: Full Winners List','status'=>'published','author'=>'Ama B','day'=>2],
-        ['id'=>2,'title'=>'Black Sherif Net Worth Deep Dive','status'=>'scheduled','author'=>'Kofi M','day'=>5],
-        ['id'=>3,'title'=>'Highlife Legends: Then vs Now','status'=>'draft','author'=>'Adjoa S','day'=>5],
-        ['id'=>4,'title'=>'King Promise Album Review','status'=>'scheduled','author'=>'Ama B','day'=>9],
-        ['id'=>5,'title'=>'Ghana Music Awards History','status'=>'published','author'=>'Kofi M','day'=>12],
-        ['id'=>6,'title'=>'Celebrity Fashion Week Roundup','status'=>'review','author'=>'Adjoa S','day'=>15],
-        ['id'=>7,'title'=>'Sarkodie Biography Updated','status'=>'scheduled','author'=>'Ama B','day'=>18],
-        ['id'=>8,'title'=>'Top 10 Afrobeats Songs 2024','status'=>'draft','author'=>'Kofi M','day'=>20],
-        ['id'=>9,'title'=>'TGMA Best New Artist Analysis','status'=>'approved','author'=>'Adjoa S','day'=>22],
-        ['id'=>10,'title'=>'Ghana Sports Year in Review','status'=>'scheduled','author'=>'Ama B','day'=>25],
-        ['id'=>11,'title'=>'Highlife Music Festival Preview','status'=>'draft','author'=>'Kofi M','day'=>28],
-    ];
-
     $statusColors = [
         'published' => ['bg'=>'#E7F5EE','color'=>'#1A7A45','dot'=>'#2ECC71'],
         'scheduled' => ['bg'=>'#FFF8E6','color'=>'#8A5A00','dot'=>'#E8A800'],
@@ -34,12 +20,17 @@
         'approved'  => ['bg'=>'rgba(46,204,113,0.12)','color'=>'#1A7A45','dot'=>'#27AE60'],
     ];
 
-    // Group posts by day
+    // Group posts by day (only for current month/year)
     $byDay = [];
-    foreach ($posts as $p) { $byDay[$p['day']][] = $p; }
+    foreach ($posts as $p) {
+        if ($p['month'] == $month && $p['year'] == $year) {
+            $byDay[$p['day']][] = $p;
+        }
+    }
 
-    $upcoming = array_filter($posts, fn($p) => in_array($p['status'], ['scheduled','approved']) && $p['day'] >= $now->day);
-    usort($upcoming, fn($a,$b) => $a['day'] <=> $b['day']);
+    $upcoming = $posts->filter(fn($p) => in_array($p['status'], ['scheduled','approved']) && ($p['year'] > $year || ($p['year'] == $year && $p['month'] > $month) || ($p['year'] == $year && $p['month'] == $month && $p['day'] >= $now->day)))
+        ->sortBy(fn($p) => $p['year'] . str_pad($p['month'], 2, '0', STR_PAD_LEFT) . str_pad($p['day'], 2, '0', STR_PAD_LEFT))
+        ->values();
 @endphp
 
 <div style="display: grid; grid-template-columns: 1fr 240px; gap: 20px; align-items: start;">
@@ -160,7 +151,7 @@
                 <i data-lucide="clock" style="width: 14px; height: 14px; color: var(--cms-gold);"></i>
                 <span style="font-family: var(--cms-font-ui); font-size: 13px; font-weight: 700; color: var(--cms-fg1);">Upcoming</span>
             </div>
-            @foreach(array_slice(array_values($upcoming), 0, 5) as $post)
+            @foreach($upcoming->take(5) as $post)
                 @php $sc = $statusColors[$post['status']] ?? $statusColors['draft']; @endphp
                 <a href="{{ route('admin.posts.edit', $post['id']) }}"
                    style="display: flex; align-items: flex-start; gap: 10px; padding: 11px 16px; border-bottom: 1px solid var(--cms-border); text-decoration: none; transition: background 100ms;"
