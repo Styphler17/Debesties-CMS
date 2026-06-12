@@ -105,41 +105,9 @@
 </div>
 
 <script>
-    let activeWidgets = [
-        {
-            id: 1,
-            type: 'hero',
-            name: 'Hero Banner',
-            settings: {
-                headline: 'The Rhythm of the African Soul',
-                subtext: 'Exploring beats, lifestyle, and modern culture from the streets of Accra.',
-                cta_label: 'Read Latest Edition',
-                cta_link: '/editions/latest',
-                theme: 'gold-black'
-            }
-        },
-        {
-            id: 2,
-            type: 'grid',
-            name: 'Featured Posts Grid',
-            settings: {
-                limit: 5,
-                category: 'all',
-                style: 'masonry'
-            }
-        },
-        {
-            id: 3,
-            type: 'newsletter',
-            name: 'Newsletter Signup',
-            settings: {
-                placeholder: 'Enter email address...',
-                cta: 'Subscribe Now'
-            }
-        }
-    ];
+    let activeWidgets = {!! $layout !!};
 
-    let nextWidgetId = 4;
+    let nextWidgetId = activeWidgets.reduce((max, w) => Math.max(max, w.id || 0), 0) + 1;
     let selectedInspectorId = null;
 
     document.addEventListener("DOMContentLoaded", () => {
@@ -404,7 +372,28 @@
     }
 
     function saveLayout() {
-        showToast("Homepage layout configuration saved successfully ✓");
+        fetch('{{ route('admin.homepage-builder.store') }}', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+            },
+            body: JSON.stringify({
+                layout: JSON.stringify(activeWidgets)
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                showToast(data.message || "Homepage layout configuration saved successfully ✓");
+            } else {
+                showToast("Failed to save layout configuration.");
+            }
+        })
+        .catch(error => {
+            console.error('Error saving layout:', error);
+            showToast("An error occurred while saving.");
+        });
     }
 
     // Toast Generator

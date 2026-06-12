@@ -8,6 +8,7 @@ use App\Http\Controllers\Public\HomeController;
 use App\Http\Controllers\Public\SearchController;
 use App\Http\Controllers\Public\SitemapController;
 use App\Http\Controllers\Public\TagController;
+use App\Http\Controllers\Public\PageController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
@@ -19,6 +20,8 @@ Route::get('/author/{user:slug}', [AuthorController::class, 'show'])->name('auth
 Route::get('/category/{category:slug}', [CategoryController::class, 'show'])->name('categories.show');
 
 Route::get('/tag/{tag:slug}', [TagController::class, 'show'])->name('tags.show');
+
+Route::get('/pages/{page:slug}', [PageController::class, 'show'])->name('pages.show');
 
 Route::get('/sitemap.xml', [SitemapController::class, 'index'])->name('sitemap');
 

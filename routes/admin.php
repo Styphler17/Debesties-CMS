@@ -43,7 +43,7 @@ Route::prefix('admin')
         Route::resource('roles', RoleController::class);
         Route::resource('comments', CommentController::class);
 
-        Route::get('pages', [PageController::class, 'index'])->name('pages.index');
+        Route::resource('pages', PageController::class);
         Route::get('calendar', [CalendarController::class, 'index'])->name('calendar.index');
         Route::get('analytics', [AnalyticsController::class, 'index'])->name('analytics.index');
         Route::get('menus', [MenuController::class, 'index'])->name('menus.index');
@@ -51,4 +51,5 @@ Route::prefix('admin')
         Route::get('seo', [SeoController::class, 'index'])->name('seo.index');
         Route::get('ai-visibility', [AiVisibilityController::class, 'index'])->name('ai-visibility.index');
         Route::get('homepage-builder', [HomepageBuilderController::class, 'index'])->name('homepage-builder.index');
+        Route::post('homepage-builder', [HomepageBuilderController::class, 'store'])->name('homepage-builder.store');
     });
