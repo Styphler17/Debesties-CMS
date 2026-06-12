@@ -23,12 +23,19 @@
 
         {{-- Right: Search + New Post --}}
         <div style="display: flex; align-items: center; gap: 10px;">
-            <div style="display: flex; align-items: center; gap: 8px; width: 220px; height: 38px; background: var(--cms-surface); border: 1.5px solid var(--cms-border); border-radius: var(--cms-r-md); padding: 0 12px;"
-                 onfocusin="this.style.borderColor='var(--cms-gold)'"
-                 onfocusout="this.style.borderColor='var(--cms-border)'">
-                <i data-lucide="search" style="width: 15px; height: 15px; color: var(--cms-fg4); flex-shrink: 0;"></i>
-                <input placeholder="Search posts…" style="border: none; outline: none; background: none; flex: 1; font-family: var(--cms-font-ui); font-size: 13.5px; color: var(--cms-fg1); min-width: 0;" />
-            </div>
+            <form method="GET" action="{{ route('admin.posts.index') }}" style="display: flex; align-items: center; gap: 10px; margin: 0;">
+                <input type="hidden" name="status" value="{{ request('status', 'all') }}" />
+                @if(request('category_id'))
+                    <input type="hidden" name="category_id" value="{{ request('category_id') }}" />
+                @endif
+                @if(request('author_id'))
+                    <input type="hidden" name="author_id" value="{{ request('author_id') }}" />
+                @endif
+                <div style="display: flex; align-items: center; gap: 8px; width: 220px; height: 38px; background: var(--cms-surface); border: 1.5px solid var(--cms-border); border-radius: var(--cms-r-md); padding: 0 12px;">
+                    <i data-lucide="search" style="width: 15px; height: 15px; color: var(--cms-fg4); flex-shrink: 0;"></i>
+                    <input name="search" value="{{ request('search') }}" placeholder="Search posts…" style="border: none; outline: none; background: none; flex: 1; font-family: var(--cms-font-ui); font-size: 13.5px; color: var(--cms-fg1); min-width: 0;" />
+                </div>
+            </form>
             <a href="{{ route('admin.posts.create') }}"
                style="display: inline-flex; align-items: center; gap: 7px; font-family: var(--cms-font-ui); font-size: 13.5px; font-weight: 600; padding: 0 18px; height: 38px; background: var(--cms-gold); color: #1A1410; border-radius: var(--cms-r-md); text-decoration: none; white-space: nowrap;"
                onmouseover="this.style.background='#D69B00'" onmouseout="this.style.background='var(--cms-gold)'">
@@ -39,49 +46,40 @@
     </div>
 
     {{-- ── FILTER ROW ──────────────────────────────────────────── --}}
-    <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+    <form method="GET" action="{{ route('admin.posts.index') }}" style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin: 0;">
+        <input type="hidden" name="status" value="{{ request('status', 'all') }}" />
+        @if(request('search'))
+            <input type="hidden" name="search" value="{{ request('search') }}" />
+        @endif
+        
         {{-- Category filter --}}
-        <select style="height: 36px; padding: 0 10px; font-family: var(--cms-font-ui); font-size: 13px; color: var(--cms-fg2); background: var(--cms-surface); border: 1.5px solid var(--cms-border); border-radius: var(--cms-r-md); cursor: pointer; outline: none;">
+        <select name="category_id" onchange="this.form.submit()"
+                style="height: 36px; padding: 0 10px; font-family: var(--cms-font-ui); font-size: 13px; color: var(--cms-fg2); background: var(--cms-surface); border: 1.5px solid var(--cms-border); border-radius: var(--cms-r-md); cursor: pointer; outline: none;">
             <option value="">All Categories</option>
-            <option>Awards History</option>
-            <option>Profiles</option>
-            <option>Analysis</option>
-            <option>Explainers</option>
-            <option>News</option>
+            @foreach($categories as $cat)
+                <option value="{{ $cat->id }}" {{ request('category_id') == $cat->id ? 'selected' : '' }}>{{ $cat->name }}</option>
+            @endforeach
         </select>
+        
         {{-- Author filter --}}
-        <select style="height: 36px; padding: 0 10px; font-family: var(--cms-font-ui); font-size: 13px; color: var(--cms-fg2); background: var(--cms-surface); border: 1.5px solid var(--cms-border); border-radius: var(--cms-r-md); cursor: pointer; outline: none;">
+        <select name="author_id" onchange="this.form.submit()"
+                style="height: 36px; padding: 0 10px; font-family: var(--cms-font-ui); font-size: 13px; color: var(--cms-fg2); background: var(--cms-surface); border: 1.5px solid var(--cms-border); border-radius: var(--cms-r-md); cursor: pointer; outline: none;">
             <option value="">All Authors</option>
-            <option>Ama Boateng</option>
-            <option>Yaw Owusu</option>
-            <option>Kwesi Mensah</option>
-            <option>Esi Arthur</option>
-        </select>
-        {{-- Date filter --}}
-        <select style="height: 36px; padding: 0 10px; font-family: var(--cms-font-ui); font-size: 13px; color: var(--cms-fg2); background: var(--cms-surface); border: 1.5px solid var(--cms-border); border-radius: var(--cms-r-md); cursor: pointer; outline: none;">
-            <option value="">Any Date</option>
-            <option>This Week</option>
-            <option>This Month</option>
-            <option>Last 3 Months</option>
+            @foreach($authors as $auth)
+                <option value="{{ $auth->id }}" {{ request('author_id') == $auth->id ? 'selected' : '' }}>{{ $auth->name }}</option>
+            @endforeach
         </select>
 
         <div style="flex: 1;"></div>
 
-        {{-- Bulk action bar (shows when items checked) --}}
+        {{-- Bulk action bar --}}
         <div id="bulk-bar" style="display: none; align-items: center; gap: 8px; animation: dsPop 180ms ease;">
             <span id="bulk-count" style="font-family: var(--cms-font-ui); font-size: 13px; color: var(--cms-fg3);">0 selected</span>
-            <button onclick="bulkAction('publish')" style="height: 34px; padding: 0 14px; font-family: var(--cms-font-ui); font-size: 12.5px; font-weight: 600; background: var(--cms-green-soft); color: var(--cms-green-deep); border: 1.5px solid rgba(26,138,75,0.2); border-radius: var(--cms-r-md); cursor: pointer;">Publish</button>
-            <button onclick="bulkAction('draft')" style="height: 34px; padding: 0 14px; font-family: var(--cms-font-ui); font-size: 12.5px; font-weight: 600; background: #F0EDE8; color: var(--cms-fg3); border: 1.5px solid var(--cms-border); border-radius: var(--cms-r-md); cursor: pointer;">Move to Draft</button>
-            <button onclick="bulkAction('trash')" style="height: 34px; padding: 0 14px; font-family: var(--cms-font-ui); font-size: 12.5px; font-weight: 600; background: var(--cms-red-soft); color: var(--cms-red-deep); border: 1.5px solid rgba(200,55,43,0.2); border-radius: var(--cms-r-md); cursor: pointer;">Trash</button>
+            <button type="button" onclick="bulkAction('publish')" style="height: 34px; padding: 0 14px; font-family: var(--cms-font-ui); font-size: 12.5px; font-weight: 600; background: var(--cms-green-soft); color: var(--cms-green-deep); border: 1.5px solid rgba(26,138,75,0.2); border-radius: var(--cms-r-md); cursor: pointer;">Publish</button>
+            <button type="button" onclick="bulkAction('draft')" style="height: 34px; padding: 0 14px; font-family: var(--cms-font-ui); font-size: 12.5px; font-weight: 600; background: #F0EDE8; color: var(--cms-fg3); border: 1.5px solid var(--cms-border); border-radius: var(--cms-r-md); cursor: pointer;">Move to Draft</button>
+            <button type="button" onclick="bulkAction('trash')" style="height: 34px; padding: 0 14px; font-family: var(--cms-font-ui); font-size: 12.5px; font-weight: 600; background: var(--cms-red-soft); color: var(--cms-red-deep); border: 1.5px solid rgba(200,55,43,0.2); border-radius: var(--cms-r-md); cursor: pointer;">Trash</button>
         </div>
-
-        {{-- Items per page --}}
-        <select style="height: 36px; padding: 0 10px; font-family: var(--cms-font-ui); font-size: 13px; color: var(--cms-fg2); background: var(--cms-surface); border: 1.5px solid var(--cms-border); border-radius: var(--cms-r-md); cursor: pointer; outline: none;">
-            <option>25 / page</option>
-            <option>50 / page</option>
-            <option>100 / page</option>
-        </select>
-    </div>
+    </form>
 
     {{-- ── TABLE ────────────────────────────────────────────────── --}}
     <div style="background: var(--cms-surface); border: 1px solid var(--cms-border); border-radius: var(--cms-r-lg); overflow: hidden; box-shadow: var(--cms-sh-card);">
@@ -259,9 +257,29 @@
             document.getElementById('delete-modal').style.display = 'none';
         }
     }
+
     function executeDelete() {
-        // Submit delete form for deleteTargetId
-        closeDeleteModal();
+        if (!deleteTargetId) return;
+        const form = document.createElement('form');
+        form.method = 'POST';
+        
+        const deleteUrl = "{{ route('admin.posts.destroy', ':id') }}";
+        form.action = deleteUrl.replace(':id', deleteTargetId);
+        
+        const csrfToken = document.createElement('input');
+        csrfToken.type = 'hidden';
+        csrfToken.name = '_token';
+        csrfToken.value = "{{ csrf_token() }}";
+        form.appendChild(csrfToken);
+
+        const methodInput = document.createElement('input');
+        methodInput.type = 'hidden';
+        methodInput.name = '_method';
+        methodInput.value = 'DELETE';
+        form.appendChild(methodInput);
+
+        document.body.appendChild(form);
+        form.submit();
     }
 
     // Bulk selection

@@ -20,12 +20,28 @@ class PostController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Post::with(['user', 'category', 'meta'])
-            ->orderBy('created_at', 'desc');
+        $query = Post::with(['user', 'category', 'meta']);
 
         if ($request->filled('status') && $request->status !== 'all') {
             $query->where('status', $request->status);
         }
+
+        if ($request->filled('search')) {
+            $query->where(function ($q) use ($request) {
+                $q->where('title', 'like', '%' . $request->search . '%')
+                  ->orWhere('body', 'like', '%' . $request->search . '%');
+            });
+        }
+
+        if ($request->filled('category_id')) {
+            $query->where('category_id', $request->category_id);
+        }
+
+        if ($request->filled('author_id')) {
+            $query->where('user_id', $request->author_id);
+        }
+
+        $query->orderBy('created_at', 'desc');
 
         $posts = $query->paginate(25)->withQueryString();
 
@@ -37,6 +53,11 @@ class PostController extends Controller
             'scheduled' => Post::where('status', 'scheduled')->count(),
         ];
 
+        $categories = Category::orderBy('name')->get();
+        $authors = User::whereHas('roles', function($q) {
+            $q->where('slug', '!=', 'subscriber');
+        })->orderBy('name')->get();
+
         $statusMeta = [
             'published' => ['label' => 'Published', 'bg' => 'var(--cms-green-soft)', 'color' => 'var(--cms-green-deep)'],
             'draft'     => ['label' => 'Draft',     'bg' => '#F0EDE8',               'color' => 'var(--cms-fg3)'],
@@ -47,7 +68,7 @@ class PostController extends Controller
             'trash'     => ['label' => 'Trash',     'bg' => 'var(--cms-red-soft)',   'color' => 'var(--cms-red-deep)'],
         ];
 
-        return view('admin.posts.index', compact('posts', 'counts', 'statusMeta'));
+        return view('admin.posts.index', compact('posts', 'counts', 'statusMeta', 'categories', 'authors'));
     }
 
     public function create()
