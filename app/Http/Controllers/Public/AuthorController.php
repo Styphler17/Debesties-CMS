@@ -3,11 +3,18 @@
 namespace App\Http\Controllers\Public;
 
 use App\Http\Controllers\Controller;
+use App\Models\User;
 
 class AuthorController extends Controller
 {
-    public function show(string $slug)
+    public function show(User $user)
     {
-        return view('public.author', compact('slug'));
+        $posts = $user->posts()
+            ->published()
+            ->with(['category', 'user', 'featuredImage', 'tags'])
+            ->latest('published_at')
+            ->paginate(6);
+
+        return view('public.author', compact('user', 'posts'));
     }
 }

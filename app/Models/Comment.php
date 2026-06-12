@@ -9,7 +9,60 @@ class Comment extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['post_id', 'user_id', 'author_name', 'author_email', 'author_url', 'content', 'status', 'parent_id'];
+    protected $fillable = [
+        'post_id',
+        'user_id',
+        'name',
+        'email',
+        'comment',
+        'status',
+        'parent_id',
+        'author_name',
+        'author_email',
+        'author_url',
+        'content',
+        'body'
+    ];
+
+    public function getBodyAttribute()
+    {
+        return $this->attributes['comment'] ?? null;
+    }
+
+    public function setBodyAttribute($value)
+    {
+        $this->attributes['comment'] = $value;
+    }
+
+    public function getContentAttribute()
+    {
+        return $this->attributes['comment'] ?? null;
+    }
+
+    public function setContentAttribute($value)
+    {
+        $this->attributes['comment'] = $value;
+    }
+
+    public function getAuthorNameAttribute()
+    {
+        return $this->attributes['name'] ?? null;
+    }
+
+    public function setAuthorNameAttribute($value)
+    {
+        $this->attributes['name'] = $value;
+    }
+
+    public function getAuthorEmailAttribute()
+    {
+        return $this->attributes['email'] ?? null;
+    }
+
+    public function setAuthorEmailAttribute($value)
+    {
+        $this->attributes['email'] = $value;
+    }
 
     public function post()
     {
