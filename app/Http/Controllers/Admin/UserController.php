@@ -9,6 +9,7 @@ use App\Models\Role;
 use App\Models\User;
 use App\Actions\SEO\GenerateSlug;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 
@@ -122,12 +123,12 @@ class UserController extends Controller
     {
         $user = User::findOrFail($id);
 
-        if ($user->id === auth()->id()) {
+        if ($user->id === Auth::id()) {
             return redirect()->route('admin.users.index')->with('error', 'You cannot delete your own account.');
         }
 
         // Reassign authored posts to currently authenticated user (the deleting admin)
-        $user->posts()->update(['user_id' => auth()->id()]);
+        $user->posts()->update(['user_id' => Auth::id()]);
 
         $user->delete();
 
