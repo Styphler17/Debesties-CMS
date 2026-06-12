@@ -28,10 +28,22 @@ class RolesAndPermissionsSeeder extends Seeder
         });
 
         // subscriber role — public users, no admin permissions
-        Role::firstOrCreate(['slug' => 'subscriber'], ['name' => 'Subscriber']);
+        Role::firstOrCreate(
+            ['slug' => 'subscriber'],
+            [
+                'name' => 'Subscriber',
+                'description' => 'Public registered user. Can view articles, write comments, and manage bookmarks.'
+            ]
+        );
 
         // super_admin role — all permissions
-        $superAdmin = Role::firstOrCreate(['slug' => 'super_admin'], ['name' => 'Super Admin']);
+        $superAdmin = Role::firstOrCreate(
+            ['slug' => 'super_admin'],
+            [
+                'name' => 'Super Admin',
+                'description' => 'Full access to all system features, settings, users, and content.'
+            ]
+        );
         $superAdmin->permissions()->sync($created->pluck('id'));
 
         // Create the first super admin user if none exists

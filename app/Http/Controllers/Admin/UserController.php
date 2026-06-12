@@ -29,8 +29,11 @@ class UserController extends Controller
 
         $users = $query->latest()->paginate(15)->withQueryString();
         $roles = Role::all();
+        $allCount = User::count();
+        $activeCount = User::where('status', 'active')->count();
+        $suspendedCount = User::where('status', 'suspended')->count();
 
-        return view('admin.users.index', compact('users', 'roles'));
+        return view('admin.users.index', compact('users', 'roles', 'allCount', 'activeCount', 'suspendedCount'));
     }
 
     public function create()
