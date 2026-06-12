@@ -24,6 +24,8 @@ Route::get('/tag/{tag:slug}', [TagController::class, 'show'])->name('tags.show')
 Route::get('/pages/{page:slug}', [PageController::class, 'show'])->name('pages.show');
 
 Route::get('/sitemap.xml', [SitemapController::class, 'index'])->name('sitemap');
+Route::get('/robots.txt', [SitemapController::class, 'robots'])->name('robots.txt');
+Route::get('/llms.txt', [SitemapController::class, 'llms'])->name('llms.txt');
 
 Route::middleware('auth')->group(function () {
     // User Profile

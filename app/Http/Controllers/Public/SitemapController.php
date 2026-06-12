@@ -79,4 +79,35 @@ class SitemapController extends Controller
 
         return response($xml, 200)->header('Content-Type', 'application/xml');
     }
+
+    public function robots()
+    {
+        $content = \App\Services\AiVisibilityService::generateRobotsTxt();
+        return response($content, 200)->header('Content-Type', 'text/plain');
+    }
+
+    public function llms()
+    {
+        if (\App\Services\SettingsService::get('ai_llms_txt_enabled', '1') !== '1') {
+            abort(404);
+        }
+
+        $txt = Cache::remember('llms_txt', now()->addHour(), function () {
+            $content = "# Debesties CMS\n\n";
+            $content .= "A premium digital publishing and creative blog platform.\n\n";
+            $content .= "## Essential Links\n\n";
+            $content .= "- [Homepage](" . route('home') . ")\n";
+            $content .= "- [Sitemap](" . route('sitemap') . ")\n\n";
+            
+            $content .= "## Recent Articles\n\n";
+            $posts = Post::published()->latest()->limit(50)->get();
+            foreach ($posts as $post) {
+                $content .= "- [" . $post->title . "](" . route('posts.show', $post->slug) . ")\n";
+            }
+            
+            return $content;
+        });
+
+        return response($txt, 200)->header('Content-Type', 'text/plain');
+    }
 }

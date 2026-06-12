@@ -53,6 +53,8 @@ Route::prefix('admin')
         Route::post('settings', [SettingController::class, 'store'])->name('settings.store');
         Route::get('seo', [SeoController::class, 'index'])->name('seo.index');
         Route::get('ai-visibility', [AiVisibilityController::class, 'index'])->name('ai-visibility.index');
+        Route::post('ai-visibility', [AiVisibilityController::class, 'update'])->name('ai-visibility.update');
+        Route::delete('ai-visibility/logs', [AiVisibilityController::class, 'clearLogs'])->name('ai-visibility.logs.clear');
         Route::get('homepage-builder', [HomepageBuilderController::class, 'index'])->name('homepage-builder.index');
         Route::post('homepage-builder', [HomepageBuilderController::class, 'store'])->name('homepage-builder.store');
     });
