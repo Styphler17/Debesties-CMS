@@ -69,6 +69,7 @@
         margin-bottom: 2rem;
         display: -webkit-box;
         -webkit-line-clamp: 3;
+        line-clamp: 3;
         -webkit-box-orient: vertical;
         overflow: hidden;
     }
@@ -162,6 +163,7 @@
         margin-bottom: 1.5rem;
         display: -webkit-box;
         -webkit-line-clamp: 3;
+        line-clamp: 3;
         -webkit-box-orient: vertical;
         overflow: hidden;
     }
@@ -273,7 +275,7 @@
         <div style="margin-top: 4rem;">
             <h3 class="section-title">Latest Editorial</h3>
             
-            @if($posts->count() > 0)
+            @if(count($posts) > 0)
                 <div class="articles-grid">
                     @foreach($posts as $post)
                         <article class="article-card">

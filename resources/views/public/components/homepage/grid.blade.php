@@ -12,7 +12,7 @@
         <span style="position: absolute; left: 0; bottom: 0; width: 40px; height: 3px; background-color: var(--accent-green);"></span>
     </h3>
 
-    @if(isset($posts) && $posts->count() > 0)
+    @if(isset($posts) && count($posts) > 0)
         <div class="{{ $gridClass }}">
             @foreach($posts as $post)
                 <article class="grid-article-card">
@@ -170,6 +170,7 @@
         margin-bottom: 1.5rem;
         display: -webkit-box;
         -webkit-line-clamp: 3;
+        line-clamp: 3;
         -webkit-box-orient: vertical;
         overflow: hidden;
         line-height: 1.5;

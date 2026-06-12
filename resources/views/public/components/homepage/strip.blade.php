@@ -4,7 +4,7 @@
         Latest News
     </div>
     
-    @if(isset($posts) && $posts->count() > 0)
+    @if(isset($posts) && count($posts) > 0)
         <div class="strip-marquee-container" style="flex-grow: 1; overflow: hidden; position: relative;">
             <div class="strip-marquee-wrapper" style="display: flex; gap: 2.5rem; animation: marquee-scroll 20s linear infinite; white-space: nowrap;">
                 @foreach($posts as $post)
@@ -14,7 +14,7 @@
                     </a>
                 @endforeach
                 <!-- Duplicate for seamless looping if there are enough items -->
-                @if($posts->count() >= 3)
+                @if(count($posts) >= 3)
                     @foreach($posts as $post)
                         <a href="{{ route('posts.show', $post->slug) }}" class="strip-post-link" style="color: #CCD6F6; font-size: 0.9rem; font-weight: 500; display: inline-flex; align-items: center; gap: 8px;">
                             <span style="color: var(--accent-gold);">•</span>
