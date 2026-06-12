@@ -9,7 +9,7 @@
         ['id'=>1,'title'=>'The Elite Club: 4 Artists Who Dominated TGMAs','meta_title'=>'4 Artists Who Dominated the TGMAs | Debesties','meta_desc'=>'A deep dive into the artists who have dominated Ghana Music Awards history.','keyword'=>'TGMA winners','score'=>88],
         ['id'=>2,'title'=>'Black Sherif: From Konongo to International Fame','meta_title'=>'','meta_desc'=>'Black Sherif biography and career timeline.','keyword'=>'Black Sherif','score'=>61],
         ['id'=>3,'title'=>'TGMA 2024 Full Winners Announced','meta_title'=>'TGMA 2024 Winners','meta_desc'=>'','keyword'=>'','score'=>38],
-        ['id'=>4,'title'=>'Ghana Music: The Highlife Renaissance','meta_title'=>'Ghana Highlife Music Revival 2024 | Debesties','meta_desc'=>'How Highlife is making a major comeback in Ghana's music industry.','keyword'=>'Ghana highlife','score'=>79],
+        ['id'=>4,'title'=>'Ghana Music: The Highlife Renaissance','meta_title'=>'Ghana Highlife Music Revival 2024 | Debesties','meta_desc'=>'How Highlife is making a major comeback in Ghana\'s music industry.','keyword'=>'Ghana highlife','score'=>79],
         ['id'=>5,'title'=>'King Promise: A Year in Review','meta_title'=>'','meta_desc'=>'','keyword'=>'','score'=>22],
         ['id'=>6,'title'=>'Celebrity Fashion Week Roundup','meta_title'=>'Ghana Celebrity Fashion Week 2024 | Debesties','meta_desc'=>'Best celebrity looks from Ghana Fashion Week 2024.','keyword'=>'Ghana celebrity fashion','score'=>91],
     ];
