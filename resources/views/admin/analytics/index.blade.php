@@ -44,38 +44,7 @@
 </style>
 @php
     $ranges = ['7d' => '7 Days', '30d' => '30 Days', '90d' => '90 Days'];
-    $stats = [
-        ['label'=>'Total Views',        'value'=>'124,839', 'delta'=>'+18.4%', 'up'=>true,  'icon'=>'eye'],
-        ['label'=>'Unique Visitors',    'value'=>'38,201',  'delta'=>'+11.2%', 'up'=>true,  'icon'=>'users'],
-        ['label'=>'Avg. Time on Page',  'value'=>'3m 42s',  'delta'=>'+0:23',  'up'=>true,  'icon'=>'clock'],
-        ['label'=>'Bounce Rate',        'value'=>'52.1%',   'delta'=>'-3.8%',  'up'=>true,  'icon'=>'trending-down'],
-    ];
-    $topPosts = [
-        ['rank'=>1,'title'=>'The Elite Club: 4 Artists Who Dominated the TGMAs','views'=>'18,420','time'=>'5m 12s','category'=>'Awards History','trend'=>[40,55,48,72,65,80,88]],
-        ['rank'=>2,'title'=>'Black Sherif: From Konongo to International Fame','views'=>'12,905','time'=>'4m 38s','category'=>'Profiles','trend'=>[30,40,35,55,45,60,62]],
-        ['rank'=>3,'title'=>'TGMA 2024 Full Winners Announced','views'=>'10,312','time'=>'2m 55s','category'=>'News','trend'=>[80,75,60,45,30,22,18]],
-        ['rank'=>4,'title'=>'Ghana Music: The Highlife Renaissance','views'=>'8,044','time'=>'6m 10s','category'=>'Analysis','trend'=>[10,20,28,35,42,52,58]],
-        ['rank'=>5,'title'=>'King Promise: A Year in Review','views'=>'6,890','time'=>'3m 28s','category'=>'Profiles','trend'=>[22,25,30,32,38,40,45]],
-    ];
-    $sources = [
-        ['label'=>'Organic Search','pct'=>54,'color'=>'var(--cms-gold)'],
-        ['label'=>'Direct',        'pct'=>21,'color'=>'var(--cms-blue)'],
-        ['label'=>'Social Media',  'pct'=>16,'color'=>'#9B59B6'],
-        ['label'=>'Referral',      'pct'=>9, 'color'=>'var(--cms-green)'],
-    ];
-    $countries = [
-        ['country'=>'Ghana','visits'=>'48,392','pct'=>38.8],
-        ['country'=>'Nigeria','visits'=>'22,104','pct'=>17.7],
-        ['country'=>'United Kingdom','visits'=>'14,830','pct'=>11.9],
-        ['country'=>'United States','visits'=>'12,210','pct'=>9.8],
-        ['country'=>'Canada','visits'=>'7,015','pct'=>5.6],
-        ['country'=>'South Africa','visits'=>'5,390','pct'=>4.3],
-        ['country'=>'Germany','visits'=>'3,240','pct'=>2.6],
-        ['country'=>'France','visits'=>'2,880','pct'=>2.3],
-    ];
-    // Bar chart data (views per day, last 30 days, sample)
-    $chartBars = [28,45,32,60,55,71,82,68,75,90,78,65,88,72,95,83,69,77,91,86,78,62,55,70,88,92,74,80,96,102];
-    $maxBar = max($chartBars);
+    $maxBar = count($chartBars) > 0 ? max($chartBars) : 1;
 @endphp
 
 {{-- Date Range Selector --}}
@@ -83,7 +52,7 @@
     <div style="display: flex; gap: 4px; background: var(--cms-surface); border: 1.5px solid var(--cms-border); border-radius: var(--cms-r-lg); padding: 4px;">
         @foreach($ranges as $key => $label)
             <button onclick="setRange('{{ $key }}', this)"
-                    class="range-btn {{ $key === '30d' ? 'active' : '' }}"
+                    class="range-btn {{ $key === $range ? 'active' : '' }}"
                     data-range="{{ $key }}">
                 {{ $label }}
             </button>
@@ -111,25 +80,37 @@
 </div>
 
 {{-- Main Chart --}}
+@php
+    $daysCount = count($chartBars);
+    $rangeDays = $range === '7d' ? 7 : ($range === '90d' ? 90 : 30);
+    $interval = $range === '90d' ? 3 : 1;
+@endphp
 <div style="background: var(--cms-surface); border: 1px solid var(--cms-border); border-radius: var(--cms-r-lg); padding: 20px; margin-bottom: 20px; box-shadow: var(--cms-sh-card);">
     <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px;">
-        <span style="font-family: var(--cms-font-ui); font-size: 14px; font-weight: 700; color: var(--cms-fg1);">Daily Views — Last 30 Days</span>
-        <span style="font-family: var(--cms-font-ui); font-size: 12px; color: var(--cms-fg4);">Peak: {{ max($chartBars) }}K views</span>
+        <span style="font-family: var(--cms-font-ui); font-size: 14px; font-weight: 700; color: var(--cms-fg1);">Daily Views — Last {{ $rangeDays }} Days</span>
+        <span style="font-family: var(--cms-font-ui); font-size: 12px; color: var(--cms-fg4);">Peak: {{ number_format(max($chartBars)) }} views</span>
     </div>
     <div style="display: flex; align-items: flex-end; gap: 5px; height: 160px; padding: 0 4px;">
         @foreach($chartBars as $i => $val)
-            @php $h = max(4, round(($val / $maxBar) * 100)); @endphp
+            @php 
+                $h = max(4, round(($val / $maxBar) * 100));
+                $startOffset = ($daysCount - 1 - $i) * $interval;
+                $dateLabel = $range === '90d'
+                    ? now()->subDays($startOffset + 2)->format('j M') . ' - ' . now()->subDays($startOffset)->format('j M')
+                    : now()->subDays($startOffset)->format('j M');
+            @endphp
             <div style="flex: 1; display: flex; flex-direction: column; align-items: center; gap: 3px; height: 100%;">
-                <div style="width: 100%; margin-top: auto; height: {{ $h }}%; background: linear-gradient(180deg, var(--cms-gold) 0%, rgba(232,168,0,0.4) 100%); border-radius: 4px 4px 0 0; transition: opacity 150ms; min-height: 4px;"
-                     onmouseover="this.style.opacity='0.75'; showBarTip(event, '{{ $val }}K', '{{ $i + 1 }} May')"
+                <div style="width: 100%; margin-top: auto; background: linear-gradient(180deg, var(--cms-gold) 0%, rgba(232,168,0,0.4) 100%); border-radius: 4px 4px 0 0; transition: opacity 150ms; min-height: 4px;"
+                     data-height="{{ $h }}%"
+                     onmouseover="this.style.opacity='0.75'; showBarTip(event, '{{ number_format($val) }} views', '{{ $dateLabel }}')"
                      onmouseout="this.style.opacity='1'; hideBarTip()"></div>
             </div>
         @endforeach
     </div>
     <div style="display: flex; align-items: center; justify-content: space-between; margin-top: 6px; padding: 0 4px;">
-        <span style="font-family: var(--cms-font-ui); font-size: 11px; color: var(--cms-fg4);">1 Jun</span>
-        <span style="font-family: var(--cms-font-ui); font-size: 11px; color: var(--cms-fg4);">15 Jun</span>
-        <span style="font-family: var(--cms-font-ui); font-size: 11px; color: var(--cms-fg4);">30 Jun</span>
+        <span style="font-family: var(--cms-font-ui); font-size: 11px; color: var(--cms-fg4);">{{ now()->subDays($rangeDays - 1)->format('j M') }}</span>
+        <span style="font-family: var(--cms-font-ui); font-size: 11px; color: var(--cms-fg4);">{{ now()->subDays($rangeDays / 2)->format('j M') }}</span>
+        <span style="font-family: var(--cms-font-ui); font-size: 11px; color: var(--cms-fg4);">{{ now()->format('j M') }}</span>
     </div>
 </div>
 
@@ -156,7 +137,7 @@
                     <tr style="border-bottom: 1px solid var(--cms-border); transition: background 100ms;"
                         onmouseover="this.style.background='#FDFBF8'" onmouseout="this.style.background='transparent'">
                         <td style="padding: 12px; text-align: center;">
-                            <span style="font-family: var(--cms-font-ui); font-size: 13px; font-weight: 800; color: {{ $p['rank'] <= 3 ? 'var(--cms-gold)' : 'var(--cms-fg4)' }};">{{ $p['rank'] }}</span>
+                            <span style="font-family: var(--cms-font-ui); font-size: 13px; font-weight: 800;" data-color="{{ $p['rank'] <= 3 ? 'var(--cms-gold)' : 'var(--cms-fg4)' }}">{{ $p['rank'] }}</span>
                         </td>
                         <td style="padding: 12px 12px 12px 0; max-width: 0;">
                             <div style="font-family: var(--cms-font-ui); font-size: 13px; font-weight: 600; color: var(--cms-fg1); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ $p['title'] }}</div>
@@ -202,7 +183,7 @@
                         <span style="font-family: var(--cms-font-ui); font-size: 13px; font-weight: 700; color: var(--cms-fg1);">{{ $s['pct'] }}%</span>
                     </div>
                     <div style="width: 100%; height: 6px; background: var(--cms-border); border-radius: 999px; overflow: hidden;">
-                        <div style="width: {{ $s['pct'] }}%; height: 100%; background: {{ $s['color'] }}; border-radius: 999px;"></div>
+                        <div style="height: 100%; border-radius: 999px;" data-width="{{ $s['pct'] }}%" data-background="{{ $s['color'] }}"></div>
                     </div>
                 </div>
             @endforeach
@@ -228,9 +209,7 @@
 
 <script>
     function setRange(r, btn) {
-        document.querySelectorAll('.range-btn').forEach(b => {
-            b.classList.toggle('active', b.dataset.range === r);
-        });
+        window.location.href = '?range=' + r;
     }
     function showBarTip(e, val, label) {
         const t = document.getElementById('bar-tip');
@@ -240,5 +219,20 @@
         t.style.top  = (e.clientY - 28) + 'px';
     }
     function hideBarTip() { document.getElementById('bar-tip').style.display = 'none'; }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        document.querySelectorAll('[data-height]').forEach(el => {
+            el.style.height = el.getAttribute('data-height');
+        });
+        document.querySelectorAll('[data-width]').forEach(el => {
+            el.style.width = el.getAttribute('data-width');
+        });
+        document.querySelectorAll('[data-background]').forEach(el => {
+            el.style.background = el.getAttribute('data-background');
+        });
+        document.querySelectorAll('[data-color]').forEach(el => {
+            el.style.color = el.getAttribute('data-color');
+        });
+    });
 </script>
 @endsection
