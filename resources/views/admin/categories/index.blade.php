@@ -4,83 +4,77 @@
 @section('page_title', 'Categories')
 
 @section('content')
-<div style="display: grid; grid-template-columns: 1fr 340px; gap: 20px; align-items: start;">
+<div style="display: grid; grid-template-columns: 1fr 360px; gap: 24px; align-items: start;">
 
     {{-- Left: Category Tree Table --}}
-    <div style="display: flex; flex-direction: column; gap: 0;">
-        <div style="background: var(--cms-surface); border: 1px solid var(--cms-border); border-radius: var(--cms-r-lg); overflow: hidden; box-shadow: var(--cms-sh-card);">
-            <div style="display: flex; align-items: center; justify-content: space-between; padding: 14px 20px; border-bottom: 1px solid var(--cms-border);">
-                <div style="display: flex; align-items: center; gap: 8px;">
-                    <i data-lucide="folder-tree" style="width: 16px; height: 16px; color: var(--cms-gold);"></i>
-                    <span style="font-family: var(--cms-font-ui); font-size: 14px; font-weight: 700; color: var(--cms-fg1);">All Categories</span>
-                    <span style="font-family: var(--cms-font-ui); font-size: 12px; color: var(--cms-fg4);">{{ $categories->total() }} total</span>
+    <div style="display: flex; flex-direction: column; gap: 20px;">
+        <div class="cms-card">
+            <div class="cms-card-header">
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <div style="width: 32px; height: 32px; border-radius: 8px; background: var(--cms-gold-soft); display: flex; align-items: center; justify-content: center; color: var(--cms-gold-deep);">
+                        <i data-lucide="folder-tree" style="width: 16px; height: 16px;"></i>
+                    </div>
+                    <div>
+                        <span style="font-family: var(--cms-font-ui); font-size: 15px; font-weight: 700; color: var(--cms-fg1);">All Categories</span>
+                        <div style="font-family: var(--cms-font-ui); font-size: 11px; color: var(--cms-fg4); font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; margin-top: 1px;">{{ $categories->total() }} taxonomy units</div>
+                    </div>
                 </div>
-                <div id="bulk-bar" style="display: none; align-items: center; gap: 8px;">
-                    <span id="bulk-count" style="font-family: var(--cms-font-ui); font-size: 13px; color: var(--cms-fg3);">0 selected</span>
-                    <button style="height: 32px; padding: 0 14px; font-family: var(--cms-font-ui); font-size: 12.5px; font-weight: 600; background: var(--cms-red-soft); color: var(--cms-red-deep); border: 1.5px solid rgba(200,55,43,0.2); border-radius: var(--cms-r-md); cursor: pointer;">Delete</button>
+                <div id="bulk-bar" style="display: none; align-items: center; gap: 10px; animation: dsPop 180ms ease;">
+                    <span id="bulk-count" style="font-family: var(--cms-font-ui); font-size: 13px; color: var(--cms-fg3); font-weight: 600;">0 selected</span>
+                    <button class="badge badge-danger" style="height: 30px; cursor: pointer; border: 1px solid rgba(200,55,43,0.1);">Delete Bulk</button>
                 </div>
             </div>
 
-            <table style="width: 100%; border-collapse: collapse; font-family: var(--cms-font-ui);">
+            <table class="cms-table">
                 <thead>
-                    <tr style="border-bottom: 1px solid var(--cms-border);">
-                        <th style="width: 40px; padding: 10px 16px; text-align: center;">
+                    <tr>
+                        <th style="width: 40px; text-align: center; padding-right: 16px;">
                             <input type="checkbox" onchange="toggleAll(this)" style="cursor: pointer; accent-color: var(--cms-gold); width: 14px; height: 14px;" />
                         </th>
-                        <th style="padding: 10px 16px 10px 0; text-align: left; font-size: 12px; font-weight: 700; color: var(--cms-fg3); letter-spacing: 0.04em; text-transform: uppercase;">Name</th>
-                        <th style="padding: 10px 16px 10px 0; text-align: left; font-size: 12px; font-weight: 700; color: var(--cms-fg3); letter-spacing: 0.04em; text-transform: uppercase;">Slug</th>
-                        <th style="padding: 10px 16px 10px 0; text-align: left; font-size: 12px; font-weight: 700; color: var(--cms-fg3); letter-spacing: 0.04em; text-transform: uppercase;">Parent</th>
-                        <th style="padding: 10px 16px 10px 0; text-align: center; font-size: 12px; font-weight: 700; color: var(--cms-fg3); letter-spacing: 0.04em; text-transform: uppercase;">Posts</th>
-                        <th style="padding: 10px 16px 10px 0; text-align: center; font-size: 12px; font-weight: 700; color: var(--cms-fg3); letter-spacing: 0.04em; text-transform: uppercase;">Visible</th>
-                        <th style="padding: 10px 16px; width: 80px;"></th>
+                        <th style="padding-left: 0;">Name</th>
+                        <th>Slug</th>
+                        <th style="text-align: center;">Posts</th>
+                        <th style="text-align: center;">Visible</th>
+                        <th style="width: 80px;"></th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach($categories as $cat)
-                        <tr style="border-bottom: 1px solid var(--cms-border); transition: background 100ms;"
-                            onmouseover="this.style.background='#FDFBF8'" onmouseout="this.style.background='transparent'">
-                            <td style="padding: 13px 16px; text-align: center;">
+                    @forelse($categories as $cat)
+                        <tr class="cat-row">
+                            <td style="text-align: center; padding-right: 16px;">
                                 <input type="checkbox" class="cat-cb" value="{{ $cat->id }}" onchange="updateBulk()" style="cursor: pointer; accent-color: var(--cms-gold); width: 14px; height: 14px;" />
                             </td>
-                            <td style="padding: 13px 16px 13px 0;">
-                                <div style="display: flex; align-items: center; gap: 8px;">
-                                    <div style="width: 7px; height: 7px; border-radius: 999px; background: var(--cms-gold); flex-shrink: 0;"></div>
-                                    <span style="font-family: var(--cms-font-ui); font-size: 13.5px; font-weight: 600; color: var(--cms-fg1);">{{ $cat->name }}</span>
+                            <td style="padding-left: 0;">
+                                <div style="display: flex; align-items: center; gap: 10px;">
+                                    <div style="width: 8px; height: 8px; border-radius: 999px; background: var(--cms-gold); flex-shrink: 0; box-shadow: 0 0 0 3px var(--cms-gold-soft);"></div>
+                                    <span style="font-weight: 700; color: var(--cms-fg1); font-size: 14px;">{{ $cat->name }}</span>
                                 </div>
                             </td>
-                            <td style="padding: 13px 16px 13px 0;">
-                                <span style="font-family: var(--cms-font-mono); font-size: 12px; color: var(--cms-fg3);">{{ $cat->slug }}</span>
+                            <td>
+                                <span style="font-family: var(--cms-font-mono); font-size: 12px; color: var(--cms-fg3); background: var(--cms-bg); padding: 2px 6px; border-radius: 4px;">{{ $cat->slug }}</span>
                             </td>
-                            <td style="padding: 13px 16px 13px 0;">
-                                <span style="font-family: var(--cms-font-ui); font-size: 12.5px; color: var(--cms-fg4);">—</span>
-                            </td>
-                            <td style="padding: 13px 16px 13px 0; text-align: center;">
+                            <td style="text-align: center;">
                                 <a href="{{ route('admin.posts.index', ['category' => $cat->slug]) }}"
-                                   style="font-family: var(--cms-font-ui); font-size: 13px; font-weight: 600; color: var(--cms-blue); text-decoration: none;">
+                                   style="font-weight: 700; color: var(--cms-blue); text-decoration: none; font-size: 13.5px;">
                                     {{ $cat->posts_count ?? $cat->posts()->count() }}
                                 </a>
                             </td>
-                            <td style="padding: 13px 16px 13px 0; text-align: center;">
+                            <td style="text-align: center;">
                                 <button onclick="toggleVisible({{ $cat->id }}, this)"
                                         data-visible="{{ $cat->is_visible ? 'true' : 'false' }}"
-                                        style="width: 38px; height: 22px; border-radius: 999px; border: none; cursor: pointer; transition: background 200ms; position: relative; background: {{ $cat->is_visible ? 'var(--cms-green)' : 'var(--cms-border-st)' }};">
-                                    <span style="position: absolute; top: 3px; width: 16px; height: 16px; border-radius: 999px; background: #fff; transition: left 200ms; left: {{ $cat->is_visible ? '19px' : '3px' }};"></span>
+                                        style="width: 36px; height: 20px; border-radius: 999px; border: none; cursor: pointer; transition: all 200ms ease; position: relative; background: {{ $cat->is_visible ? 'var(--cms-green)' : 'var(--cms-border-st)' }};">
+                                    <span style="position: absolute; top: 2px; width: 16px; height: 16px; border-radius: 999px; background: #fff; transition: left 200ms; left: {{ $cat->is_visible ? '18px' : '2px' }}; box-shadow: 0 1px 2px rgba(0,0,0,0.1);"></span>
                                 </button>
                             </td>
-                            <td style="padding: 13px 16px;">
-                                <div style="display: flex; gap: 5px; justify-content: flex-end;">
-                                    <a href="{{ route('admin.categories.edit', $cat->id) }}" title="Edit"
-                                       style="width: 30px; height: 30px; border-radius: 6px; border: 1.5px solid var(--cms-border); background: var(--cms-surface); cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--cms-fg3); text-decoration: none;"
-                                       onmouseover="this.style.background='var(--cms-bg)'; this.style.color='var(--cms-fg1)'"
-                                       onmouseout="this.style.background='var(--cms-surface)'; this.style.color='var(--cms-fg3)'">
-                                        <i data-lucide="edit-2" style="width: 13px; height: 13px;"></i>
+                            <td>
+                                <div style="display: flex; gap: 6px; justify-content: flex-end;">
+                                    <a href="{{ route('admin.categories.edit', $cat->id) }}" class="btn-secondary" style="width: 32px; height: 32px; padding: 0;" title="Edit">
+                                        <i data-lucide="edit-2" style="width: 14px; height: 14px;"></i>
                                     </a>
                                     <form method="POST" action="{{ route('admin.categories.destroy', $cat->id) }}" style="display: inline;">
                                         @csrf @method('DELETE')
-                                        <button type="submit" onclick="return confirm('Delete {{ $cat->name }}?')" title="Delete"
-                                                style="width: 30px; height: 30px; border-radius: 6px; border: 1.5px solid rgba(200,55,43,0.2); background: var(--cms-red-soft); cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--cms-red);"
-                                                onmouseover="this.style.background='#F8D5D2'" onmouseout="this.style.background='var(--cms-red-soft)'">
-                                            <i data-lucide="trash-2" style="width: 13px; height: 13px;"></i>
+                                        <button type="submit" onclick="return confirm('Delete {{ $cat->name }}?')" class="btn-secondary" style="width: 32px; height: 32px; padding: 0; color: var(--cms-red); border-color: rgba(200,55,43,0.15);" title="Delete">
+                                            <i data-lucide="trash-2" style="width: 14px; height: 14px;"></i>
                                         </button>
                                     </form>
                                 </div>
@@ -89,44 +83,36 @@
 
                         {{-- Children --}}
                         @foreach($cat->children as $child)
-                            <tr style="border-bottom: 1px solid var(--cms-border); background: #FDFBF8; transition: background 100ms;"
-                                onmouseover="this.style.background='#FAF7F2'" onmouseout="this.style.background='#FDFBF8'">
-                                <td style="padding: 10px 16px; text-align: center;">
+                            <tr style="background: #FDFBF8;">
+                                <td style="text-align: center; padding-right: 16px;">
                                     <input type="checkbox" class="cat-cb" value="{{ $child->id }}" onchange="updateBulk()" style="cursor: pointer; accent-color: var(--cms-gold); width: 14px; height: 14px;" />
                                 </td>
-                                <td style="padding: 10px 16px 10px 0;">
-                                    <div style="display: flex; align-items: center; gap: 8px; padding-left: 20px;">
-                                        <i data-lucide="corner-down-right" style="width: 13px; height: 13px; color: var(--cms-fg4);"></i>
-                                        <span style="font-family: var(--cms-font-ui); font-size: 13px; font-weight: 500; color: var(--cms-fg2);">{{ $child->name }}</span>
+                                <td style="padding-left: 0;">
+                                    <div style="display: flex; align-items: center; gap: 10px; padding-left: 20px;">
+                                        <i data-lucide="corner-down-right" style="width: 14px; height: 14px; color: var(--cms-fg4);"></i>
+                                        <span style="font-weight: 600; color: var(--cms-fg2); font-size: 13.5px;">{{ $child->name }}</span>
                                     </div>
                                 </td>
-                                <td style="padding: 10px 16px 10px 0;">
+                                <td>
                                     <span style="font-family: var(--cms-font-mono); font-size: 11.5px; color: var(--cms-fg4);">{{ $child->slug }}</span>
                                 </td>
-                                <td style="padding: 10px 16px 10px 0;">
-                                    <span style="font-family: var(--cms-font-ui); font-size: 12.5px; color: var(--cms-fg3);">{{ $cat->name }}</span>
+                                <td style="text-align: center;">
+                                    <span style="font-weight: 600; color: var(--cms-fg2); font-size: 13px;">{{ $child->posts()->count() }}</span>
                                 </td>
-                                <td style="padding: 10px 16px 10px 0; text-align: center;">
-                                    <span style="font-family: var(--cms-font-ui); font-size: 13px; font-weight: 600; color: var(--cms-fg2);">{{ $child->posts()->count() }}</span>
-                                </td>
-                                <td style="padding: 10px 16px 10px 0; text-align: center;">
+                                <td style="text-align: center;">
                                     <button onclick="toggleVisible({{ $child->id }}, this)" data-visible="{{ $child->is_visible ? 'true' : 'false' }}"
-                                            style="width: 38px; height: 22px; border-radius: 999px; border: none; cursor: pointer; background: {{ $child->is_visible ? 'var(--cms-green)' : 'var(--cms-border-st)' }}; position: relative; transition: background 200ms;">
-                                        <span style="position: absolute; top: 3px; width: 16px; height: 16px; border-radius: 999px; background: #fff; transition: left 200ms; left: {{ $child->is_visible ? '19px' : '3px' }};"></span>
+                                            style="width: 36px; height: 20px; border-radius: 999px; border: none; cursor: pointer; background: {{ $child->is_visible ? 'var(--cms-green)' : 'var(--cms-border-st)' }}; position: relative; transition: all 200ms ease;">
+                                        <span style="position: absolute; top: 2px; width: 16px; height: 16px; border-radius: 999px; background: #fff; transition: left 200ms; left: {{ $child->is_visible ? '18px' : '2px' }};"></span>
                                     </button>
                                 </td>
-                                <td style="padding: 10px 16px;">
-                                    <div style="display: flex; gap: 5px; justify-content: flex-end;">
-                                        <a href="{{ route('admin.categories.edit', $child->id) }}"
-                                           style="width: 30px; height: 30px; border-radius: 6px; border: 1.5px solid var(--cms-border); background: var(--cms-surface); cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--cms-fg3); text-decoration: none;"
-                                           onmouseover="this.style.background='var(--cms-bg)'" onmouseout="this.style.background='var(--cms-surface)'">
+                                <td>
+                                    <div style="display: flex; gap: 6px; justify-content: flex-end;">
+                                        <a href="{{ route('admin.categories.edit', $child->id) }}" class="btn-secondary" style="width: 30px; height: 30px; padding: 0;">
                                             <i data-lucide="edit-2" style="width: 13px; height: 13px;"></i>
                                         </a>
                                         <form method="POST" action="{{ route('admin.categories.destroy', $child->id) }}" style="display: inline;">
                                             @csrf @method('DELETE')
-                                            <button type="submit" onclick="return confirm('Delete {{ $child->name }}?')"
-                                                    style="width: 30px; height: 30px; border-radius: 6px; border: 1.5px solid rgba(200,55,43,0.2); background: var(--cms-red-soft); cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--cms-red);"
-                                                    onmouseover="this.style.background='#F8D5D2'" onmouseout="this.style.background='var(--cms-red-soft)'">
+                                            <button type="submit" onclick="return confirm('Delete {{ $child->name }}?')" class="btn-secondary" style="width: 30px; height: 30px; padding: 0; color: var(--cms-red); border-color: rgba(200,55,43,0.1);">
                                                 <i data-lucide="trash-2" style="width: 13px; height: 13px;"></i>
                                             </button>
                                         </form>
@@ -134,116 +120,77 @@
                                 </td>
                             </tr>
                         @endforeach
-                    @endforeach
+                    @empty
+                        <tr>
+                            <td colspan="6" style="padding: 48px 20px; text-align: center; color: var(--cms-fg4); font-size: 14px;">No categories defined yet.</td>
+                        </tr>
+                    @endforelse
                 </tbody>
             </table>
+            
+            @if($categories->hasPages())
+                <div style="padding: 16px 20px; border-top: 1px solid var(--cms-border); background: #FDFBF8;">
+                    {{ $categories->links() }}
+                </div>
+            @endif
         </div>
     </div>
 
     {{-- Right: Add / Edit Form --}}
-    <div style="background: var(--cms-surface); border: 1px solid var(--cms-border); border-radius: var(--cms-r-lg); overflow: hidden; box-shadow: var(--cms-sh-card); position: sticky; top: 88px;">
-        <div style="padding: 14px 18px; border-bottom: 1px solid var(--cms-border); display: flex; align-items: center; gap: 8px;">
-            <i data-lucide="folder-plus" style="width: 15px; height: 15px; color: var(--cms-gold);"></i>
-            <span id="form-title" style="font-family: var(--cms-font-ui); font-size: 14px; font-weight: 700; color: var(--cms-fg1);">Add New Category</span>
+    <div class="cms-card" style="position: sticky; top: 88px;">
+        <div class="cms-card-header">
+            <div style="display: flex; align-items: center; gap: 10px;">
+                <div style="width: 32px; height: 32px; border-radius: 8px; background: var(--cms-blue-soft); display: flex; align-items: center; justify-content: center; color: var(--cms-blue);">
+                    <i data-lucide="folder-plus" style="width: 16px; height: 16px;"></i>
+                </div>
+                <span id="form-title" style="font-family: var(--cms-font-ui); font-size: 15px; font-weight: 700; color: var(--cms-fg1);">Create Category</span>
+            </div>
         </div>
-        <form method="POST" action="{{ route('admin.categories.store') }}" style="padding: 18px; display: flex; flex-direction: column; gap: 14px;">
+        <form method="POST" action="{{ route('admin.categories.store') }}" class="cms-card-body" style="display: flex; flex-direction: column; gap: 16px; padding: 24px;">
             @csrf
             <input type="hidden" id="edit-cat-id" value="" />
 
-            <div>
-                <label style="font-family: var(--cms-font-ui); font-size: 12px; font-weight: 700; color: var(--cms-fg3); text-transform: uppercase; letter-spacing: 0.04em; display: block; margin-bottom: 6px;">Name <span style="color: var(--cms-red);">*</span></label>
-                <input id="cat-name" name="name" type="text" placeholder="e.g. Music Awards" oninput="autoCatSlug(this.value)"
-                       style="display: block; width: 100%; height: 40px; padding: 0 12px; font-family: var(--cms-font-ui); font-size: 13.5px; color: var(--cms-fg1); background: var(--cms-bg); border: 1.5px solid var(--cms-border); border-radius: var(--cms-r-md); outline: none;"
-                       onfocus="this.style.borderColor='var(--cms-gold)'; this.style.boxShadow='0 0 0 3px rgba(232,168,0,0.13)'"
-                       onblur="this.style.borderColor='var(--cms-border)'; this.style.boxShadow='none'" />
+            <div class="form-group">
+                <label class="form-label">Category Name</label>
+                <input id="cat-name" name="name" type="text" class="form-input" placeholder="e.g. Industry Analysis" oninput="autoCatSlug(this.value)" required />
             </div>
 
-            <div>
-                <label style="font-family: var(--cms-font-ui); font-size: 12px; font-weight: 700; color: var(--cms-fg3); text-transform: uppercase; letter-spacing: 0.04em; display: block; margin-bottom: 6px;">Slug</label>
-                <input id="cat-slug" type="text" placeholder="auto-generated"
-                       style="display: block; width: 100%; height: 40px; padding: 0 12px; font-family: var(--cms-font-mono); font-size: 12.5px; color: var(--cms-fg2); background: var(--cms-bg); border: 1.5px solid var(--cms-border); border-radius: var(--cms-r-md); outline: none;"
-                       onfocus="this.style.borderColor='var(--cms-gold)'" onblur="this.style.borderColor='var(--cms-border)'" />
+            <div class="form-group">
+                <label class="form-label">URL Slug</label>
+                <input id="cat-slug" name="slug" type="text" class="form-input" style="font-family: var(--cms-font-mono); font-size: 12.5px;" placeholder="industry-analysis" />
             </div>
 
-            <div>
-                <label style="font-family: var(--cms-font-ui); font-size: 12px; font-weight: 700; color: var(--cms-fg3); text-transform: uppercase; letter-spacing: 0.04em; display: block; margin-bottom: 6px;">Description</label>
-                <textarea id="cat-desc" name="description" rows="2" placeholder="Optional description…"
-                          style="display: block; width: 100%; padding: 10px 12px; font-family: var(--cms-font-ui); font-size: 13px; color: var(--cms-fg1); background: var(--cms-bg); border: 1.5px solid var(--cms-border); border-radius: var(--cms-r-md); outline: none; resize: vertical; line-height: 1.5;"
-                          onfocus="this.style.borderColor='var(--cms-gold)'" onblur="this.style.borderColor='var(--cms-border)'"></textarea>
+            <div class="form-group">
+                <label class="form-label">Description</label>
+                <textarea id="cat-desc" name="description" rows="3" class="form-textarea" placeholder="Describe this category's focus…"></textarea>
             </div>
 
-            <div>
-                <label style="font-family: var(--cms-font-ui); font-size: 12px; font-weight: 700; color: var(--cms-fg3); text-transform: uppercase; letter-spacing: 0.04em; display: block; margin-bottom: 6px;">Parent Category</label>
-                <select id="cat-parent" name="parent_id"
-                        style="width: 100%; height: 40px; padding: 0 10px; font-family: var(--cms-font-ui); font-size: 13.5px; color: var(--cms-fg1); background: var(--cms-bg); border: 1.5px solid var(--cms-border); border-radius: var(--cms-r-md); cursor: pointer; outline: none;">
-                    <option value="">None (top-level)</option>
-                    @foreach($topLevel as $cat)
-                        <option value="{{ $cat->id }}">{{ $cat->name }}</option>
+            <div class="form-group">
+                <label class="form-label">Parent Category</label>
+                <select id="cat-parent" name="parent_id" class="form-select">
+                    <option value="">None (Top Level)</option>
+                    @foreach($topLevel as $tc)
+                        <option value="{{ $tc->id }}">{{ $tc->name }}</option>
                     @endforeach
                 </select>
             </div>
 
-            <div>
-                <label style="font-family: var(--cms-font-ui); font-size: 12px; font-weight: 700; color: var(--cms-fg3); text-transform: uppercase; letter-spacing: 0.04em; display: block; margin-bottom: 6px;">Sort Order</label>
-                <input id="cat-order" name="sort_order" type="number" value="0" min="0"
-                       style="display: block; width: 100%; height: 40px; padding: 0 12px; font-family: var(--cms-font-ui); font-size: 13.5px; color: var(--cms-fg1); background: var(--cms-bg); border: 1.5px solid var(--cms-border); border-radius: var(--cms-r-md); outline: none;"
-                       onfocus="this.style.borderColor='var(--cms-gold)'" onblur="this.style.borderColor='var(--cms-border)'" />
+            <div class="form-group">
+                <label class="form-label">Sort Order</label>
+                <input id="cat-order" name="sort_order" type="number" value="0" min="0" class="form-input" />
             </div>
 
-            <div style="display: flex; gap: 8px; padding-top: 4px;">
-                <button type="button" id="cancel-btn" onclick="resetCatForm()" style="display: none; flex: 1; height: 38px; font-family: var(--cms-font-ui); font-size: 13.5px; font-weight: 600; background: var(--cms-bg); color: var(--cms-fg2); border: 1.5px solid var(--cms-border); border-radius: var(--cms-r-md); cursor: pointer;">Cancel</button>
-                <button type="submit" id="cat-submit"
-                        style="flex: 1; height: 40px; font-family: var(--cms-font-ui); font-size: 13.5px; font-weight: 700; background: var(--cms-gold); color: #1A1410; border: none; border-radius: var(--cms-r-md); cursor: pointer;"
-                        onmouseover="this.style.background='#D69B00'" onmouseout="this.style.background='var(--cms-gold)'">
-                    Add Category
-                </button>
+            <div style="display: flex; gap: 10px; margin-top: 8px;">
+                <button type="button" id="cancel-btn" onclick="resetCatForm()" class="btn-secondary" style="display: none; flex: 1;">Cancel</button>
+                <button type="submit" id="cat-submit" class="btn-primary" style="flex: 1.5;">Create Category</button>
             </div>
         </form>
     </div>
 </div>
 
-{{-- Delete Modal --}}
-<div id="delete-modal" style="display: none; position: fixed; inset: 0; background: rgba(20,16,12,0.5); z-index: 200; align-items: center; justify-content: center; animation: dsFade 180ms ease;">
-    <div style="background: var(--cms-surface); border-radius: var(--cms-r-xl); padding: 28px; width: 380px; max-width: calc(100vw - 40px); box-shadow: var(--cms-sh-pop); animation: dsPop 200ms ease;">
-        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 8px;">
-            <div style="width: 40px; height: 40px; border-radius: var(--cms-r-md); background: var(--cms-red-soft); display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
-                <i data-lucide="folder-x" style="width: 20px; height: 20px; color: var(--cms-red);"></i>
-            </div>
-            <div>
-                <div style="font-family: var(--cms-font-ui); font-size: 15px; font-weight: 700; color: var(--cms-fg1);">Delete Category?</div>
-                <div id="delete-label" style="font-family: var(--cms-font-ui); font-size: 13px; color: var(--cms-fg3); margin-top: 2px;"></div>
-            </div>
-        </div>
-        <div style="background: var(--cms-gold-soft); border: 1px solid rgba(232,168,0,0.3); border-radius: var(--cms-r-md); padding: 10px 14px; margin: 12px 0; font-family: var(--cms-font-ui); font-size: 12.5px; color: var(--cms-gold-deep);">
-            Posts in this category will be set to uncategorized.
-        </div>
-        <div style="display: flex; gap: 8px; justify-content: flex-end;">
-            <button onclick="closeModal()" style="height: 38px; padding: 0 18px; font-family: var(--cms-font-ui); font-size: 13.5px; font-weight: 600; background: var(--cms-surface); color: var(--cms-fg2); border: 1.5px solid var(--cms-border); border-radius: var(--cms-r-md); cursor: pointer;">Cancel</button>
-            <button onclick="executeDelete()" style="height: 38px; padding: 0 18px; font-family: var(--cms-font-ui); font-size: 13.5px; font-weight: 600; background: var(--cms-red); color: #fff; border: none; border-radius: var(--cms-r-md); cursor: pointer;">Delete</button>
-        </div>
-    </div>
-</div>
-
 <script>
-    let deleteId = null;
-
     function autoCatSlug(val) {
-        document.getElementById('cat-slug').value = val.toLowerCase().replace(/[^\w\s-]/g,'').replace(/\s+/g,'-').replace(/-+/g,'-');
-    }
-
-    function editCategory(id, name, slug, parent, order) {
-        document.getElementById('edit-cat-id').value = id;
-        document.getElementById('cat-name').value = name;
-        document.getElementById('cat-slug').value = slug;
-        document.getElementById('cat-desc').value = '';
-        document.getElementById('cat-order').value = order;
-        document.getElementById('form-title').textContent = 'Edit Category';
-        document.getElementById('cat-submit').textContent = 'Save Changes';
-        document.getElementById('cancel-btn').style.display = 'block';
-        // Set parent select
-        const sel = document.getElementById('cat-parent');
-        for (let opt of sel.options) { if (opt.text === parent) { opt.selected = true; break; } }
-        document.getElementById('cat-name').focus();
+        document.getElementById('cat-slug').value = val.toLowerCase().replace(/[^\w\s-]/g,'').replace(/\s+/g,'-').replace(/-+/g,'-').substring(0, 50);
     }
 
     function resetCatForm() {
@@ -253,8 +200,8 @@
         document.getElementById('cat-desc').value = '';
         document.getElementById('cat-order').value = '0';
         document.getElementById('cat-parent').value = '';
-        document.getElementById('form-title').textContent = 'Add New Category';
-        document.getElementById('cat-submit').textContent = 'Add Category';
+        document.getElementById('form-title').textContent = 'Create Category';
+        document.getElementById('cat-submit').textContent = 'Create Category';
         document.getElementById('cancel-btn').style.display = 'none';
     }
 
@@ -262,17 +209,8 @@
         const isOn = btn.dataset.visible === 'true';
         btn.dataset.visible = isOn ? 'false' : 'true';
         btn.style.background = isOn ? 'var(--cms-border-st)' : 'var(--cms-green)';
-        btn.querySelector('span').style.left = isOn ? '3px' : '19px';
+        btn.querySelector('span').style.left = isOn ? '2px' : '18px';
     }
-
-    function confirmDelete(id, name) {
-        deleteId = id;
-        document.getElementById('delete-label').textContent = `"${name}"`;
-        document.getElementById('delete-modal').style.display = 'flex';
-        lucide.createIcons();
-    }
-    function closeModal() { document.getElementById('delete-modal').style.display = 'none'; }
-    function executeDelete() { closeModal(); console.log('Delete category:', deleteId); }
 
     function toggleAll(master) {
         document.querySelectorAll('.cat-cb').forEach(cb => cb.checked = master.checked);

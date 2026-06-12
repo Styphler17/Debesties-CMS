@@ -42,6 +42,8 @@ Route::prefix('admin')
         Route::resource('users', UserController::class);
         Route::resource('roles', RoleController::class);
         Route::resource('comments', CommentController::class);
+        Route::resource('newsletters', \App\Http\Controllers\Admin\NewsletterController::class);
+        Route::post('newsletters/{newsletter}/send', [\App\Http\Controllers\Admin\NewsletterController::class, 'send'])->name('newsletters.send');
 
         Route::resource('pages', PageController::class);
         Route::get('calendar', [CalendarController::class, 'index'])->name('calendar.index');

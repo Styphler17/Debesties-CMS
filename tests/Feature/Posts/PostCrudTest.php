@@ -43,6 +43,7 @@ class PostCrudTest extends TestCase
 
     public function test_admin_can_create_a_post(): void
     {
+        $this->withoutMiddleware();
         Queue::fake();
 
         $tag = Tag::create(['name' => 'PHP', 'slug' => 'php']);
