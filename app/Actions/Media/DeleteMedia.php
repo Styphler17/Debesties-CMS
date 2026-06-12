@@ -16,15 +16,7 @@ class DeleteMedia
             throw new Exception("Cannot delete media: It is currently set as the featured image of a post.");
         }
 
-        $fileName = basename($media->file_path);
-
-        // Delete from storage
-        Storage::disk('public')->delete($media->file_path);
-        Storage::disk('public')->delete("uploads/thumb/{$fileName}");
-        Storage::disk('public')->delete("uploads/medium/{$fileName}");
-        Storage::disk('public')->delete("uploads/large/{$fileName}");
-
-        // Delete DB record
+        // Delete DB record (this automatically triggers the MediaObserver to delete files)
         $media->delete();
     }
 }
