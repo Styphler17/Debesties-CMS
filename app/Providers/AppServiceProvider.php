@@ -22,5 +22,6 @@ class AppServiceProvider extends ServiceProvider
         \App\Models\User::observe(\App\Observers\UserObserver::class);
         \App\Models\Media::observe(\App\Observers\MediaObserver::class);
         \App\Models\Post::observe(\App\Observers\PostObserver::class);
+        \App\Models\Comment::observe(\App\Observers\CommentObserver::class);
     }
 }
