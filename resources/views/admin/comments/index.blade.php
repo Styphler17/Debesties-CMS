@@ -4,6 +4,25 @@
 @section('page_title', 'Comments')
 
 @section('content')
+
+<style>
+    .comment-status-tab {
+        height: 30px; padding: 0 14px; font-family: var(--cms-font-ui), sans-serif; font-size: 13px; font-weight: 600; 
+        border: none; border-radius: var(--cms-r-md); cursor: pointer; display: flex; align-items: center; gap: 5px; transition: all 150ms;
+    }
+    .comment-status-tab--active { background: var(--cms-gold); color: #1A1410; }
+    .comment-status-tab--inactive { background: transparent; color: var(--cms-fg3); }
+
+    .comment-badge { font-size: 11px; padding: 0 5px; border-radius: 999px; }
+    .comment-badge--active { background: rgba(0,0,0,0.15); }
+    .comment-badge--inactive { background: var(--cms-border); }
+
+    .comment-avatar { 
+        width: 34px; height: 34px; border-radius: 999px; color: #fff; display: flex; align-items: center; 
+        justify-content: center; font-family: var(--cms-font-ui), sans-serif; font-size: 12px; font-weight: 800; flex-shrink: 0; 
+    }
+</style>
+
 @php
     $comments = [
         [
@@ -67,25 +86,26 @@
                 $statusVal = strtolower($tab);
                 $count = $statusVal === 'all' ? count($comments) : count(array_filter($comments, fn($c) => $c['status'] === $statusVal));
             @endphp
-            <button onclick="filterStatus('{{ $statusVal }}', this)" class="comment-tab"
+            @php $isActiveTab = ($statusVal === 'pending'); @endphp
+            <button onclick="filterStatus('{{ $statusVal }}', this)" 
                     data-status="{{ $statusVal }}"
-                    style="height: 30px; padding: 0 14px; font-family: var(--cms-font-ui); font-size: 13px; font-weight: 600; border: none; border-radius: var(--cms-r-md); cursor: pointer; background: {{ $statusVal === 'pending' ? 'var(--cms-gold)' : 'transparent' }}; color: {{ $statusVal === 'pending' ? '#1A1410' : 'var(--cms-fg3)' }}; display: flex; align-items: center; gap: 5px; transition: all 150ms;">
+                    @class(['comment-status-tab', 'comment-status-tab--active' => $isActiveTab, 'comment-status-tab--inactive' => ! $isActiveTab])>
                 {{ $tab }} 
-                <span class="tab-badge" style="font-size: 11px; background: {{ $statusVal === 'pending' ? 'rgba(0,0,0,0.15)' : 'var(--cms-border)' }}; padding: 0 5px; border-radius: 999px;">{{ $count }}</span>
+                <span @class(['comment-badge', 'comment-badge--active' => $isActiveTab, 'comment-badge--inactive' => ! $isActiveTab])>{{ $count }}</span>
             </button>
         @endforeach
     </div>
 
     {{-- Bulk Actions Bar (displays when rows checked) --}}
     <div id="bulk-actions-bar" style="display: flex; align-items: center; gap: 8px; visibility: hidden; opacity: 0; transition: opacity 150ms;">
-        <span style="font-family: var(--cms-font-ui); font-size: 13px; color: var(--cms-fg3); margin-right: 4px;" id="selected-count">0 selected</span>
-        <button onclick="bulkChangeStatus('approved')" style="display: inline-flex; align-items: center; gap: 5px; height: 34px; padding: 0 12px; font-family: var(--cms-font-ui); font-size: 12.5px; font-weight: 600; background: var(--cms-green-soft); color: var(--cms-green-deep); border: 1px solid rgba(26,138,75,0.2); border-radius: var(--cms-r-md); cursor: pointer;">
+        <span style="font-family: var(--cms-font-ui), sans-serif; font-size: 13px; color: var(--cms-fg3); margin-right: 4px;" id="selected-count">0 selected</span>
+        <button onclick="bulkChangeStatus('approved')" style="display: inline-flex; align-items: center; gap: 5px; height: 34px; padding: 0 12px; font-family: var(--cms-font-ui), sans-serif; font-size: 12.5px; font-weight: 600; background: var(--cms-green-soft); color: var(--cms-green-deep); border: 1px solid rgba(26,138,75,0.2); border-radius: var(--cms-r-md); cursor: pointer;">
             <i data-lucide="check" style="width: 14px; height: 14px;"></i> Approve
         </button>
-        <button onclick="bulkChangeStatus('spam')" style="display: inline-flex; align-items: center; gap: 5px; height: 34px; padding: 0 12px; font-family: var(--cms-font-ui); font-size: 12.5px; font-weight: 600; background: var(--cms-red-soft); color: var(--cms-red); border: 1px solid rgba(200,55,43,0.2); border-radius: var(--cms-r-md); cursor: pointer;">
+        <button onclick="bulkChangeStatus('spam')" style="display: inline-flex; align-items: center; gap: 5px; height: 34px; padding: 0 12px; font-family: var(--cms-font-ui), sans-serif; font-size: 12.5px; font-weight: 600; background: var(--cms-red-soft); color: var(--cms-red); border: 1px solid rgba(200,55,43,0.2); border-radius: var(--cms-r-md); cursor: pointer;">
             <i data-lucide="slash" style="width: 14px; height: 14px;"></i> Spam
         </button>
-        <button onclick="bulkDelete()" style="display: inline-flex; align-items: center; gap: 5px; height: 34px; padding: 0 12px; font-family: var(--cms-font-ui); font-size: 12.5px; font-weight: 600; background: var(--cms-bg); color: var(--cms-fg1); border: 1px solid var(--cms-border-st); border-radius: var(--cms-r-md); cursor: pointer;">
+        <button onclick="bulkDelete()" style="display: inline-flex; align-items: center; gap: 5px; height: 34px; padding: 0 12px; font-family: var(--cms-font-ui), sans-serif; font-size: 12.5px; font-weight: 600; background: var(--cms-bg); color: var(--cms-fg1); border: 1px solid var(--cms-border-st); border-radius: var(--cms-r-md); cursor: pointer;">
             <i data-lucide="trash-2" style="width: 14px; height: 14px;"></i> Delete
         </button>
     </div>
@@ -97,11 +117,11 @@
         <thead>
             <tr style="border-bottom: 1px solid var(--cms-border); background: var(--cms-bg);">
                 <th style="padding: 12px 16px; width: 40px; text-align: left;"><input type="checkbox" onchange="toggleAll(this)" style="cursor: pointer; accent-color: var(--cms-gold); width: 14px; height: 14px;" /></th>
-                <th style="padding: 12px 0; text-align: left; font-family: var(--cms-font-ui); font-size: 11.5px; font-weight: 700; color: var(--cms-fg3); text-transform: uppercase; letter-spacing: 0.05em;">Author</th>
-                <th style="padding: 12px 16px; text-align: left; font-family: var(--cms-font-ui); font-size: 11.5px; font-weight: 700; color: var(--cms-fg3); text-transform: uppercase; letter-spacing: 0.05em;">Comment Excerpt</th>
-                <th style="padding: 12px 16px 12px 0; text-align: left; font-family: var(--cms-font-ui); font-size: 11.5px; font-weight: 700; color: var(--cms-fg3); text-transform: uppercase; letter-spacing: 0.05em;">On Post</th>
-                <th style="padding: 12px 16px 12px 0; text-align: center; font-family: var(--cms-font-ui); font-size: 11.5px; font-weight: 700; color: var(--cms-fg3); text-transform: uppercase; letter-spacing: 0.05em; width: 100px;">Status</th>
-                <th style="padding: 12px 16px 12px 0; text-align: right; font-family: var(--cms-font-ui); font-size: 11.5px; font-weight: 700; color: var(--cms-fg3); text-transform: uppercase; letter-spacing: 0.05em; width: 100px;">Submitted</th>
+                <th style="padding: 12px 0; text-align: left; font-family: var(--cms-font-ui), sans-serif; font-size: 11.5px; font-weight: 700; color: var(--cms-fg3); text-transform: uppercase; letter-spacing: 0.05em;">Author</th>
+                <th style="padding: 12px 16px; text-align: left; font-family: var(--cms-font-ui), sans-serif; font-size: 11.5px; font-weight: 700; color: var(--cms-fg3); text-transform: uppercase; letter-spacing: 0.05em;">Comment Excerpt</th>
+                <th style="padding: 12px 16px 12px 0; text-align: left; font-family: var(--cms-font-ui), sans-serif; font-size: 11.5px; font-weight: 700; color: var(--cms-fg3); text-transform: uppercase; letter-spacing: 0.05em;">On Post</th>
+                <th style="padding: 12px 16px 12px 0; text-align: center; font-family: var(--cms-font-ui), sans-serif; font-size: 11.5px; font-weight: 700; color: var(--cms-fg3); text-transform: uppercase; letter-spacing: 0.05em; width: 100px;">Status</th>
+                <th style="padding: 12px 16px 12px 0; text-align: right; font-family: var(--cms-font-ui), sans-serif; font-size: 11.5px; font-weight: 700; color: var(--cms-fg3); text-transform: uppercase; letter-spacing: 0.05em; width: 100px;">Submitted</th>
                 <th style="padding: 12px 16px; width: 140px;"></th>
             </tr>
         </thead>
@@ -109,6 +129,7 @@
             @foreach($comments as $comment)
                 @php 
                     $initials = implode('', array_map(fn($w) => strtoupper($w[0]), array_filter(explode(' ', $comment['name'])))); 
+                    $avatarStyle = "background: " . $comment['avatar_bg'] . ";";
                 @endphp
                 {{-- Master Row --}}
                 <tr class="comment-row" 
@@ -123,30 +144,30 @@
                     </td>
                     <td style="padding: 16px 0; vertical-align: top;">
                         <div style="display: flex; align-items: center; gap: 10px;">
-                            <div style="width: 34px; height: 34px; border-radius: 999px; background: {{ $comment['avatar_bg'] }}; color: #fff; display: flex; align-items: center; justify-content: center; font-family: var(--cms-font-ui); font-size: 12px; font-weight: 800; flex-shrink: 0;">
+                            <div class="comment-avatar" style="{!! $avatarStyle !!}">
                                 {{ substr($initials, 0, 2) }}
                             </div>
                             <div style="min-width: 0;">
-                                <div style="font-family: var(--cms-font-ui); font-size: 13.5px; font-weight: 700; color: var(--cms-fg1); text-overflow: ellipsis; overflow: hidden; white-space: nowrap;">{{ $comment['name'] }}</div>
-                                <div style="font-family: var(--cms-font-ui); font-size: 11.5px; color: var(--cms-fg4); text-overflow: ellipsis; overflow: hidden; white-space: nowrap;">{{ $comment['email'] }}</div>
+                                <div style="font-family: var(--cms-font-ui), sans-serif; font-size: 13.5px; font-weight: 700; color: var(--cms-fg1); text-overflow: ellipsis; overflow: hidden; white-space: nowrap;">{{ $comment['name'] }}</div>
+                                <div style="font-family: var(--cms-font-ui), sans-serif; font-size: 11.5px; color: var(--cms-fg4); text-overflow: ellipsis; overflow: hidden; white-space: nowrap;">{{ $comment['email'] }}</div>
                             </div>
                         </div>
                     </td>
                     <td style="padding: 16px; vertical-align: top;">
-                        <div style="font-family: var(--cms-font-ui); font-size: 13px; color: var(--cms-fg2); line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;" class="comment-text-excerpt">
+                        <div style="font-family: var(--cms-font-ui), sans-serif; font-size: 13px; color: var(--cms-fg2); line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;" class="comment-text-excerpt">
                             {{ $comment['comment'] }}
                         </div>
                     </td>
                     <td style="padding: 16px 16px 16px 0; vertical-align: top; max-width: 180px;">
-                        <div style="font-family: var(--cms-font-ui); font-size: 13px; font-weight: 600; color: var(--cms-blue); text-overflow: ellipsis; overflow: hidden; white-space: nowrap;">{{ $comment['post_title'] }}</div>
+                        <div style="font-family: var(--cms-font-ui), sans-serif; font-size: 13px; font-weight: 600; color: var(--cms-blue); text-overflow: ellipsis; overflow: hidden; white-space: nowrap;">{{ $comment['post_title'] }}</div>
                     </td>
                     <td style="padding: 16px 16px 16px 0; vertical-align: top; text-align: center;" class="status-cell">
-                        <span class="status-badge status-{{ $comment['status'] }}" style="padding: 3px 8px; border-radius: 999px; font-family: var(--cms-font-ui); font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.02em;">
+                        <span class="status-badge status-{{ $comment['status'] }}" style="padding: 3px 8px; border-radius: 999px; font-family: var(--cms-font-ui), sans-serif; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.02em;">
                             {{ $comment['status'] }}
                         </span>
                     </td>
                     <td style="padding: 16px 16px 16px 0; vertical-align: top; text-align: right; white-space: nowrap;">
-                        <span style="font-family: var(--cms-font-ui); font-size: 12.5px; color: var(--cms-fg4);">{{ $comment['date'] }}</span>
+                        <span style="font-family: var(--cms-font-ui), sans-serif; font-size: 12.5px; color: var(--cms-fg4);">{{ $comment['date'] }}</span>
                     </td>
                     <td style="padding: 16px; text-align: right; vertical-align: top;" onclick="event.stopPropagation()">
                         <div style="display: flex; gap: 4px; justify-content: flex-end;">
@@ -170,24 +191,24 @@
                         {{-- Thread Context if exists --}}
                         @if($comment['parent_comment'])
                             <div style="border-left: 3px solid var(--cms-border-st); padding-left: 14px; margin-bottom: 16px; font-style: italic;">
-                                <div style="font-family: var(--cms-font-ui); font-size: 11px; font-weight: 700; color: var(--cms-fg4); text-transform: uppercase; margin-bottom: 2px;">In reply to parent comment:</div>
-                                <div style="font-family: var(--cms-font-ui); font-size: 12.5px; color: var(--cms-fg3); line-height: 1.4;">"{{ $comment['parent_comment'] }}"</div>
+                                <div style="font-family: var(--cms-font-ui), sans-serif; font-size: 11px; font-weight: 700; color: var(--cms-fg4); text-transform: uppercase; margin-bottom: 2px;">In reply to parent comment:</div>
+                                <div style="font-family: var(--cms-font-ui), sans-serif; font-size: 12.5px; color: var(--cms-fg3); line-height: 1.4;">"{{ $comment['parent_comment'] }}"</div>
                             </div>
                         @endif
 
                         {{-- Full Comment Text --}}
                         <div style="margin-bottom: 20px;">
-                            <div style="font-family: var(--cms-font-ui); font-size: 14.5px; color: var(--cms-fg1); line-height: 1.6; font-weight: 400; white-space: pre-line;">
+                            <div style="font-family: var(--cms-font-ui), sans-serif; font-size: 14.5px; color: var(--cms-fg1); line-height: 1.6; font-weight: 400; white-space: pre-line;">
                                 {{ $comment['comment'] }}
                             </div>
                         </div>
 
                         {{-- Quick Reply Area --}}
                         <div style="border-top: 1px solid var(--cms-border); padding-top: 18px; margin-top: 14px; max-width: 680px;">
-                            <div style="font-family: var(--cms-font-ui); font-size: 12.5px; font-weight: 700; color: var(--cms-fg3); text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 8px;">Quick Reply as Ama Boateng</div>
+                            <div style="font-family: var(--cms-font-ui), sans-serif; font-size: 12.5px; font-weight: 700; color: var(--cms-fg3); text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 8px;">Quick Reply as Ama Boateng</div>
                             <div style="display: flex; gap: 12px; align-items: flex-end;">
-                                <textarea placeholder="Type your response to {{ $comment['name'] }}…" style="flex: 1; height: 72px; padding: 10px 12px; font-family: var(--cms-font-ui); font-size: 13.5px; color: var(--cms-fg1); background: var(--cms-surface); border: 1.5px solid var(--cms-border); border-radius: var(--cms-r-md); outline: none; resize: none; transition: border-color 150ms;" onfocus="this.style.borderColor='var(--cms-gold)'; this.style.boxShadow='0 0 0 3px rgba(232,168,0,0.11)'" onblur="this.style.borderColor='var(--cms-border)'; this.style.boxShadow='none'"></textarea>
-                                <button onclick="sendReply({{ $comment['id'] }}, this)" style="height: 38px; padding: 0 16px; font-family: var(--cms-font-ui); font-size: 13px; font-weight: 700; background: var(--cms-fg1); color: #fff; border: none; border-radius: var(--cms-r-md); cursor: pointer; display: flex; align-items: center; gap: 6px; transition: background 150ms;" onmouseover="this.style.background='var(--cms-fg2)'" onmouseout="this.style.background='var(--cms-fg1)'">
+                                <textarea placeholder="Type your response to {{ $comment['name'] }}…" style="flex: 1; height: 72px; padding: 10px 12px; font-family: var(--cms-font-ui), sans-serif; font-size: 13.5px; color: var(--cms-fg1); background: var(--cms-surface); border: 1.5px solid var(--cms-border); border-radius: var(--cms-r-md); outline: none; resize: none; transition: border-color 150ms;" onfocus="this.style.borderColor='var(--cms-gold)'; this.style.boxShadow='0 0 0 3px rgba(232,168,0,0.11)'" onblur="this.style.borderColor='var(--cms-border)'; this.style.boxShadow='none'"></textarea>
+                                <button onclick="sendReply({{ $comment['id'] }}, this)" style="height: 38px; padding: 0 16px; font-family: var(--cms-font-ui), sans-serif; font-size: 13px; font-weight: 700; background: var(--cms-fg1); color: #fff; border: none; border-radius: var(--cms-r-md); cursor: pointer; display: flex; align-items: center; gap: 6px; transition: background 150ms;" onmouseover="this.style.background='var(--cms-fg2)'" onmouseout="this.style.background='var(--cms-fg1)'">
                                     <i data-lucide="corner-down-right" style="width: 14px; height: 14px;"></i> Reply
                                 </button>
                             </div>
@@ -284,7 +305,7 @@
         // Update badge
         const badgeCell = row.querySelector('.status-cell');
         badgeCell.innerHTML = `
-            <span class="status-badge status-${newStatus}" style="padding: 3px 8px; border-radius: 999px; font-family: var(--cms-font-ui); font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.02em;">
+            <span class="status-badge status-${newStatus}" style="padding: 3px 8px; border-radius: 999px; font-family: var(--cms-font-ui), sans-serif; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.02em;">
                 ${newStatus}
             </span>
         `;

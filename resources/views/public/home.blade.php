@@ -275,6 +275,8 @@
         }
     }
 </style>
+@endsection
+
 @section('content')
 
     @if(isset($widgets) && count($widgets) > 0)

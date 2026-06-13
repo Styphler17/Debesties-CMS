@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Category;
+use App\Models\Setting;
 use App\Services\SettingsService;
 use Illuminate\Http\Request;
 
@@ -11,6 +12,8 @@ class HomepageBuilderController extends Controller
 {
     public function index()
     {
+        $this->authorize('viewAny', Setting::class);
+
         $layout = SettingsService::get('homepage_layout', '[]');
         $categories = Category::orderBy('name')->get();
 
@@ -19,6 +22,8 @@ class HomepageBuilderController extends Controller
 
     public function store(Request $request)
     {
+        $this->authorize('create', Setting::class);
+
         $request->validate([
             'layout' => ['required', 'string'],
         ]);

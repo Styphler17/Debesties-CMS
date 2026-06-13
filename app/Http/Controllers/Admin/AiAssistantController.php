@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Post;
 use App\Services\AiAssistantService;
 use Illuminate\Http\Request;
 
@@ -17,6 +18,8 @@ class AiAssistantController extends Controller
 
     public function generateTags(Request $request)
     {
+        $this->authorize('create', Post::class);
+
         $request->validate([
             'title' => ['required', 'string'],
             'body' => ['required', 'string'],
@@ -32,6 +35,8 @@ class AiAssistantController extends Controller
 
     public function generateOutline(Request $request)
     {
+        $this->authorize('create', Post::class);
+
         $request->validate([
             'title' => ['required', 'string'],
         ]);

@@ -12,6 +12,8 @@ class TagController extends Controller
 {
     public function index()
     {
+        $this->authorize('viewAny', Tag::class);
+
         $tags = Tag::withCount('posts')
             ->orderBy('name')
             ->paginate(50);
@@ -21,11 +23,15 @@ class TagController extends Controller
 
     public function create()
     {
+        $this->authorize('create', Tag::class);
+
         return view('admin.tags.create');
     }
 
     public function store(StoreTagRequest $request)
     {
+        $this->authorize('create', Tag::class);
+
         $slug = (new GenerateSlug)->handle($request->name, 'tags');
 
         Tag::create([
@@ -40,16 +46,22 @@ class TagController extends Controller
 
     public function show(Tag $tag)
     {
+        $this->authorize('view', $tag);
+
         return view('admin.tags.show', compact('tag'));
     }
 
     public function edit(Tag $tag)
     {
+        $this->authorize('update', $tag);
+
         return view('admin.tags.edit', compact('tag'));
     }
 
     public function update(UpdateTagRequest $request, Tag $tag)
     {
+        $this->authorize('update', $tag);
+
         $slug = $tag->slug;
         if ($request->name !== $tag->name) {
             $slug = (new GenerateSlug)->handle($request->name, 'tags');
@@ -67,6 +79,8 @@ class TagController extends Controller
 
     public function destroy(Tag $tag)
     {
+        $this->authorize('delete', $tag);
+
         $tag->posts()->detach();
         $tag->delete();
 

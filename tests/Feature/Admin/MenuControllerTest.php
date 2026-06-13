@@ -3,6 +3,8 @@
 namespace Tests\Feature\Admin;
 
 use App\Models\Menu;
+use App\Models\Permission;
+use App\Models\Role;
 use App\Models\User;
 use Database\Seeders\RolesAndPermissionsSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -14,11 +16,22 @@ class MenuControllerTest extends TestCase
 
     protected $admin;
 
+    protected $limitedAdmin;
+
     protected function setUp(): void
     {
         parent::setUp();
         $this->seed(RolesAndPermissionsSeeder::class);
         $this->admin = User::whereHas('roles', fn ($q) => $q->where('slug', 'super_admin'))->first();
+
+        $role = Role::create(['name' => 'Content Staff', 'slug' => 'content_staff']);
+        $role->permissions()->sync([
+            Permission::where('slug', 'posts.create')->firstOrFail()->id,
+        ]);
+
+        $this->limitedAdmin = User::factory()->create();
+        $this->limitedAdmin->roles()->sync([$role->id]);
+
         $this->withoutMiddleware();
     }
 
@@ -42,6 +55,17 @@ class MenuControllerTest extends TestCase
 
         $response->assertStatus(200);
         $this->assertDatabaseHas('menus', ['name' => 'Footer Menu']);
+    }
+
+    public function test_admin_role_without_settings_manage_cannot_create_menu()
+    {
+        $response = $this->actingAs($this->limitedAdmin)
+            ->postJson(route('admin.menus.store'), [
+                'name' => 'Restricted Menu',
+            ]);
+
+        $response->assertForbidden();
+        $this->assertDatabaseMissing('menus', ['name' => 'Restricted Menu']);
     }
 
     public function test_admin_can_save_menu_items()
@@ -84,6 +108,25 @@ class MenuControllerTest extends TestCase
             'title' => 'Culture',
             'order' => 2,
             'target' => '1',
+        ]);
+    }
+
+    public function test_admin_role_without_settings_manage_cannot_save_menu_items()
+    {
+        $menu = Menu::create(['name' => 'Main Menu', 'slug' => 'main']);
+
+        $response = $this->actingAs($this->limitedAdmin)
+            ->postJson(route('admin.menus.items.store', $menu), [
+                'items' => json_encode([
+                    ['title' => 'Home', 'url' => '/', 'indent' => 0],
+                ]),
+                'location' => 'header',
+            ]);
+
+        $response->assertForbidden();
+        $this->assertDatabaseMissing('menu_items', [
+            'menu_id' => $menu->id,
+            'title' => 'Home',
         ]);
     }
 }

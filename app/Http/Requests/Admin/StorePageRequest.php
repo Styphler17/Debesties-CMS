@@ -15,7 +15,8 @@ class StorePageRequest extends FormRequest
     {
         return [
             'title' => ['required', 'string', 'max:255'],
-            'body' => ['required', 'string'],
+            'body' => ['required_without:layout', 'nullable', 'string'],
+            'layout' => ['nullable', 'string'],
             'status' => ['required', 'string', 'in:draft,published'],
         ];
     }

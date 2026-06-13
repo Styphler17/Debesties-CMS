@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\CrawlerLog;
+use App\Models\Setting;
 use App\Services\AiVisibilityService;
 use App\Services\SettingsService;
 use Illuminate\Http\Request;
@@ -12,6 +13,8 @@ class AiVisibilityController extends Controller
 {
     public function index()
     {
+        $this->authorize('viewAny', Setting::class);
+
         $bots = AiVisibilityService::getBots();
         $logs = CrawlerLog::latest()->limit(50)->get();
         $visibilityScore = AiVisibilityService::getVisibilityScore();
@@ -29,6 +32,8 @@ class AiVisibilityController extends Controller
 
     public function update(Request $request)
     {
+        $this->authorize('create', Setting::class);
+
         if ($request->has('bot_id')) {
             $botId = $request->bot_id;
             $blockedBots = json_decode(SettingsService::get('ai_blocked_bots', '[]'), true);
@@ -60,6 +65,8 @@ class AiVisibilityController extends Controller
 
     public function clearLogs()
     {
+        $this->authorize('create', Setting::class);
+
         CrawlerLog::truncate();
 
         return redirect()->back()->with('success', 'Crawler logs cleared.');

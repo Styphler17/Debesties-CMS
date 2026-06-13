@@ -5,6 +5,32 @@
 
 @section('content')
 
+<style>
+    .post-status-tab {
+        display: inline-flex; align-items: center; gap: 5px; padding: 6px 13px; border-radius: 7px; 
+        font-family: var(--cms-font-ui), sans-serif; font-size: 13px; transition: color 120ms, background 120ms;
+        text-decoration: none;
+    }
+    .post-status-tab--active {
+        font-weight: 700; color: var(--cms-fg1); background: var(--cms-bg); box-shadow: var(--cms-sh-card);
+    }
+    .post-status-tab--inactive {
+        font-weight: 500; color: var(--cms-fg3); background: transparent; box-shadow: none;
+    }
+
+    .post-status-count { font-size: 11px; font-weight: 600; }
+    .post-status-count--active { color: var(--cms-fg3); }
+    .post-status-count--inactive { color: var(--cms-fg4); }
+
+    .post-row { transition: background 100ms; cursor: default; }
+    .post-row--border { border-bottom: 1px solid var(--cms-border); }
+
+    .post-status-badge {
+        display: inline-flex; align-items: center; gap: 4px; font-family: var(--cms-font-ui), sans-serif; 
+        font-size: 12px; font-weight: 700; padding: 3px 10px; border-radius: 999px;
+    }
+</style>
+
 <div style="display: flex; flex-direction: column; gap: 20px;">
 
     {{-- ── TOP ACTION ROW ────────────────────────────────────── --}}
@@ -14,9 +40,9 @@
             @foreach(['all'=>'All', 'published'=>'Published', 'draft'=>'Drafts', 'review'=>'In Review', 'scheduled'=>'Scheduled'] as $key => $label)
                 @php $isActive = (request('status', 'all') === $key); @endphp
                 <a href="{{ route('admin.posts.index', ['status' => $key]) }}"
-                   style="display: inline-flex; align-items: center; gap: 5px; padding: 6px 13px; border-radius: 7px; font-family: var(--cms-font-ui); font-size: 13px; font-weight: {{ $isActive ? '700' : '500' }}; color: {{ $isActive ? 'var(--cms-fg1)' : 'var(--cms-fg3)' }}; background: {{ $isActive ? 'var(--cms-bg)' : 'transparent' }}; text-decoration: none; box-shadow: {{ $isActive ? 'var(--cms-sh-card)' : 'none' }}; transition: color 120ms, background 120ms;">
+                   @class(['post-status-tab', 'post-status-tab--active' => $isActive, 'post-status-tab--inactive' => ! $isActive])>
                     {{ $label }}
-                    <span style="font-size: 11px; font-weight: 600; color: {{ $isActive ? 'var(--cms-fg3)' : 'var(--cms-fg4)' }};">{{ $counts[$key] }}</span>
+                    <span @class(['post-status-count', 'post-status-count--active' => $isActive, 'post-status-count--inactive' => ! $isActive])>{{ $counts[$key] }}</span>
                 </a>
             @endforeach
         </div>
@@ -33,11 +59,11 @@
                 @endif
                 <div style="display: flex; align-items: center; gap: 8px; width: 220px; height: 38px; background: var(--cms-surface); border: 1.5px solid var(--cms-border); border-radius: var(--cms-r-md); padding: 0 12px;">
                     <i data-lucide="search" style="width: 15px; height: 15px; color: var(--cms-fg4); flex-shrink: 0;"></i>
-                    <input name="search" value="{{ request('search') }}" placeholder="Search posts…" style="border: none; outline: none; background: none; flex: 1; font-family: var(--cms-font-ui); font-size: 13.5px; color: var(--cms-fg1); min-width: 0;" />
+                    <input name="search" value="{{ request('search') }}" placeholder="Search posts…" style="border: none; outline: none; background: none; flex: 1; font-family: var(--cms-font-ui), sans-serif; font-size: 13.5px; color: var(--cms-fg1); min-width: 0;" />
                 </div>
             </form>
             <a href="{{ route('admin.posts.create') }}"
-               style="display: inline-flex; align-items: center; gap: 7px; font-family: var(--cms-font-ui); font-size: 13.5px; font-weight: 600; padding: 0 18px; height: 38px; background: var(--cms-gold); color: #1A1410; border-radius: var(--cms-r-md); text-decoration: none; white-space: nowrap;"
+               style="display: inline-flex; align-items: center; gap: 7px; font-family: var(--cms-font-ui), sans-serif; font-size: 13.5px; font-weight: 600; padding: 0 18px; height: 38px; background: var(--cms-gold); color: #1A1410; border-radius: var(--cms-r-md); text-decoration: none; white-space: nowrap;"
                onmouseover="this.style.background='#D69B00'" onmouseout="this.style.background='var(--cms-gold)'">
                 <i data-lucide="plus" style="width: 16px; height: 16px; stroke-width: 2.2;"></i>
                 New Post
@@ -54,7 +80,7 @@
         
         {{-- Category filter --}}
         <select name="category_id" onchange="this.form.submit()"
-                style="height: 36px; padding: 0 10px; font-family: var(--cms-font-ui); font-size: 13px; color: var(--cms-fg2); background: var(--cms-surface); border: 1.5px solid var(--cms-border); border-radius: var(--cms-r-md); cursor: pointer; outline: none;">
+                style="height: 36px; padding: 0 10px; font-family: var(--cms-font-ui), sans-serif; font-size: 13px; color: var(--cms-fg2); background: var(--cms-surface); border: 1.5px solid var(--cms-border); border-radius: var(--cms-r-md); cursor: pointer; outline: none;">
             <option value="">All Categories</option>
             @foreach($categories as $cat)
                 <option value="{{ $cat->id }}" {{ request('category_id') == $cat->id ? 'selected' : '' }}>{{ $cat->name }}</option>
@@ -63,7 +89,7 @@
         
         {{-- Author filter --}}
         <select name="author_id" onchange="this.form.submit()"
-                style="height: 36px; padding: 0 10px; font-family: var(--cms-font-ui); font-size: 13px; color: var(--cms-fg2); background: var(--cms-surface); border: 1.5px solid var(--cms-border); border-radius: var(--cms-r-md); cursor: pointer; outline: none;">
+                style="height: 36px; padding: 0 10px; font-family: var(--cms-font-ui), sans-serif; font-size: 13px; color: var(--cms-fg2); background: var(--cms-surface); border: 1.5px solid var(--cms-border); border-radius: var(--cms-r-md); cursor: pointer; outline: none;">
             <option value="">All Authors</option>
             @foreach($authors as $auth)
                 <option value="{{ $auth->id }}" {{ request('author_id') == $auth->id ? 'selected' : '' }}>{{ $auth->name }}</option>
@@ -74,16 +100,16 @@
 
         {{-- Bulk action bar --}}
         <div id="bulk-bar" style="display: none; align-items: center; gap: 8px; animation: dsPop 180ms ease;">
-            <span id="bulk-count" style="font-family: var(--cms-font-ui); font-size: 13px; color: var(--cms-fg3);">0 selected</span>
-            <button type="button" onclick="bulkAction('publish')" style="height: 34px; padding: 0 14px; font-family: var(--cms-font-ui); font-size: 12.5px; font-weight: 600; background: var(--cms-green-soft); color: var(--cms-green-deep); border: 1.5px solid rgba(26,138,75,0.2); border-radius: var(--cms-r-md); cursor: pointer;">Publish</button>
-            <button type="button" onclick="bulkAction('draft')" style="height: 34px; padding: 0 14px; font-family: var(--cms-font-ui); font-size: 12.5px; font-weight: 600; background: #F0EDE8; color: var(--cms-fg3); border: 1.5px solid var(--cms-border); border-radius: var(--cms-r-md); cursor: pointer;">Move to Draft</button>
-            <button type="button" onclick="bulkAction('trash')" style="height: 34px; padding: 0 14px; font-family: var(--cms-font-ui); font-size: 12.5px; font-weight: 600; background: var(--cms-red-soft); color: var(--cms-red-deep); border: 1.5px solid rgba(200,55,43,0.2); border-radius: var(--cms-r-md); cursor: pointer;">Trash</button>
+            <span id="bulk-count" style="font-family: var(--cms-font-ui), sans-serif; font-size: 13px; color: var(--cms-fg3);">0 selected</span>
+            <button type="button" onclick="bulkAction('publish')" style="height: 34px; padding: 0 14px; font-family: var(--cms-font-ui), sans-serif; font-size: 12.5px; font-weight: 600; background: var(--cms-green-soft); color: var(--cms-green-deep); border: 1.5px solid rgba(26,138,75,0.2); border-radius: var(--cms-r-md); cursor: pointer;">Publish</button>
+            <button type="button" onclick="bulkAction('draft')" style="height: 34px; padding: 0 14px; font-family: var(--cms-font-ui), sans-serif; font-size: 12.5px; font-weight: 600; background: #F0EDE8; color: var(--cms-fg3); border: 1.5px solid var(--cms-border); border-radius: var(--cms-r-md); cursor: pointer;">Move to Draft</button>
+            <button type="button" onclick="bulkAction('trash')" style="height: 34px; padding: 0 14px; font-family: var(--cms-font-ui), sans-serif; font-size: 12.5px; font-weight: 600; background: var(--cms-red-soft); color: var(--cms-red-deep); border: 1.5px solid rgba(200,55,43,0.2); border-radius: var(--cms-r-md); cursor: pointer;">Trash</button>
         </div>
     </form>
 
     {{-- ── TABLE ────────────────────────────────────────────────── --}}
     <div style="background: var(--cms-surface); border: 1px solid var(--cms-border); border-radius: var(--cms-r-lg); overflow: hidden; box-shadow: var(--cms-sh-card);">
-        <table style="width: 100%; border-collapse: collapse; font-family: var(--cms-font-ui);" id="posts-table">
+        <table style="width: 100%; border-collapse: collapse; font-family: var(--cms-font-ui), sans-serif;" id="posts-table">
             <thead>
                 <tr style="border-bottom: 1px solid var(--cms-border);">
                     <th style="width: 40px; padding: 11px 16px; text-align: center;">
@@ -107,9 +133,11 @@
             </thead>
             <tbody>
                 @foreach($posts as $post)
-                    @php $sm = $statusMeta[$post->status] ?? $statusMeta['draft']; @endphp
-                    <tr class="post-row"
-                        style="border-bottom: {{ !$loop->last ? '1px solid var(--cms-border)' : 'none' }}; transition: background 100ms; cursor: default;"
+                    @php 
+                        $sm = $statusMeta[$post->status] ?? $statusMeta['draft']; 
+                        $badgeStyle = "background: {$sm['bg']}; color: {$sm['color']};";
+                    @endphp
+                    <tr @class(['post-row', 'post-row--border' => ! $loop->last])
                         onmouseover="this.style.background='#FDFBF8'"
                         onmouseout="this.style.background='transparent'">
 
@@ -135,7 +163,7 @@
                                    onmouseover="this.style.color='var(--cms-fg1)'" onmouseout="this.style.color='var(--cms-fg3)'">Preview</a>
                                 <span style="color: var(--cms-border-st); font-size: 12px;">|</span>
                                 <button onclick="confirmDelete({{ $post->id }})"
-                                        style="font-size: 12px; font-weight: 600; color: var(--cms-red); background: none; border: none; cursor: pointer; padding: 0; font-family: var(--cms-font-ui);"
+                                        style="font-size: 12px; font-weight: 600; color: var(--cms-red); background: none; border: none; cursor: pointer; padding: 0; font-family: var(--cms-font-ui), sans-serif;"
                                         onmouseover="this.style.color='var(--cms-red-deep)'" onmouseout="this.style.color='var(--cms-red)'">Trash</button>
                             </div>
                         </td>
@@ -157,7 +185,7 @@
 
                         {{-- Status badge --}}
                         <td style="padding: 14px 16px 14px 0; white-space: nowrap;">
-                            <span style="display: inline-flex; align-items: center; gap: 4px; font-family: var(--cms-font-ui); font-size: 12px; font-weight: 700; padding: 3px 10px; border-radius: 999px; background: {{ $sm['bg'] }}; color: {{ $sm['color'] }};">
+                            <span class="post-status-badge" style="{!! $badgeStyle !!}">
                                 @if($post->status === 'published')
                                     <span style="width: 6px; height: 6px; border-radius: 999px; background: var(--cms-green); display: inline-block;"></span>
                                 @elseif($post->status === 'scheduled')
@@ -193,17 +221,17 @@
                                 <i data-lucide="more-horizontal" style="width: 17px; height: 17px;"></i>
                             </button>
                             <div id="row-menu-{{ $post->id }}" style="display: none; position: absolute; right: 12px; top: 42px; width: 160px; background: var(--cms-surface); border: 1px solid var(--cms-border); border-radius: var(--cms-r-md); box-shadow: var(--cms-sh-pop); z-index: 50; overflow: hidden; animation: dsPop 150ms ease;">
-                                <a href="{{ route('admin.posts.edit', $post->id) }}" style="display: flex; align-items: center; gap: 8px; padding: 9px 14px; font-family: var(--cms-font-ui); font-size: 13px; color: var(--cms-fg1); text-decoration: none;" onmouseover="this.style.background='#FBF9F5'" onmouseout="this.style.background='transparent'">
+                                <a href="{{ route('admin.posts.edit', $post->id) }}" style="display: flex; align-items: center; gap: 8px; padding: 9px 14px; font-family: var(--cms-font-ui), sans-serif; font-size: 13px; color: var(--cms-fg1); text-decoration: none;" onmouseover="this.style.background='#FBF9F5'" onmouseout="this.style.background='transparent'">
                                     <i data-lucide="edit-2" style="width: 14px; height: 14px; color: var(--cms-fg3);"></i> Edit
                                 </a>
-                                <a href="#" style="display: flex; align-items: center; gap: 8px; padding: 9px 14px; font-family: var(--cms-font-ui); font-size: 13px; color: var(--cms-fg1); text-decoration: none;" onmouseover="this.style.background='#FBF9F5'" onmouseout="this.style.background='transparent'">
+                                <a href="#" style="display: flex; align-items: center; gap: 8px; padding: 9px 14px; font-family: var(--cms-font-ui), sans-serif; font-size: 13px; color: var(--cms-fg1); text-decoration: none;" onmouseover="this.style.background='#FBF9F5'" onmouseout="this.style.background='transparent'">
                                     <i data-lucide="copy" style="width: 14px; height: 14px; color: var(--cms-fg3);"></i> Duplicate
                                 </a>
-                                <a href="#" style="display: flex; align-items: center; gap: 8px; padding: 9px 14px; font-family: var(--cms-font-ui); font-size: 13px; color: var(--cms-fg1); text-decoration: none;" onmouseover="this.style.background='#FBF9F5'" onmouseout="this.style.background='transparent'">
+                                <a href="#" style="display: flex; align-items: center; gap: 8px; padding: 9px 14px; font-family: var(--cms-font-ui), sans-serif; font-size: 13px; color: var(--cms-fg1); text-decoration: none;" onmouseover="this.style.background='#FBF9F5'" onmouseout="this.style.background='transparent'">
                                     <i data-lucide="external-link" style="width: 14px; height: 14px; color: var(--cms-fg3);"></i> View live
                                 </a>
                                 <div style="border-top: 1px solid var(--cms-border); margin: 3px 0;"></div>
-                                <button onclick="confirmDelete({{ $post->id }})" style="display: flex; align-items: center; gap: 8px; padding: 9px 14px; font-family: var(--cms-font-ui); font-size: 13px; color: var(--cms-red); background: none; border: none; cursor: pointer; width: 100%; text-align: left;" onmouseover="this.style.background='var(--cms-red-soft)'" onmouseout="this.style.background='transparent'">
+                                <button onclick="confirmDelete({{ $post->id }})" style="display: flex; align-items: center; gap: 8px; padding: 9px 14px; font-family: var(--cms-font-ui), sans-serif; font-size: 13px; color: var(--cms-red); background: none; border: none; cursor: pointer; width: 100%; text-align: left;" onmouseover="this.style.background='var(--cms-red-soft)'" onmouseout="this.style.background='transparent'">
                                     <i data-lucide="trash-2" style="width: 14px; height: 14px;"></i> Move to Trash
                                 </button>
                             </div>
@@ -215,8 +243,8 @@
 
         {{-- Pagination --}}
         <div style="display: flex; align-items: center; justify-content: space-between; padding: 12px 20px; border-top: 1px solid var(--cms-border);">
-            <span style="font-family: var(--cms-font-ui); font-size: 13px; color: var(--cms-fg3);">Showing {{ $posts->firstItem() }}–{{ $posts->lastItem() }} of {{ $posts->total() }} posts</span>
-            <div style="font-family: var(--cms-font-ui); font-size: 13px;">
+            <span style="font-family: var(--cms-font-ui), sans-serif; font-size: 13px; color: var(--cms-fg3);">Showing {{ $posts->firstItem() }}–{{ $posts->lastItem() }} of {{ $posts->total() }} posts</span>
+            <div style="font-family: var(--cms-font-ui), sans-serif; font-size: 13px;">
                 {{ $posts->links() }}
             </div>
         </div>
@@ -232,13 +260,13 @@
                 <i data-lucide="trash-2" style="width: 20px; height: 20px; color: var(--cms-red);"></i>
             </div>
             <div>
-                <div style="font-family: var(--cms-font-ui); font-size: 16px; font-weight: 700; color: var(--cms-fg1);">Move to Trash?</div>
-                <div style="font-family: var(--cms-font-ui); font-size: 13px; color: var(--cms-fg3); margin-top: 2px;">This post will be moved to trash. You can restore it later.</div>
+                <div style="font-family: var(--cms-font-ui), sans-serif; font-size: 16px; font-weight: 700; color: var(--cms-fg1);">Move to Trash?</div>
+                <div style="font-family: var(--cms-font-ui), sans-serif; font-size: 13px; color: var(--cms-fg3); margin-top: 2px;">This post will be moved to trash. You can restore it later.</div>
             </div>
         </div>
         <div style="display: flex; gap: 8px; justify-content: flex-end; margin-top: 20px;">
-            <button onclick="closeDeleteModal()" style="height: 38px; padding: 0 18px; font-family: var(--cms-font-ui); font-size: 13.5px; font-weight: 600; background: var(--cms-surface); color: var(--cms-fg2); border: 1.5px solid var(--cms-border); border-radius: var(--cms-r-md); cursor: pointer;">Cancel</button>
-            <button onclick="executeDelete()" style="height: 38px; padding: 0 18px; font-family: var(--cms-font-ui); font-size: 13.5px; font-weight: 600; background: var(--cms-red); color: #fff; border: none; border-radius: var(--cms-r-md); cursor: pointer;">Move to Trash</button>
+            <button onclick="closeDeleteModal()" style="height: 38px; padding: 0 18px; font-family: var(--cms-font-ui), sans-serif; font-size: 13.5px; font-weight: 600; background: var(--cms-surface); color: var(--cms-fg2); border: 1.5px solid var(--cms-border); border-radius: var(--cms-r-md); cursor: pointer;">Cancel</button>
+            <button onclick="executeDelete()" style="height: 38px; padding: 0 18px; font-family: var(--cms-font-ui), sans-serif; font-size: 13.5px; font-weight: 600; background: var(--cms-red); color: #fff; border: none; border-radius: var(--cms-r-md); cursor: pointer;">Move to Trash</button>
         </div>
     </div>
 </div>

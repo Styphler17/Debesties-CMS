@@ -4,6 +4,23 @@
 @section('page_title', 'Pages')
 
 @section('content')
+
+<style>
+    .page-tab {
+        display: inline-flex; align-items: center; justify-content: center; height: 32px; padding: 0 16px; 
+        font-family: var(--cms-font-ui), sans-serif; font-size: 13px; font-weight: 600; text-decoration: none; 
+        border-radius: var(--cms-r-sm); transition: all 120ms;
+    }
+    .page-tab--active {
+        color: var(--cms-fg1); background: var(--cms-surface); box-shadow: var(--cms-sh-card);
+    }
+    .page-tab--inactive {
+        color: var(--cms-fg3); background: transparent; box-shadow: none;
+    }
+    .page-row { transition: background 120ms; }
+    .page-row--border { border-bottom: 1px solid var(--cms-border); }
+</style>
+
 <div style="display: flex; flex-direction: column; gap: 20px;">
 
     {{-- Top Action Bar --}}
@@ -15,10 +32,7 @@
                     $isActive = request('status', 'All') === $tab;
                 @endphp
                 <a href="{{ route('admin.pages.index', array_merge(request()->query(), ['status' => $tab])) }}"
-                   style="display: inline-flex; align-items: center; justify-content: center; height: 32px; padding: 0 16px; font-family: var(--cms-font-ui); font-size: 13px; font-weight: 600; text-decoration: none; border-radius: var(--cms-r-sm); transition: all 120ms;
-                          color: {{ $isActive ? 'var(--cms-fg1)' : 'var(--cms-fg3)' }};
-                          background: {{ $isActive ? 'var(--cms-surface)' : 'transparent' }};
-                          box-shadow: {{ $isActive ? 'var(--cms-sh-card)' : 'none' }};">
+                   @class(['page-tab', 'page-tab--active' => $isActive, 'page-tab--inactive' => ! $isActive])>
                     {{ $tab }}
                 </a>
             @endforeach
@@ -32,10 +46,10 @@
                 @endif
                 <i data-lucide="search" style="width: 15px; height: 15px; color: var(--cms-fg4); flex-shrink: 0;"></i>
                 <input name="q" value="{{ request('q') }}" placeholder="Search pages…"
-                       style="border: none; outline: none; background: none; flex: 1; font-family: var(--cms-font-ui); font-size: 13.5px; color: var(--cms-fg1);" />
+                       style="border: none; outline: none; background: none; flex: 1; font-family: var(--cms-font-ui), sans-serif; font-size: 13.5px; color: var(--cms-fg1);" />
             </form>
             <a href="{{ route('admin.pages.create') }}"
-               style="display: inline-flex; align-items: center; gap: 7px; font-family: var(--cms-font-ui); font-size: 13.5px; font-weight: 600; padding: 0 18px; height: 38px; background: var(--cms-gold); color: #1A1410; border: none; border-radius: var(--cms-r-md); cursor: pointer; text-decoration: none; line-height: 38px;"
+               style="display: inline-flex; align-items: center; gap: 7px; font-family: var(--cms-font-ui), sans-serif; font-size: 13.5px; font-weight: 600; padding: 0 18px; height: 38px; background: var(--cms-gold); color: #1A1410; border: none; border-radius: var(--cms-r-md); cursor: pointer; text-decoration: none; line-height: 38px;"
                onmouseover="this.style.background='#D69B00'" onmouseout="this.style.background='var(--cms-gold)'">
                 <i data-lucide="plus" style="width: 16px; height: 16px; stroke-width: 2.2;"></i>
                 Add Page
@@ -45,7 +59,7 @@
 
     {{-- Pages List Table --}}
     <div style="background: var(--cms-surface); border: 1px solid var(--cms-border); border-radius: var(--cms-r-lg); overflow: hidden; box-shadow: var(--cms-sh-card);">
-        <table style="width: 100%; border-collapse: collapse; font-family: var(--cms-font-ui); text-align: left;">
+        <table style="width: 100%; border-collapse: collapse; font-family: var(--cms-font-ui), sans-serif; text-align: left;">
             <thead>
                 <tr style="border-bottom: 1px solid var(--cms-border);">
                     <th style="padding: 14px 20px; font-size: 12px; font-weight: 700; color: var(--cms-fg3); letter-spacing: 0.04em; text-transform: uppercase;">Title</th>
@@ -58,12 +72,12 @@
             </thead>
             <tbody>
                 @forelse($pages as $page)
-                    <tr style="border-bottom: {{ !$loop->last ? '1px solid var(--cms-border)' : 'none' }}; transition: background 120ms;"
+                    <tr @class(['page-row', 'page-row--border' => ! $loop->last])
                         onmouseover="this.style.background='#FDFBF8'" onmouseout="this.style.background='transparent'">
                         <td style="padding: 14px 20px; font-weight: 600; color: var(--cms-fg1);">
                             {{ $page->title }}
                         </td>
-                        <td style="padding: 14px 20px; font-family: var(--cms-font-mono); font-size: 12.5px; color: var(--cms-fg2);">
+                        <td style="padding: 14px 20px; font-family: var(--cms-font-mono), monospace; font-size: 12.5px; color: var(--cms-fg2);">
                             /pages/{{ $page->slug }}
                         </td>
                         <td style="padding: 14px 20px; color: var(--cms-fg2);">

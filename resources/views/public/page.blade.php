@@ -78,9 +78,24 @@
         margin: 2rem 0;
     }
 
+    /* Builder section responsive grid */
+    .page-body section [style*="grid-template-columns"] {
+        gap: 2rem;
+    }
+
+    /* FAQ details arrow animation */
+    .page-body details[open] summary span:last-child {
+        transform: rotate(45deg);
+    }
+
     @media (max-width: 768px) {
         .page-title {
             font-size: 2.2rem;
+        }
+
+        /* Stack builder columns on mobile */
+        .page-body section [style*="grid-template-columns"] {
+            grid-template-columns: 1fr !important;
         }
     }
 </style>

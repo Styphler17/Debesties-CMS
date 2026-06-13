@@ -76,6 +76,11 @@
             color: var(--cms-gold) !important;
             font-weight: 600;
         }
+        .sidebar-count {
+            font-family: var(--cms-font-ui), sans-serif; font-size: 11px; font-weight: 700; background: rgba(255,255,255,0.06); padding: 1px 7px; border-radius: 999px;
+        }
+        .sidebar-count--active { color: var(--cms-gold); }
+        .sidebar-count--inactive { color: rgba(255,255,255,0.4); }
         .cms-sidebar.collapsed .sidebar-logo-full {
             display: none !important;
         }
@@ -131,14 +136,14 @@
 
                 @foreach($navGroups as $groupName => $items)
                     <div style="margin-bottom: 10px;">
-                        <div class="group-title" style="font-family: var(--cms-font-ui); font-size: 10.5px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(255,255,255,0.32); padding: 6px 10px 4px;">{{ $groupName }}</div>
+                        <div class="group-title" style="font-family: var(--cms-font-ui), sans-serif; font-size: 10.5px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(255,255,255,0.32); padding: 6px 10px 4px;">{{ $groupName }}</div>
                         
                         @foreach($items as $item)
                             @php
                                 $isActive = request()->routeIs($item['route']) || (request()->routeIs(explode('.', $item['route'])[0] . '.*') && !in_array($item['key'], ['calendar', 'seo', 'ai', 'navbuilder', 'homebuilder', 'settings', 'pages']));
                             @endphp
                             
-                            <a href="{{ route($item['route']) }}" class="sidebar-link {{ $isActive ? 'active' : '' }}" style="display: flex; align-items: center; gap: 11px; width: 100%; padding: 9px 10px; border-radius: var(--cms-r-md); margin-bottom: 1px; font-family: var(--cms-font-ui); font-size: 13.5px; text-decoration: none; position: relative;">
+                            <a href="{{ route($item['route']) }}" class="sidebar-link {{ $isActive ? 'active' : '' }}" style="display: flex; align-items: center; gap: 11px; width: 100%; padding: 9px 10px; border-radius: var(--cms-r-md); margin-bottom: 1px; font-family: var(--cms-font-ui), sans-serif; font-size: 13.5px; text-decoration: none; position: relative;">
                                 @if($isActive)
                                     <span class="active-indicator" style="position: absolute; left: -12px; top: 8px; bottom: 8px; width: 3px; border-radius: 999px; background: var(--cms-gold);"></span>
                                 @endif
@@ -146,11 +151,13 @@
                                 <span class="sidebar-label" style="flex: 1; text-align: left;">{{ $item['label'] }}</span>
                                 
                                 @if(isset($item['count']))
-                                    <span class="sidebar-count" style="font-family: var(--cms-font-ui); font-size: 11px; font-weight: 700; color: {{ $isActive ? 'var(--cms-gold)' : 'rgba(255,255,255,0.4)' }}; background: rgba(255,255,255,0.06); padding: 1px 7px; border-radius: 999px;">{{ $item['count'] }}</span>
+                                    <span @class(['sidebar-count', 'sidebar-count--active' => $isActive, 'sidebar-count--inactive' => ! $isActive])>
+                                        {{ $item['count'] }}
+                                    </span>
                                 @endif
                                 
                                 @if(isset($item['badge']))
-                                    <span class="sidebar-badge" style="font-family: var(--cms-font-ui); font-size: 9.5px; font-weight: 800; letter-spacing: 0.05em; color: #fff; background: linear-gradient(120deg, var(--cms-ai-from), var(--cms-ai-to)); padding: 2px 6px; border-radius: 999px;">{{ $item['badge'] }}</span>
+                                    <span class="sidebar-badge" style="font-family: var(--cms-font-ui), sans-serif; font-size: 9.5px; font-weight: 800; letter-spacing: 0.05em; color: #fff; background: linear-gradient(120deg, var(--cms-ai-from), var(--cms-ai-to)); padding: 2px 6px; border-radius: 999px;">{{ $item['badge'] }}</span>
                                 @endif
                             </a>
                         @endforeach
@@ -165,12 +172,12 @@
                      onmouseover="this.style.background='rgba(255,255,255,0.05)'"
                      onmouseout="this.style.background='transparent'">
                     <!-- Initials Avatar -->
-                    <div style="width: 34px; height: 34px; border-radius: 999px; background: rgba(232, 168, 0, 0.22); color: var(--cms-gold); display: flex; align-items: center; justify-content: center; font-family: var(--cms-font-ui); font-size: 13px; font-weight: 700; flex-shrink: 0; border: 1.5px solid rgba(232, 168, 0, 0.33);">
+                    <div style="width: 34px; height: 34px; border-radius: 999px; background: rgba(232, 168, 0, 0.22); color: var(--cms-gold); display: flex; align-items: center; justify-content: center; font-family: var(--cms-font-ui), sans-serif; font-size: 13px; font-weight: 700; flex-shrink: 0; border: 1.5px solid rgba(232, 168, 0, 0.33);">
                         AB
                     </div>
                     <div class="sidebar-footer-text" style="flex: 1; overflow: hidden;">
-                        <div style="font-family: var(--cms-font-ui); font-size: 13px; font-weight: 600; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Ama Boateng</div>
-                        <div style="font-family: var(--cms-font-ui); font-size: 11px; color: rgba(255,255,255,0.4)">Admin</div>
+                        <div style="font-family: var(--cms-font-ui), sans-serif; font-size: 13px; font-weight: 600; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Ama Boateng</div>
+                        <div style="font-family: var(--cms-font-ui), sans-serif; font-size: 11px; color: rgba(255,255,255,0.4)">Admin</div>
                     </div>
                     <i data-lucide="chevron-down" class="sidebar-footer-arrow" style="width: 15px; height: 15px; color: rgba(255,255,255,0.4);"></i>
                 </div>
@@ -190,7 +197,7 @@
                         <i data-lucide="menu" style="width: 22px; height: 22px;"></i>
                     </button>
                     <div style="min-width: 0;">
-                        <h1 style="font-family: var(--cms-font-disp); font-size: 21px; font-weight: 700; color: var(--cms-fg1); margin: 0; letter-spacing: -0.01em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                        <h1 style="font-family: var(--cms-font-disp), serif; font-size: 21px; font-weight: 700; color: var(--cms-fg1); margin: 0; letter-spacing: -0.01em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
                             @yield('page_title', 'Dashboard')
                         </h1>
                     </div>
@@ -200,7 +207,7 @@
                     <!-- Search Input -->
                     <div class="cms-search-hide" style="display: flex; align-items: center; gap: 8px; width: 240px; height: 38px; background: var(--cms-surface); border: 1.5px solid var(--cms-border); border-radius: var(--cms-r-md); padding: 0 12px; transition: border-color 140ms;" onfocusin="this.style.borderColor='var(--cms-gold)'; this.style.boxShadow='0 0 0 3px rgba(232, 168, 0, 0.13)';" onfocusout="this.style.borderColor='var(--cms-border)'; this.style.boxShadow='none';">
                         <i data-lucide="search" style="width: 16px; height: 16px; color: var(--cms-fg4);"></i>
-                        <input placeholder="Search posts, media…" style="border: none; outline: none; background: none; flex: 1; font-family: var(--cms-font-ui); font-size: 13.5px; color: var(--cms-fg1); min-width: 0;" />
+                        <input placeholder="Search posts, media…" style="border: none; outline: none; background: none; flex: 1; font-family: var(--cms-font-ui), sans-serif; font-size: 13.5px; color: var(--cms-fg1); min-width: 0;" />
                     </div>
 
                     <!-- Notification Bell Dropdown -->
@@ -211,27 +218,27 @@
                         </button>
                         <!-- Notifications Panel -->
                         <div id="notifications-panel" style="display: none; position: absolute; top: 48px; right: 0; width: 300px; background: var(--cms-surface); border-radius: var(--cms-r-lg); box-shadow: var(--cms-sh-pop); border: 1px solid var(--cms-border); z-index: 100; overflow: hidden; animation: dsPop 180ms ease;">
-                            <div style="padding: 12px 16px; border-bottom: 1px solid var(--cms-border); font-family: var(--cms-font-ui); font-weight: 700; font-size: 13.5px; color: var(--cms-fg1);">Notifications</div>
+                            <div style="padding: 12px 16px; border-bottom: 1px solid var(--cms-border); font-family: var(--cms-font-ui), sans-serif; font-weight: 700; font-size: 13.5px; color: var(--cms-fg1);">Notifications</div>
                             
                             <div style="padding: 11px 16px; border-bottom: 1px solid var(--cms-border); display: flex; gap: 10px; cursor: pointer;" onmouseover="this.style.background='#FBF9F5'" onmouseout="this.style.background='transparent'">
                                 <span style="width: 7px; height: 7px; border-radius: 999px; background: var(--cms-gold); id: 5px; flex-shrink: 0; margin-top: 5px;"></span>
                                 <div>
-                                    <div style="font-family: var(--cms-font-ui); font-size: 12.5px; color: var(--cms-fg1); line-height: 1.4;">Yaw submitted a post for review</div>
-                                    <div style="font-family: var(--cms-font-ui); font-size: 11px; color: var(--cms-fg4); margin-top: 2px;">3h ago</div>
+                                    <div style="font-family: var(--cms-font-ui), sans-serif; font-size: 12.5px; color: var(--cms-fg1); line-height: 1.4;">Yaw submitted a post for review</div>
+                                    <div style="font-family: var(--cms-font-ui), sans-serif; font-size: 11px; color: var(--cms-fg4); margin-top: 2px;">3h ago</div>
                                 </div>
                             </div>
                             <div style="padding: 11px 16px; border-bottom: 1px solid var(--cms-border); display: flex; gap: 10px; cursor: pointer;" onmouseover="this.style.background='#FBF9F5'" onmouseout="this.style.background='transparent'">
                                 <span style="width: 7px; height: 7px; border-radius: 999px; background: var(--cms-red); id: 5px; flex-shrink: 0; margin-top: 5px;"></span>
                                 <div>
-                                    <div style="font-family: var(--cms-font-ui); font-size: 12.5px; color: var(--cms-fg1); line-height: 1.4;">V.I.P article flagged for content decay</div>
-                                    <div style="font-family: var(--cms-font-ui); font-size: 11px; color: var(--cms-fg4); margin-top: 2px;">1d ago</div>
+                                    <div style="font-family: var(--cms-font-ui), sans-serif; font-size: 12.5px; color: var(--cms-fg1); line-height: 1.4;">V.I.P article flagged for content decay</div>
+                                    <div style="font-family: var(--cms-font-ui), sans-serif; font-size: 11px; color: var(--cms-fg4); margin-top: 2px;">1d ago</div>
                                 </div>
                             </div>
                             <div style="padding: 11px 16px; display: flex; gap: 10px; cursor: pointer;" onmouseover="this.style.background='#FBF9F5'" onmouseout="this.style.background='transparent'">
                                 <span style="width: 7px; height: 7px; border-radius: 999px; background: var(--cms-fg4); id: 5px; flex-shrink: 0; margin-top: 5px;"></span>
                                 <div>
-                                    <div style="font-family: var(--cms-font-ui); font-size: 12.5px; color: var(--cms-fg1); line-height: 1.4;">12 new comments awaiting moderation</div>
-                                    <div style="font-family: var(--cms-font-ui); font-size: 11px; color: var(--cms-fg4); margin-top: 2px;">1d ago</div>
+                                    <div style="font-family: var(--cms-font-ui), sans-serif; font-size: 12.5px; color: var(--cms-fg1); line-height: 1.4;">12 new comments awaiting moderation</div>
+                                    <div style="font-family: var(--cms-font-ui), sans-serif; font-size: 11px; color: var(--cms-fg4); margin-top: 2px;">1d ago</div>
                                 </div>
                             </div>
                         </div>
@@ -239,7 +246,7 @@
 
                     <!-- New Post Button CTA -->
                     <div class="cms-newpost-hide">
-                        <a href="{{ route('admin.posts.create') }}" style="display: inline-flex; align-items: center; justify-content: center; gap: 7px; font-family: var(--cms-font-ui); font-size: 13.5px; font-weight: 600; padding: 9px 16px; height: 38px; background: var(--cms-gold); color: #1A1410; border: 1.5px solid transparent; border-radius: var(--cms-r-md); cursor: pointer; text-decoration: none; transition: background 140ms, transform 100ms;" onmouseover="this.style.background='#D69B00'" onmouseout="this.style.background='var(--cms-gold)'">
+                        <a href="{{ route('admin.posts.create') }}" style="display: inline-flex; align-items: center; justify-content: center; gap: 7px; font-family: var(--cms-font-ui), sans-serif; font-size: 13.5px; font-weight: 600; padding: 9px 16px; height: 38px; background: var(--cms-gold); color: #1A1410; border: 1.5px solid transparent; border-radius: var(--cms-r-md); cursor: pointer; text-decoration: none; transition: background 140ms, transform 100ms;" onmouseover="this.style.background='#D69B00'" onmouseout="this.style.background='var(--cms-gold)'">
                             <i data-lucide="plus" style="width: 16px; height: 16px; stroke-width: 2;"></i>
                             New Post
                         </a>

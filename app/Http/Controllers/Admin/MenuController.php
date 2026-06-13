@@ -16,6 +16,8 @@ class MenuController extends Controller
 {
     public function index()
     {
+        $this->authorize('viewAny', Menu::class);
+
         $menus = Menu::with('items')->get();
         $categories = Category::all();
         $pages = Page::published()->get();
@@ -26,6 +28,8 @@ class MenuController extends Controller
 
     public function store(Request $request)
     {
+        $this->authorize('create', Menu::class);
+
         $request->validate(['name' => 'required|string|max:255']);
 
         $menu = Menu::create([
@@ -45,6 +49,8 @@ class MenuController extends Controller
         if (! $menu instanceof Menu) {
             $menu = Menu::findOrFail($menu);
         }
+
+        $this->authorize('update', $menu);
 
         $request->validate([
             'location' => 'nullable|string',

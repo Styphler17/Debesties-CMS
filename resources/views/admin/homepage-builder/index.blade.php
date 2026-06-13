@@ -12,7 +12,7 @@
     
     {{-- Left Panel: Widget Palette --}}
     <div style="background: var(--cms-surface); border: 1px solid var(--cms-border); border-radius: var(--cms-r-xl); padding: 20px; box-shadow: var(--cms-sh-card);">
-        <h3 style="font-family: var(--cms-font-ui); font-size: 13.5px; font-weight: 700; color: var(--cms-fg2); text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 12px;">Widget Library</h3>
+        <h3 style="font-family: var(--cms-font-ui), sans-serif; font-size: 13.5px; font-weight: 700; color: var(--cms-fg2); text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 12px;">Widget Library</h3>
         <p style="font-size: 12.5px; color: var(--cms-fg3); margin-bottom: 16px; line-height: 1.4;">Click a widget card to add it as a new section on your homepage canvas.</p>
         
         <div style="display: flex; flex-direction: column; gap: 10px;">
@@ -27,18 +27,20 @@
             @endphp
 
             @foreach($widgets as $w)
-                <div onclick="addWidget('{{ $w['type'] }}', '{{ $w['name'] }}')"
+                <div class="widget-card"
+                     data-widget-type="{{ $w['type'] }}"
+                     data-widget-name="{{ $w['name'] }}"
                      style="background: var(--cms-bg); border: 1.5px solid var(--cms-border); border-radius: var(--cms-r-md); padding: 12px; cursor: pointer; transition: all 120ms; text-align: left;"
                      onmouseover="this.style.borderColor='var(--cms-gold)'; this.style.background='var(--cms-surface)'"
                      onmouseout="this.style.borderColor='var(--cms-border)'; this.style.background='var(--cms-bg)'">
                     <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px;">
-                        <span style="display: flex; align-items: center; gap: 6px; font-family: var(--cms-font-ui); font-size: 13.5px; font-weight: 700; color: var(--cms-fg1);">
+                        <span style="display: flex; align-items: center; gap: 6px; font-family: var(--cms-font-ui), sans-serif; font-size: 13.5px; font-weight: 700; color: var(--cms-fg1);">
                             <i data-lucide="{{ $w['icon'] }}" style="width: 14px; height: 14px; color: var(--cms-gold-deep);"></i>
                             {{ $w['name'] }}
                         </span>
                         <i data-lucide="plus" style="width: 13px; height: 13px; color: var(--cms-fg3);"></i>
                     </div>
-                    <div style="font-family: var(--cms-font-ui); font-size: 11.5px; color: var(--cms-fg3); line-height: 1.4;">{{ $w['desc'] }}</div>
+                    <div style="font-family: var(--cms-font-ui), sans-serif; font-size: 11.5px; color: var(--cms-fg3); line-height: 1.4;">{{ $w['desc'] }}</div>
                 </div>
             @endforeach
         </div>
@@ -49,7 +51,7 @@
         
         <div style="background: var(--cms-surface); border: 1px solid var(--cms-border); border-radius: var(--cms-r-xl); padding: 24px; box-shadow: var(--cms-sh-card);">
             <div style="border-bottom: 1px solid var(--cms-border); padding-bottom: 14px; margin-bottom: 20px;">
-                <h2 style="font-family: var(--cms-font-disp); font-size: 20px; font-weight: 700; color: var(--cms-fg1);">Active Homepage Layout</h2>
+                <h2 style="font-family: var(--cms-font-disp), serif; font-size: 20px; font-weight: 700; color: var(--cms-fg1);">Active Homepage Layout</h2>
                 <p style="font-size: 12.5px; color: var(--cms-fg3); margin-top: 1px;">Drag and drop blocks to reorder. Changes take effect on the live site after saving.</p>
             </div>
 
@@ -61,7 +63,7 @@
             {{-- Save Action --}}
             <div style="border-top: 1px solid var(--cms-border); padding-top: 20px; margin-top: 20px; display: flex; justify-content: flex-end;">
                 <button id="save-btn" onclick="saveLayout()"
-                        style="display: inline-flex; align-items: center; gap: 7px; height: 40px; padding: 0 20px; font-family: var(--cms-font-ui); font-size: 13.5px; font-weight: 700; background: var(--cms-gold); color: #1A1410; border: none; border-radius: var(--cms-r-md); cursor: pointer; transition: background 150ms;"
+                        style="display: inline-flex; align-items: center; gap: 7px; height: 40px; padding: 0 20px; font-family: var(--cms-font-ui), sans-serif; font-size: 13.5px; font-weight: 700; background: var(--cms-gold); color: #1A1410; border: none; border-radius: var(--cms-r-md); cursor: pointer; transition: background 150ms;"
                         onmouseover="this.style.background='#D69B00'" onmouseout="this.style.background='var(--cms-gold)'">
                     <i data-lucide="save" style="width: 16px; height: 16px;"></i>
                     Save Homepage Layout
@@ -73,11 +75,11 @@
 
     {{-- Right Panel: Configuration Sidebar --}}
     <div style="background: var(--cms-surface); border: 1px solid var(--cms-border); border-radius: var(--cms-r-xl); padding: 20px; box-shadow: var(--cms-sh-card); position: sticky; top: 88px;">
-        <h3 style="font-family: var(--cms-font-ui); font-size: 13.5px; font-weight: 700; color: var(--cms-fg2); text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 6px; display: flex; align-items: center; gap: 6px;">
+        <h3 style="font-family: var(--cms-font-ui), sans-serif; font-size: 13.5px; font-weight: 700; color: var(--cms-fg2); text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 6px; display: flex; align-items: center; gap: 6px;">
             <i data-lucide="settings" style="width: 15px; height: 15px; color: var(--cms-fg3);"></i>
             Widget Inspector
         </h3>
-        <div id="inspector-placeholder" style="font-family: var(--cms-font-ui); font-size: 13px; color: var(--cms-fg3); text-align: center; padding: 48px 0; border: 1.5px dashed var(--cms-border); border-radius: var(--cms-r-md); margin-top: 14px;">
+        <div id="inspector-placeholder" style="font-family: var(--cms-font-ui), sans-serif; font-size: 13px; color: var(--cms-fg3); text-align: center; padding: 48px 0; border: 1.5px dashed var(--cms-border); border-radius: var(--cms-r-md); margin-top: 14px;">
             <i data-lucide="info" style="width: 20px; height: 20px; color: var(--cms-fg4); margin-bottom: 6px; display: inline-block;"></i>
             <div>Click the settings cog <strong style="color:var(--cms-gold-deep)">⚙</strong> on any section block to inspect and customize its variables.</div>
         </div>
@@ -85,7 +87,7 @@
         {{-- Dynamic configuration forms --}}
         <div id="inspector-form-container" style="display: none; flex-direction: column; gap: 14px; margin-top: 14px;">
             <div style="background: var(--cms-bg); border-radius: var(--cms-r-md); padding: 10px 12px; margin-bottom: 4px;">
-                <span id="inspector-widget-title" style="font-family: var(--cms-font-ui); font-size: 13px; font-weight: 700; color: var(--cms-fg1);">Hero Banner</span>
+                <span id="inspector-widget-title" style="font-family: var(--cms-font-ui), sans-serif; font-size: 13px; font-weight: 700; color: var(--cms-fg1);">Hero Banner</span>
                 <span id="inspector-widget-type-badge" style="font-size: 10px; font-weight: 700; color: var(--cms-fg3); background: rgba(0,0,0,0.05); padding: 1px 6px; border-radius: 999px; float: right; text-transform: uppercase;">hero</span>
             </div>
 
@@ -94,7 +96,7 @@
             </div>
 
             <button onclick="applySettings()"
-                    style="height: 38px; width: 100%; font-family: var(--cms-font-ui); font-size: 13px; font-weight: 700; background: var(--cms-fg1); color: #fff; border: none; border-radius: var(--cms-r-md); cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; margin-top: 8px; transition: background 120ms;"
+                    style="height: 38px; width: 100%; font-family: var(--cms-font-ui), sans-serif; font-size: 13px; font-weight: 700; background: var(--cms-fg1); color: #fff; border: none; border-radius: var(--cms-r-md); cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; margin-top: 8px; transition: background 120ms;"
                     onmouseover="this.style.background='var(--cms-fg2)'" onmouseout="this.style.background='var(--cms-fg1)'">
                 <i data-lucide="check" style="width: 14px; height: 14px;"></i>
                 Apply Changes
@@ -106,9 +108,25 @@
 
 <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
 
+<script id="homepage-layout-data" type="application/json">
+    {!! $layout !!}
+</script>
+<script id="homepage-categories-data" type="application/json">
+    {!! json_encode($categories) !!}
+</script>
+<div id="homepage-builder-config"
+     data-store-url="{{ route('admin.homepage-builder.store') }}"
+     data-csrf-token="{{ csrf_token() }}"
+     hidden></div>
+
 <script>
-    let activeWidgets = {!! $layout !!};
-    const categories = @json($categories);
+    let activeWidgets = JSON.parse(document.getElementById('homepage-layout-data').textContent);
+    const categories = JSON.parse(document.getElementById('homepage-categories-data').textContent);
+    const homepageBuilderConfigElement = document.getElementById('homepage-builder-config');
+    const homepageBuilderConfig = {
+        storeUrl: homepageBuilderConfigElement.dataset.storeUrl,
+        csrfToken: homepageBuilderConfigElement.dataset.csrfToken
+    };
 
     let nextWidgetId = activeWidgets.reduce((max, w) => Math.max(max, w.id || 0), 0) + 1;
     let selectedInspectorId = null;
@@ -116,6 +134,11 @@
 
     document.addEventListener("DOMContentLoaded", () => {
         initSortable();
+        document.querySelectorAll('.widget-card').forEach(card => {
+            card.addEventListener('click', () => {
+                addWidget(card.dataset.widgetType, card.dataset.widgetName);
+            });
+        });
         renderCanvas();
     });
 
@@ -146,7 +169,7 @@
 
         if (activeWidgets.length === 0) {
             container.innerHTML = `
-                <div style="border: 2px dashed var(--cms-border); border-radius: var(--cms-r-lg); padding: 48px; text-align: center; color: var(--cms-fg4); font-family: var(--cms-font-ui); font-size: 13.5px; display: flex; flex-direction: column; align-items: center; justify-content: center; flex: 1;">
+                <div style="border: 2px dashed var(--cms-border); border-radius: var(--cms-r-lg); padding: 48px; text-align: center; color: var(--cms-fg4); font-family: var(--cms-font-ui), sans-serif; font-size: 13.5px; display: flex; flex-direction: column; align-items: center; justify-content: center; flex: 1;">
                     <i data-lucide="layers" style="width: 32px; height: 32px; color: var(--cms-fg4); margin-bottom: 12px;"></i>
                     <div style="font-weight: 600; color: var(--cms-fg2);">Your Homepage is Empty</div>
                     <div style="margin-top: 4px;">Click components in the Widget Library to assemble the landing page.</div>
@@ -190,8 +213,8 @@
                     </div>
 
                     <div style="min-width: 0;">
-                        <span style="font-family: var(--cms-font-ui); font-size: 13.5px; font-weight: 700; color: var(--cms-fg1); display: block;">${widget.name}</span>
-                        <span style="font-family: var(--cms-font-ui); font-size: 11.5px; color: var(--cms-fg4); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: block; max-width: 320px;">${previewText}</span>
+                        <span style="font-family: var(--cms-font-ui), sans-serif; font-size: 13.5px; font-weight: 700; color: var(--cms-fg1); display: block;">${widget.name}</span>
+                        <span style="font-family: var(--cms-font-ui), sans-serif; font-size: 11.5px; color: var(--cms-fg4); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: block; max-width: 320px;">${previewText}</span>
                     </div>
                 </div>
 
@@ -388,11 +411,11 @@
         btn.innerHTML = '<i data-lucide="loader-2" class="spin" style="width: 16px; height: 16px;"></i> Saving...';
         lucide.createIcons();
 
-        fetch('{{ route('admin.homepage-builder.store') }}', {
+        fetch(homepageBuilderConfig.storeUrl, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                'X-CSRF-TOKEN': homepageBuilderConfig.csrfToken
             },
             body: JSON.stringify({
                 layout: JSON.stringify(activeWidgets)
@@ -422,7 +445,7 @@
         const container = document.getElementById('toast-container');
         
         const toast = document.createElement('div');
-        toast.style.cssText = "background: #17120D; border: 1.5px solid var(--cms-gold); border-radius: var(--cms-r-md); padding: 12px 20px; color: #fff; font-family: var(--cms-font-ui); font-size: 13.5px; font-weight: 600; display: flex; align-items: center; gap: 8px; box-shadow: var(--cms-sh-pop); animation: dsPop 180ms ease; min-width: 280px;";
+        toast.style.cssText = "background: #17120D; border: 1.5px solid var(--cms-gold); border-radius: var(--cms-r-md); padding: 12px 20px; color: #fff; font-family: var(--cms-font-ui), sans-serif; font-size: 13.5px; font-weight: 600; display: flex; align-items: center; gap: 8px; box-shadow: var(--cms-sh-pop); animation: dsPop 180ms ease; min-width: 280px;";
         toast.innerHTML = `<i data-lucide="check-circle" style="width: 16px; height: 16px; color: var(--cms-gold); flex-shrink: 0;"></i> <span>${message}</span>`;
         
         container.appendChild(toast);
@@ -451,7 +474,7 @@
         to { transform: rotate(360deg); }
     }
     .insp-lbl {
-        font-family: var(--cms-font-ui);
+        font-family: var(--cms-font-ui), sans-serif;
         font-size: 11px;
         font-weight: 700;
         color: var(--cms-fg3);
@@ -465,7 +488,7 @@
         width: 100%;
         height: 38px;
         padding: 0 10px;
-        font-family: var(--cms-font-ui);
+        font-family: var(--cms-font-ui), sans-serif;
         font-size: 13px;
         color: var(--cms-fg1);
         background: var(--cms-bg);
@@ -478,7 +501,7 @@
         width: 100%;
         height: 60px;
         padding: 8px 10px;
-        font-family: var(--cms-font-ui);
+        font-family: var(--cms-font-ui), sans-serif;
         font-size: 13px;
         color: var(--cms-fg1);
         background: var(--cms-bg);
@@ -492,7 +515,7 @@
         width: 100%;
         height: 38px;
         padding: 0 10px;
-        font-family: var(--cms-font-ui);
+        font-family: var(--cms-font-ui), sans-serif;
         font-size: 13px;
         color: var(--cms-fg1);
         background: var(--cms-bg);

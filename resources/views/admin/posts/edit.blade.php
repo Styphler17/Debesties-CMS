@@ -5,26 +5,53 @@
 
 @section('content')
 
+<style>
+    .post-schedule-row--visible { display: block; }
+    .post-schedule-row--hidden { display: none; }
+
+    .post-featured-drop {
+        border: 2px dashed var(--cms-border); border-radius: var(--cms-r-md); text-align: center; 
+        cursor: pointer; transition: border-color 150ms, background 150ms; overflow: hidden;
+    }
+    .post-featured-drop--empty { padding: 24px 12px; }
+    .post-featured-drop--filled { padding: 0; }
+
+    .post-featured-placeholder--hidden { display: none; }
+    .post-featured-placeholder--visible { display: block; }
+
+    .post-featured-preview { width: 100%; border-radius: 7px; }
+    .post-featured-preview--hidden { display: none; }
+    .post-featured-preview--visible { display: block; }
+
+    .post-featured-remove-btn {
+        margin-top: 8px; width: 100%; height: 34px; font-family: var(--cms-font-ui), sans-serif; 
+        font-size: 13px; font-weight: 600; color: var(--cms-red); background: var(--cms-red-soft); 
+        border: none; border-radius: var(--cms-r-md); cursor: pointer;
+    }
+    .post-featured-remove-btn--hidden { display: none; }
+    .post-featured-remove-btn--visible { display: block; }
+</style>
+
 {{-- SEO Score Indicator Strip --}}
 <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; flex-wrap: wrap; gap: 10px;">
     <div style="display: flex; align-items: center; gap: 10px;">
         <a href="{{ route('admin.posts.index') }}"
-           style="display: inline-flex; align-items: center; gap: 5px; font-family: var(--cms-font-ui); font-size: 13px; color: var(--cms-fg3); text-decoration: none;"
+           style="display: inline-flex; align-items: center; gap: 5px; font-family: var(--cms-font-ui), sans-serif; font-size: 13px; color: var(--cms-fg3); text-decoration: none;"
            onmouseover="this.style.color='var(--cms-fg1)'" onmouseout="this.style.color='var(--cms-fg3)'">
             <i data-lucide="arrow-left" style="width: 14px; height: 14px;"></i> All Posts
         </a>
         <span style="color: var(--cms-border-st);">/</span>
-        <span style="font-family: var(--cms-font-ui); font-size: 13px; color: var(--cms-fg2); max-width: 280px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ $post->title }}</span>
+        <span style="font-family: var(--cms-font-ui), sans-serif; font-size: 13px; color: var(--cms-fg2); max-width: 280px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ $post->title }}</span>
     </div>
     <div style="display: flex; align-items: center; gap: 10px;">
         {{-- SEO Score badge --}}
         <div style="display: flex; align-items: center; gap: 7px; padding: 5px 13px; background: var(--cms-surface); border: 1.5px solid var(--cms-border); border-radius: var(--cms-r-md);">
             <i data-lucide="search" style="width: 14px; height: 14px; color: var(--cms-fg4);"></i>
-            <span style="font-family: var(--cms-font-ui); font-size: 13px; font-weight: 700; color: var(--cms-fg4);">SEO —</span>
+            <span style="font-family: var(--cms-font-ui), sans-serif; font-size: 13px; font-weight: 700; color: var(--cms-fg4);">SEO —</span>
         </div>
         {{-- View live --}}
         <a href="#" target="_blank"
-           style="display: inline-flex; align-items: center; gap: 6px; height: 36px; padding: 0 14px; font-family: var(--cms-font-ui); font-size: 13px; font-weight: 600; color: var(--cms-fg2); background: var(--cms-surface); border: 1.5px solid var(--cms-border); border-radius: var(--cms-r-md); text-decoration: none;"
+           style="display: inline-flex; align-items: center; gap: 6px; height: 36px; padding: 0 14px; font-family: var(--cms-font-ui), sans-serif; font-size: 13px; font-weight: 600; color: var(--cms-fg2); background: var(--cms-surface); border: 1.5px solid var(--cms-border); border-radius: var(--cms-r-md); text-decoration: none;"
            onmouseover="this.style.background='var(--cms-bg)'" onmouseout="this.style.background='var(--cms-surface)'">
             <i data-lucide="external-link" style="width: 14px; height: 14px;"></i> View Live
         </a>
@@ -45,29 +72,29 @@
             <input id="post-title" name="title" type="text"
                    value="{{ $post->title }}"
                    placeholder="Enter post title…"
-                   style="display: block; width: 100%; border: none; outline: none; font-family: var(--cms-font-disp); font-size: 28px; font-weight: 700; color: var(--cms-fg1); background: transparent; letter-spacing: -0.015em; line-height: 1.2;"
+                   style="display: block; width: 100%; border: none; outline: none; font-family: var(--cms-font-disp), serif; font-size: 28px; font-weight: 700; color: var(--cms-fg1); background: transparent; letter-spacing: -0.015em; line-height: 1.2;"
                    oninput="generateSlug(this.value, false)" />
             <input id="post-subtitle" name="subtitle" type="text"
                    value="{{ $post->subtitle ?? '' }}"
                    placeholder="Subtitle (optional)…"
-                   style="display: block; width: 100%; border: none; outline: none; font-family: var(--cms-font-ui); font-size: 16px; font-weight: 400; color: var(--cms-fg3); background: transparent; margin-top: 6px;" />
+                   style="display: block; width: 100%; border: none; outline: none; font-family: var(--cms-font-ui), sans-serif; font-size: 16px; font-weight: 400; color: var(--cms-fg3); background: transparent; margin-top: 6px;" />
             <div style="display: flex; align-items: center; gap: 8px; margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--cms-border);">
-                <span style="font-family: var(--cms-font-ui); font-size: 12.5px; color: var(--cms-fg4);">debesties.com/</span>
+                <span style="font-family: var(--cms-font-ui), sans-serif; font-size: 12.5px; color: var(--cms-fg4);">debesties.com/</span>
                 <input id="post-slug" name="slug" type="text" value="{{ $post->slug }}"
-                       style="font-family: var(--cms-font-mono); font-size: 12.5px; color: var(--cms-fg2); background: transparent; border: none; outline: none; flex: 1; padding: 2px 0;" />
-                <button type="button" onclick="editSlug()" style="font-family: var(--cms-font-ui); font-size: 12px; color: var(--cms-gold); background: none; border: none; cursor: pointer; font-weight: 600;">Edit</button>
+                       style="font-family: var(--cms-font-mono), monospace; font-size: 12.5px; color: var(--cms-fg2); background: transparent; border: none; outline: none; flex: 1; padding: 2px 0;" />
+                <button type="button" onclick="editSlug()" style="font-family: var(--cms-font-ui), sans-serif; font-size: 12px; color: var(--cms-gold); background: none; border: none; cursor: pointer; font-weight: 600;">Edit</button>
             </div>
         </div>
 
         {{-- Excerpt --}}
         <div style="background: var(--cms-surface); border: 1px solid var(--cms-border); border-radius: var(--cms-r-lg); overflow: hidden; box-shadow: var(--cms-sh-card);">
             <div style="padding: 12px 20px; border-bottom: 1px solid var(--cms-border); display: flex; align-items: center; justify-content: space-between;">
-                <span style="font-family: var(--cms-font-ui); font-size: 14px; font-weight: 700; color: var(--cms-fg1);">Excerpt</span>
-                <span id="excerpt-count" style="font-family: var(--cms-font-mono); font-size: 11.5px; color: var(--cms-fg4);">{{ strlen($post->excerpt ?? '') }} / 160</span>
+                <span style="font-family: var(--cms-font-ui), sans-serif; font-size: 14px; font-weight: 700; color: var(--cms-fg1);">Excerpt</span>
+                <span id="excerpt-count" style="font-family: var(--cms-font-mono), monospace; font-size: 11.5px; color: var(--cms-fg4);">{{ strlen($post->excerpt ?? '') }} / 160</span>
             </div>
             <textarea id="post-excerpt" name="excerpt" rows="3" maxlength="160"
                       oninput="document.getElementById('excerpt-count').textContent = this.value.length + ' / 160'"
-                      style="display: block; width: 100%; padding: 14px 20px; border: none; outline: none; font-family: var(--cms-font-ui); font-size: 13.5px; color: var(--cms-fg1); background: transparent; resize: vertical; line-height: 1.6;">{{ $post->excerpt ?? '' }}</textarea>
+                      style="display: block; width: 100%; padding: 14px 20px; border: none; outline: none; font-family: var(--cms-font-ui), sans-serif; font-size: 13.5px; color: var(--cms-fg1); background: transparent; resize: vertical; line-height: 1.6;">{{ $post->excerpt ?? '' }}</textarea>
         </div>
 
         {{-- Body Editor --}}
@@ -107,12 +134,12 @@
                         @endif
                     @endforeach
                 </div>
-                <div style="font-family: var(--cms-font-mono); font-size: 11.5px; color: var(--cms-fg4);">
+                <div style="font-family: var(--cms-font-mono), monospace; font-size: 11.5px; color: var(--cms-fg4);">
                     <span id="word-count">0</span> words
                 </div>
             </div>
             <div id="post-body" contenteditable="true"
-                 style="min-height: 380px; padding: 20px 24px; font-family: var(--cms-font-ui); font-size: 15px; line-height: 1.75; color: var(--cms-fg1); outline: none;"
+                 style="min-height: 380px; padding: 20px 24px; font-family: var(--cms-font-ui), sans-serif; font-size: 15px; line-height: 1.75; color: var(--cms-fg1); outline: none;"
                  oninput="updateWordCount()"
                  data-placeholder="Start writing your article…">{!! $post->body !!}</div>
             <textarea name="body" id="post-body-hidden" style="display: none;"></textarea>
@@ -121,7 +148,7 @@
         {{-- SEO Panel --}}
         <div style="background: var(--cms-surface); border: 1px solid var(--cms-border); border-radius: var(--cms-r-lg); overflow: hidden; box-shadow: var(--cms-sh-card);">
             <button type="button" onclick="toggleSection('seo-panel')"
-                    style="width: 100%; padding: 14px 20px; border: none; background: none; cursor: pointer; display: flex; align-items: center; justify-content: space-between; font-family: var(--cms-font-ui); font-size: 14px; font-weight: 700; color: var(--cms-fg1);">
+                    style="width: 100%; padding: 14px 20px; border: none; background: none; cursor: pointer; display: flex; align-items: center; justify-content: space-between; font-family: var(--cms-font-ui), sans-serif; font-size: 14px; font-weight: 700; color: var(--cms-fg1);">
                 <span style="display: flex; align-items: center; gap: 8px;">
                     <i data-lucide="search" style="width: 16px; height: 16px; color: var(--cms-blue);"></i>
                     SEO &amp; Meta
@@ -130,27 +157,27 @@
             </button>
             <div id="seo-panel" style="border-top: 1px solid var(--cms-border); padding: 18px 20px; display: flex; flex-direction: column; gap: 14px;">
                 <div>
-                    <label style="font-family: var(--cms-font-ui); font-size: 12.5px; font-weight: 700; color: var(--cms-fg3); letter-spacing: 0.03em; text-transform: uppercase; display: block; margin-bottom: 6px;">Meta Title</label>
+                    <label style="font-family: var(--cms-font-ui), sans-serif; font-size: 12.5px; font-weight: 700; color: var(--cms-fg3); letter-spacing: 0.03em; text-transform: uppercase; display: block; margin-bottom: 6px;">Meta Title</label>
                     <div style="position: relative;">
                         <input name="meta_title" type="text" id="meta-title" value="{{ $post->meta?->seo_title ?? '' }}"
                                placeholder="Defaults to post title if empty"
-                               style="display: block; width: 100%; height: 40px; padding: 0 12px; font-family: var(--cms-font-ui); font-size: 13.5px; color: var(--cms-fg1); background: var(--cms-bg); border: 1.5px solid var(--cms-border); border-radius: var(--cms-r-md); outline: none;"
+                               style="display: block; width: 100%; height: 40px; padding: 0 12px; font-family: var(--cms-font-ui), sans-serif; font-size: 13.5px; color: var(--cms-fg1); background: var(--cms-bg); border: 1.5px solid var(--cms-border); border-radius: var(--cms-r-md); outline: none;"
                                onfocus="this.style.borderColor='var(--cms-gold)'; this.style.boxShadow='0 0 0 3px rgba(232,168,0,0.13)'"
                                onblur="this.style.borderColor='var(--cms-border)'; this.style.boxShadow='none'"
                                oninput="document.getElementById('seo-title-count').textContent = this.value.length; document.getElementById('serp-title').textContent = this.value || document.getElementById('post-title').value" />
-                        <span id="seo-title-count" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); font-family: var(--cms-font-mono); font-size: 11px; color: var(--cms-fg4);">{{ strlen($post->meta?->seo_title ?? '') }}</span>
+                        <span id="seo-title-count" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); font-family: var(--cms-font-mono), monospace; font-size: 11px; color: var(--cms-fg4);">{{ strlen($post->meta?->seo_title ?? '') }}</span>
                     </div>
                 </div>
                 <div>
-                    <label style="font-family: var(--cms-font-ui); font-size: 12.5px; font-weight: 700; color: var(--cms-fg3); letter-spacing: 0.03em; text-transform: uppercase; display: block; margin-bottom: 6px;">Meta Description</label>
+                    <label style="font-family: var(--cms-font-ui), sans-serif; font-size: 12.5px; font-weight: 700; color: var(--cms-fg3); letter-spacing: 0.03em; text-transform: uppercase; display: block; margin-bottom: 6px;">Meta Description</label>
                     <textarea name="meta_description" rows="3"
-                              style="display: block; width: 100%; padding: 10px 12px; font-family: var(--cms-font-ui); font-size: 13.5px; color: var(--cms-fg1); background: var(--cms-bg); border: 1.5px solid var(--cms-border); border-radius: var(--cms-r-md); outline: none; resize: vertical; line-height: 1.6;"
+                              style="display: block; width: 100%; padding: 10px 12px; font-family: var(--cms-font-ui), sans-serif; font-size: 13.5px; color: var(--cms-fg1); background: var(--cms-bg); border: 1.5px solid var(--cms-border); border-radius: var(--cms-r-md); outline: none; resize: vertical; line-height: 1.6;"
                               onfocus="this.style.borderColor='var(--cms-gold)'; this.style.boxShadow='0 0 0 3px rgba(232,168,0,0.13)'"
                               onblur="this.style.borderColor='var(--cms-border)'; this.style.boxShadow='none'"
                               oninput="document.getElementById('serp-desc').textContent = this.value">{{ $post->meta?->meta_description ?? '' }}</textarea>
                 </div>
                 <div style="background: var(--cms-bg); border: 1.5px solid var(--cms-border); border-radius: var(--cms-r-md); padding: 14px 16px;">
-                    <div style="font-family: var(--cms-font-ui); font-size: 11px; font-weight: 700; color: var(--cms-fg4); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 8px;">Google Preview</div>
+                    <div style="font-family: var(--cms-font-ui), sans-serif; font-size: 11px; font-weight: 700; color: var(--cms-fg4); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 8px;">Google Preview</div>
                     <div style="font-family: Arial, sans-serif; font-size: 20px; color: #1a0dab; line-height: 1.25; margin-bottom: 2px;" id="serp-title">{{ $post->meta?->seo_title ?: $post->title }}</div>
                     <div style="font-family: Arial, sans-serif; font-size: 13px; color: #006621; margin-bottom: 4px;">debesties.com › <span id="serp-slug">{{ $post->slug }}</span></div>
                     <div style="font-family: Arial, sans-serif; font-size: 13.5px; color: #545454; line-height: 1.5;" id="serp-desc">{{ $post->meta?->meta_description ?: ($post->excerpt ?? '') }}</div>
@@ -165,19 +192,19 @@
 
         {{-- AI Assistant --}}
         <div style="background: var(--cms-surface); border: 1px solid var(--cms-border); border-radius: var(--cms-r-lg); overflow: hidden; box-shadow: var(--cms-sh-card);">
-            <div style="padding: 13px 16px; border-bottom: 1px solid var(--cms-border); font-family: var(--cms-font-ui); font-size: 14px; font-weight: 700; color: var(--cms-fg1); display: flex; align-items: center; gap: 7px; background: linear-gradient(125deg, var(--cms-ai-from), var(--cms-ai-to)); color: #fff;">
+            <div style="padding: 13px 16px; border-bottom: 1px solid var(--cms-border); font-family: var(--cms-font-ui), sans-serif; font-size: 14px; font-weight: 700; color: var(--cms-fg1); display: flex; align-items: center; gap: 7px; background: linear-gradient(125deg, var(--cms-ai-from), var(--cms-ai-to)); color: #fff;">
                 <i data-lucide="sparkles" style="width: 15px; height: 15px;"></i> AI Assistant
             </div>
             <div style="padding: 14px 16px; display: flex; flex-direction: column; gap: 11px;">
                 <button type="button" onclick="generateAiTags()"
                         id="ai-tags-btn"
-                        style="width: 100%; height: 36px; font-family: var(--cms-font-ui); font-size: 13px; font-weight: 600; background: var(--cms-ai-soft); color: var(--cms-ai-to); border: 1.5px solid var(--cms-ai-to); border-radius: var(--cms-r-md); cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px;">
+                        style="width: 100%; height: 36px; font-family: var(--cms-font-ui), sans-serif; font-size: 13px; font-weight: 600; background: var(--cms-ai-soft); color: var(--cms-ai-to); border: 1.5px solid var(--cms-ai-to); border-radius: var(--cms-r-md); cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px;">
                     <i data-lucide="tag" style="width: 14px; height: 14px;"></i>
                     Suggest Tags
                 </button>
                 <button type="button" onclick="generateAiOutline()"
                         id="ai-outline-btn"
-                        style="width: 100%; height: 36px; font-family: var(--cms-font-ui); font-size: 13px; font-weight: 600; background: var(--cms-ai-soft); color: var(--cms-ai-to); border: 1.5px solid var(--cms-ai-to); border-radius: var(--cms-r-md); cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px;">
+                        style="width: 100%; height: 36px; font-family: var(--cms-font-ui), sans-serif; font-size: 13px; font-weight: 600; background: var(--cms-ai-soft); color: var(--cms-ai-to); border: 1.5px solid var(--cms-ai-to); border-radius: var(--cms-r-md); cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px;">
                     <i data-lucide="list" style="width: 14px; height: 14px;"></i>
                     Draft Outline
                 </button>
@@ -186,13 +213,13 @@
 
         {{-- Publish Panel --}}
         <div style="background: var(--cms-surface); border: 1px solid var(--cms-border); border-radius: var(--cms-r-lg); overflow: hidden; box-shadow: var(--cms-sh-card);">
-            <div style="padding: 13px 16px; border-bottom: 1px solid var(--cms-border); font-family: var(--cms-font-ui); font-size: 14px; font-weight: 700; color: var(--cms-fg1); display: flex; align-items: center; gap: 7px;">
+            <div style="padding: 13px 16px; border-bottom: 1px solid var(--cms-border); font-family: var(--cms-font-ui), sans-serif; font-size: 14px; font-weight: 700; color: var(--cms-fg1); display: flex; align-items: center; gap: 7px;">
                 <i data-lucide="send" style="width: 15px; height: 15px; color: var(--cms-fg3);"></i> Publish
             </div>
             <div style="padding: 14px 16px; display: flex; flex-direction: column; gap: 11px;">
                 <div>
-                    <label style="font-family: var(--cms-font-ui); font-size: 12px; font-weight: 700; color: var(--cms-fg3); text-transform: uppercase; letter-spacing: 0.04em; display: block; margin-bottom: 5px;">Status</label>
-                    <select name="status" id="post-status" style="width: 100%; height: 38px; padding: 0 10px; font-family: var(--cms-font-ui); font-size: 13.5px; color: var(--cms-fg1); background: var(--cms-bg); border: 1.5px solid var(--cms-border); border-radius: var(--cms-r-md); cursor: pointer; outline: none;" onchange="updateStatusIndicator(this.value)">
+                    <label style="font-family: var(--cms-font-ui), sans-serif; font-size: 12px; font-weight: 700; color: var(--cms-fg3); text-transform: uppercase; letter-spacing: 0.04em; display: block; margin-bottom: 5px;">Status</label>
+                    <select name="status" id="post-status" style="width: 100%; height: 38px; padding: 0 10px; font-family: var(--cms-font-ui), sans-serif; font-size: 13.5px; color: var(--cms-fg1); background: var(--cms-bg); border: 1.5px solid var(--cms-border); border-radius: var(--cms-r-md); cursor: pointer; outline: none;" onchange="updateStatusIndicator(this.value)">
                         <option value="draft"     {{ $post->status==='draft'      ? 'selected' : '' }}>Draft</option>
                         <option value="review"    {{ $post->status==='review'     ? 'selected' : '' }}>In Review</option>
                         <option value="approved"  {{ $post->status==='approved'   ? 'selected' : '' }}>Approved</option>
@@ -201,22 +228,22 @@
                         <option value="archived"  {{ $post->status==='archived'   ? 'selected' : '' }}>Archived</option>
                     </select>
                 </div>
-                <div id="schedule-row" style="display: {{ $post->status==='scheduled' ? 'block' : 'none' }};">
-                    <label style="font-family: var(--cms-font-ui); font-size: 12px; font-weight: 700; color: var(--cms-fg3); text-transform: uppercase; letter-spacing: 0.04em; display: block; margin-bottom: 5px;">Schedule For</label>
+                <div id="schedule-row" @class(['post-schedule-row--visible' => $post->status === 'scheduled', 'post-schedule-row--hidden' => $post->status !== 'scheduled'])>
+                    <label style="font-family: var(--cms-font-ui), sans-serif; font-size: 12px; font-weight: 700; color: var(--cms-fg3); text-transform: uppercase; letter-spacing: 0.04em; display: block; margin-bottom: 5px;">Schedule For</label>
                     <input type="datetime-local" name="scheduled_for" value="{{ $post->scheduled_for?->format('Y-m-d\TH:i') ?? '' }}"
-                           style="width: 100%; height: 38px; padding: 0 10px; font-family: var(--cms-font-ui); font-size: 13px; color: var(--cms-fg1); background: var(--cms-bg); border: 1.5px solid var(--cms-border); border-radius: var(--cms-r-md); outline: none;" />
+                           style="width: 100%; height: 38px; padding: 0 10px; font-family: var(--cms-font-ui), sans-serif; font-size: 13px; color: var(--cms-fg1); background: var(--cms-bg); border: 1.5px solid var(--cms-border); border-radius: var(--cms-r-md); outline: none;" />
                 </div>
                 <div>
-                    <label style="font-family: var(--cms-font-ui); font-size: 12px; font-weight: 700; color: var(--cms-fg3); text-transform: uppercase; letter-spacing: 0.04em; display: block; margin-bottom: 5px;">Visibility</label>
-                    <select name="visibility" style="width: 100%; height: 38px; padding: 0 10px; font-family: var(--cms-font-ui); font-size: 13.5px; color: var(--cms-fg1); background: var(--cms-bg); border: 1.5px solid var(--cms-border); border-radius: var(--cms-r-md); cursor: pointer; outline: none;">
+                    <label style="font-family: var(--cms-font-ui), sans-serif; font-size: 12px; font-weight: 700; color: var(--cms-fg3); text-transform: uppercase; letter-spacing: 0.04em; display: block; margin-bottom: 5px;">Visibility</label>
+                    <select name="visibility" style="width: 100%; height: 38px; padding: 0 10px; font-family: var(--cms-font-ui), sans-serif; font-size: 13.5px; color: var(--cms-fg1); background: var(--cms-bg); border: 1.5px solid var(--cms-border); border-radius: var(--cms-r-md); cursor: pointer; outline: none;">
                         <option value="public"   {{ ($post->visibility ?? 'public')==='public'  ? 'selected':'' }}>Public</option>
                         <option value="members"  {{ ($post->visibility ?? 'public')==='members' ? 'selected':'' }}>Members Only</option>
                         <option value="private"  {{ ($post->visibility ?? 'public')==='private' ? 'selected':'' }}>Private</option>
                     </select>
                 </div>
                 <div>
-                    <label style="font-family: var(--cms-font-ui); font-size: 12px; font-weight: 700; color: var(--cms-fg3); text-transform: uppercase; letter-spacing: 0.04em; display: block; margin-bottom: 5px;">Author</label>
-                    <select name="author_id" style="width: 100%; height: 38px; padding: 0 10px; font-family: var(--cms-font-ui); font-size: 13.5px; color: var(--cms-fg1); background: var(--cms-bg); border: 1.5px solid var(--cms-border); border-radius: var(--cms-r-md); cursor: pointer; outline: none;">
+                    <label style="font-family: var(--cms-font-ui), sans-serif; font-size: 12px; font-weight: 700; color: var(--cms-fg3); text-transform: uppercase; letter-spacing: 0.04em; display: block; margin-bottom: 5px;">Author</label>
+                    <select name="author_id" style="width: 100%; height: 38px; padding: 0 10px; font-family: var(--cms-font-ui), sans-serif; font-size: 13.5px; color: var(--cms-fg1); background: var(--cms-bg); border: 1.5px solid var(--cms-border); border-radius: var(--cms-r-md); cursor: pointer; outline: none;">
                         @foreach($users as $u)
                             <option value="{{ $u->id }}" {{ $post->user_id === $u->id ? 'selected' : '' }}>{{ $u->name }}</option>
                         @endforeach
@@ -224,12 +251,12 @@
                 </div>
                 <div style="border-top: 1px solid var(--cms-border); padding-top: 12px; display: flex; flex-direction: column; gap: 8px;">
                     <button type="submit" name="action" value="draft"
-                            style="width: 100%; height: 38px; font-family: var(--cms-font-ui); font-size: 13.5px; font-weight: 600; background: var(--cms-bg); color: var(--cms-fg2); border: 1.5px solid var(--cms-border); border-radius: var(--cms-r-md); cursor: pointer;">
+                            style="width: 100%; height: 38px; font-family: var(--cms-font-ui), sans-serif; font-size: 13.5px; font-weight: 600; background: var(--cms-bg); color: var(--cms-fg2); border: 1.5px solid var(--cms-border); border-radius: var(--cms-r-md); cursor: pointer;">
                         Save Changes
                     </button>
                     <button type="submit" name="action" value="publish"
                             onclick="syncBody()"
-                            style="width: 100%; height: 40px; font-family: var(--cms-font-ui); font-size: 13.5px; font-weight: 700; background: var(--cms-gold); color: #1A1410; border: none; border-radius: var(--cms-r-md); cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 7px;"
+                            style="width: 100%; height: 40px; font-family: var(--cms-font-ui), sans-serif; font-size: 13.5px; font-weight: 700; background: var(--cms-gold); color: #1A1410; border: none; border-radius: var(--cms-r-md); cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 7px;"
                             onmouseover="this.style.background='#D69B00'" onmouseout="this.style.background='var(--cms-gold)'">
                         <i data-lucide="send" style="width: 15px; height: 15px; stroke-width: 2.2;"></i>
                         Update Post
@@ -240,28 +267,36 @@
 
         {{-- Featured Image --}}
         <div style="background: var(--cms-surface); border: 1px solid var(--cms-border); border-radius: var(--cms-r-lg); overflow: hidden; box-shadow: var(--cms-sh-card);">
-            <div style="padding: 13px 16px; border-bottom: 1px solid var(--cms-border); font-family: var(--cms-font-ui); font-size: 14px; font-weight: 700; color: var(--cms-fg1); display: flex; align-items: center; gap: 7px;">
+            <div style="padding: 13px 16px; border-bottom: 1px solid var(--cms-border); font-family: var(--cms-font-ui), sans-serif; font-size: 14px; font-weight: 700; color: var(--cms-fg1); display: flex; align-items: center; gap: 7px;">
                 <i data-lucide="image" style="width: 15px; height: 15px; color: var(--cms-fg3);"></i> Featured Image
             </div>
             <div style="padding: 14px 16px;">
                 <div id="featured-drop" onclick="document.getElementById('featured-file').click()"
-                     style="border: 2px dashed var(--cms-border); border-radius: var(--cms-r-md); padding: {{ $post->featured_image_id ? '0' : '24px 12px' }}; text-align: center; cursor: pointer; transition: border-color 150ms, background 150ms; overflow: hidden;"
+                     @class([
+                        'post-featured-drop',
+                        'post-featured-drop--filled' => $post->featured_image_id,
+                        'post-featured-drop--empty' => ! $post->featured_image_id,
+                     ])
                      ondragover="event.preventDefault(); this.style.borderColor='var(--cms-gold)'; this.style.background='var(--cms-gold-soft)'"
                      ondragleave="this.style.borderColor='var(--cms-border)'; this.style.background='transparent'"
                      ondrop="handleImageDrop(event)"
                      onmouseover="this.style.borderColor='var(--cms-gold)'; this.style.background='#FFFBF0'"
                      onmouseout="this.style.borderColor='var(--cms-border)'; this.style.background='transparent'">
-                    <div id="featured-placeholder" style="{{ $post->featured_image_id ? 'display:none' : '' }}">
+                    <div id="featured-placeholder" @class(['post-featured-placeholder--hidden' => $post->featured_image_id, 'post-featured-placeholder--visible' => ! $post->featured_image_id])>
                         <i data-lucide="upload-cloud" style="width: 28px; height: 28px; color: var(--cms-fg4); margin: 0 auto 8px;"></i>
-                        <div style="font-family: var(--cms-font-ui); font-size: 13px; color: var(--cms-fg3);">Click or drag to replace</div>
-                        <div style="font-family: var(--cms-font-ui); font-size: 11.5px; color: var(--cms-fg4); margin-top: 3px;">JPG, PNG, WEBP · Max 5MB</div>
+                        <div style="font-family: var(--cms-font-ui), sans-serif; font-size: 13px; color: var(--cms-fg3);">Click or drag to replace</div>
+                        <div style="font-family: var(--cms-font-ui), sans-serif; font-size: 11.5px; color: var(--cms-fg4); margin-top: 3px;">JPG, PNG, WEBP · Max 5MB</div>
                     </div>
                     <img id="featured-preview" src="{{ $post->featuredImage?->path ?? '' }}" alt="Featured"
-                         style="display: {{ $post->featured_image_id ? 'block' : 'none' }}; width: 100%; border-radius: 7px;" />
+                         @class(['post-featured-preview', 'post-featured-preview--visible' => $post->featured_image_id, 'post-featured-preview--hidden' => ! $post->featured_image_id]) />
                 </div>
                 <input type="file" id="featured-file" name="featured_image" accept="image/*" style="display: none;" onchange="previewFeatured(event)" />
                 <button type="button" id="featured-remove" onclick="removeFeatured()"
-                        style="display: {{ $post->featured_image_id ? 'block' : 'none' }}; margin-top: 8px; width: 100%; height: 34px; font-family: var(--cms-font-ui); font-size: 13px; font-weight: 600; color: var(--cms-red); background: var(--cms-red-soft); border: none; border-radius: var(--cms-r-md); cursor: pointer;">
+                        @class([
+                            'post-featured-remove-btn',
+                            'post-featured-remove-btn--visible' => $post->featured_image_id,
+                            'post-featured-remove-btn--hidden' => ! $post->featured_image_id,
+                        ])>
                     Remove Image
                 </button>
             </div>
@@ -269,12 +304,12 @@
 
         {{-- Category --}}
         <div style="background: var(--cms-surface); border: 1px solid var(--cms-border); border-radius: var(--cms-r-lg); overflow: hidden; box-shadow: var(--cms-sh-card);">
-            <div style="padding: 13px 16px; border-bottom: 1px solid var(--cms-border); font-family: var(--cms-font-ui); font-size: 14px; font-weight: 700; color: var(--cms-fg1); display: flex; align-items: center; gap: 7px;">
+            <div style="padding: 13px 16px; border-bottom: 1px solid var(--cms-border); font-family: var(--cms-font-ui), sans-serif; font-size: 14px; font-weight: 700; color: var(--cms-fg1); display: flex; align-items: center; gap: 7px;">
                 <i data-lucide="folder" style="width: 15px; height: 15px; color: var(--cms-fg3);"></i> Category
             </div>
             <div style="padding: 14px 16px; display: flex; flex-direction: column; gap: 6px; max-height: 200px; overflow-y: auto;">
                 @foreach($categories as $cat)
-                    <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-family: var(--cms-font-ui); font-size: 13.5px; color: var(--cms-fg2);">
+                    <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-family: var(--cms-font-ui), sans-serif; font-size: 13.5px; color: var(--cms-fg2);">
                         <input type="radio" name="category_id" value="{{ $cat->id }}"
                                {{ $post->category_id === $cat->id ? 'checked' : '' }}
                                style="accent-color: var(--cms-gold); width: 15px; height: 15px; cursor: pointer;" />
@@ -286,12 +321,12 @@
 
         {{-- Tags --}}
         <div style="background: var(--cms-surface); border: 1px solid var(--cms-border); border-radius: var(--cms-r-lg); overflow: hidden; box-shadow: var(--cms-sh-card);">
-            <div style="padding: 13px 16px; border-bottom: 1px solid var(--cms-border); font-family: var(--cms-font-ui); font-size: 14px; font-weight: 700; color: var(--cms-fg1); display: flex; align-items: center; gap: 7px;">
+            <div style="padding: 13px 16px; border-bottom: 1px solid var(--cms-border); font-family: var(--cms-font-ui), sans-serif; font-size: 14px; font-weight: 700; color: var(--cms-fg1); display: flex; align-items: center; gap: 7px;">
                 <i data-lucide="tag" style="width: 15px; height: 15px; color: var(--cms-fg3);"></i> Tags
             </div>
             <div style="padding: 14px 16px; display: flex; flex-direction: column; gap: 6px; max-height: 200px; overflow-y: auto;">
                 @foreach($tags as $tag)
-                    <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-family: var(--cms-font-ui); font-size: 13.5px; color: var(--cms-fg2);">
+                    <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-family: var(--cms-font-ui), sans-serif; font-size: 13.5px; color: var(--cms-fg2);">
                         <input type="checkbox" name="tags[]" value="{{ $tag->id }}"
                                {{ $post->tags->contains($tag->id) ? 'checked' : '' }}
                                style="accent-color: var(--cms-gold); width: 15px; height: 15px; cursor: pointer;" />
@@ -308,8 +343,8 @@
 <style>
     #post-body:empty::before { content: attr(data-placeholder); color: var(--cms-fg4); pointer-events: none; font-style: italic; }
     #post-body:focus { outline: none; }
-    #post-body h2 { font-family: var(--cms-font-disp); font-size: 22px; font-weight: 700; color: var(--cms-fg1); margin: 18px 0 8px; }
-    #post-body h3 { font-family: var(--cms-font-disp); font-size: 18px; font-weight: 600; color: var(--cms-fg1); margin: 14px 0 6px; }
+    #post-body h2 { font-family: var(--cms-font-disp), serif; font-size: 22px; font-weight: 700; color: var(--cms-fg1); margin: 18px 0 8px; }
+    #post-body h3 { font-family: var(--cms-font-disp), serif; font-size: 18px; font-weight: 600; color: var(--cms-fg1); margin: 14px 0 6px; }
     #post-body blockquote { border-left: 3px solid var(--cms-gold); margin: 12px 0; padding: 8px 16px; background: var(--cms-gold-soft); border-radius: 0 6px 6px 0; color: var(--cms-fg2); font-style: italic; }
     #post-body a { color: var(--cms-blue); }
     #post-body ul, #post-body ol { padding-left: 20px; margin: 8px 0; }

@@ -30,9 +30,9 @@
     {{-- Left Panel: Menus List --}}
     <div style="display: flex; flex-direction: column; gap: 16px;">
         <div style="display: flex; align-items: center; justify-content: space-between;">
-            <span style="font-family: var(--cms-font-ui); font-size: 13px; font-weight: 700; color: var(--cms-fg3); text-transform: uppercase; letter-spacing: 0.04em;">Your Menus</span>
+            <span style="font-family: var(--cms-font-ui), sans-serif; font-size: 13px; font-weight: 700; color: var(--cms-fg3); text-transform: uppercase; letter-spacing: 0.04em;">Your Menus</span>
             <button onclick="openCreateMenuModal()"
-                    style="display: inline-flex; align-items: center; gap: 4px; height: 28px; padding: 0 10px; font-family: var(--cms-font-ui); font-size: 12px; font-weight: 600; background: var(--cms-gold); color: #1A1410; border: none; border-radius: var(--cms-r-md); cursor: pointer;">
+                    style="display: inline-flex; align-items: center; gap: 4px; height: 28px; padding: 0 10px; font-family: var(--cms-font-ui), sans-serif; font-size: 12px; font-weight: 600; background: var(--cms-gold); color: #1A1410; border: none; border-radius: var(--cms-r-md); cursor: pointer;">
                 <i data-lucide="plus" style="width: 12px; height: 12px;"></i> Add Menu
             </button>
         </div>
@@ -40,7 +40,7 @@
         <div id="menus-list-container" style="display: flex; flex-direction: column; gap: 10px;">
             @foreach($menus as $menu)
                 <div class="menu-list-card {{ $loop->first ? 'active' : '' }}" data-menu-id="{{ $menu->id }}" onclick="selectMenu(this.getAttribute('data-menu-id'), this)">
-                    <div style="font-family: var(--cms-font-ui); font-size: 14px; font-weight: 700; color: var(--cms-fg1);">{{ $menu->name }}</div>
+                    <div style="font-family: var(--cms-font-ui), sans-serif; font-size: 14px; font-weight: 700; color: var(--cms-fg1);">{{ $menu->name }}</div>
                     <div style="font-size: 11.5px; color: var(--cms-fg3); margin-top: 4px;">Location: <strong class="{{ $menu->location !== 'none' ? 'location-assigned' : '' }}">{{ $menu->location === 'header' ? 'Header Main' : ($menu->location === 'footer' ? 'Footer Left' : 'Unassigned') }}</strong></div>
                     <div style="font-size: 11.5px; color: var(--cms-fg4); margin-top: 2px;">{{ $menu->items->count() }} items • Updated {{ $menu->updated_at->diffForHumans() }}</div>
                 </div>
@@ -53,22 +53,22 @@
         
         {{-- Add Item Box --}}
         <div style="background: var(--cms-surface); border: 1px solid var(--cms-border); border-radius: var(--cms-r-xl); padding: 20px; box-shadow: var(--cms-sh-card);">
-            <h3 style="font-family: var(--cms-font-ui); font-size: 14px; font-weight: 700; color: var(--cms-fg1); margin-bottom: 14px; display: flex; align-items: center; gap: 8px;">
+            <h3 style="font-family: var(--cms-font-ui), sans-serif; font-size: 14px; font-weight: 700; color: var(--cms-fg1); margin-bottom: 14px; display: flex; align-items: center; gap: 8px;">
                 <i data-lucide="plus-circle" style="width: 16px; height: 16px; color: var(--cms-gold-deep);"></i>
                 Add Link to Menu
             </h3>
             
             <div style="display: flex; flex-direction: column; gap: 14px;">
                 <div>
-                    <label style="font-family: var(--cms-font-ui); font-size: 11px; font-weight: 700; color: var(--cms-fg3); text-transform: uppercase; letter-spacing: 0.04em; display: block; margin-bottom: 5px;">Link Title</label>
+                    <label style="font-family: var(--cms-font-ui), sans-serif; font-size: 11px; font-weight: 700; color: var(--cms-fg3); text-transform: uppercase; letter-spacing: 0.04em; display: block; margin-bottom: 5px;">Link Title</label>
                     <input type="text" id="new-item-title" placeholder="e.g. Culture"
-                           style="display: block; width: 100%; height: 38px; padding: 0 10px; font-family: var(--cms-font-ui); font-size: 13px; color: var(--cms-fg1); background: var(--cms-bg); border: 1.5px solid var(--cms-border); border-radius: var(--cms-r-md); outline: none;" />
+                           style="display: block; width: 100%; height: 38px; padding: 0 10px; font-family: var(--cms-font-ui), sans-serif; font-size: 13px; color: var(--cms-fg1); background: var(--cms-bg); border: 1.5px solid var(--cms-border); border-radius: var(--cms-r-md); outline: none;" />
                 </div>
 
                 <div>
-                    <label style="font-family: var(--cms-font-ui); font-size: 11px; font-weight: 700; color: var(--cms-fg3); text-transform: uppercase; letter-spacing: 0.04em; display: block; margin-bottom: 5px;">Link Type</label>
+                    <label style="font-family: var(--cms-font-ui), sans-serif; font-size: 11px; font-weight: 700; color: var(--cms-fg3); text-transform: uppercase; letter-spacing: 0.04em; display: block; margin-bottom: 5px;">Link Type</label>
                     <select id="new-item-type" onchange="toggleLinkSource()"
-                            style="display: block; width: 100%; height: 38px; padding: 0 10px; font-family: var(--cms-font-ui); font-size: 13px; color: var(--cms-fg1); background: var(--cms-bg); border: 1.5px solid var(--cms-border); border-radius: var(--cms-r-md); cursor: pointer; outline: none;">
+                            style="display: block; width: 100%; height: 38px; padding: 0 10px; font-family: var(--cms-font-ui), sans-serif; font-size: 13px; color: var(--cms-fg1); background: var(--cms-bg); border: 1.5px solid var(--cms-border); border-radius: var(--cms-r-md); cursor: pointer; outline: none;">
                         <option value="custom">Custom URL</option>
                         <option value="page">Static Page</option>
                         <option value="category">Category</option>
@@ -78,19 +78,19 @@
 
                 {{-- Source Select Panel --}}
                 <div id="source-custom-panel">
-                    <label style="font-family: var(--cms-font-ui); font-size: 11px; font-weight: 700; color: var(--cms-fg3); text-transform: uppercase; letter-spacing: 0.04em; display: block; margin-bottom: 5px;">URL Path</label>
+                    <label style="font-family: var(--cms-font-ui), sans-serif; font-size: 11px; font-weight: 700; color: var(--cms-fg3); text-transform: uppercase; letter-spacing: 0.04em; display: block; margin-bottom: 5px;">URL Path</label>
                     <input type="text" id="new-item-url" value="https://"
-                           style="display: block; width: 100%; height: 38px; padding: 0 10px; font-family: var(--cms-font-ui); font-size: 13px; color: var(--cms-fg1); background: var(--cms-bg); border: 1.5px solid var(--cms-border); border-radius: var(--cms-r-md); outline: none;" />
+                           style="display: block; width: 100%; height: 38px; padding: 0 10px; font-family: var(--cms-font-ui), sans-serif; font-size: 13px; color: var(--cms-fg1); background: var(--cms-bg); border: 1.5px solid var(--cms-border); border-radius: var(--cms-r-md); outline: none;" />
                 </div>
 
                 <div id="source-select-panel" style="display: none;">
-                    <label style="font-family: var(--cms-font-ui); font-size: 11px; font-weight: 700; color: var(--cms-fg3); text-transform: uppercase; letter-spacing: 0.04em; display: block; margin-bottom: 5px;">Reference Destination</label>
+                    <label style="font-family: var(--cms-font-ui), sans-serif; font-size: 11px; font-weight: 700; color: var(--cms-fg3); text-transform: uppercase; letter-spacing: 0.04em; display: block; margin-bottom: 5px;">Reference Destination</label>
                     <select id="new-item-ref"
-                            style="display: block; width: 100%; height: 38px; padding: 0 10px; font-family: var(--cms-font-ui); font-size: 13px; color: var(--cms-fg1); background: var(--cms-bg); border: 1.5px solid var(--cms-border); border-radius: var(--cms-r-md); cursor: pointer; outline: none;"></select>
+                            style="display: block; width: 100%; height: 38px; padding: 0 10px; font-family: var(--cms-font-ui), sans-serif; font-size: 13px; color: var(--cms-fg1); background: var(--cms-bg); border: 1.5px solid var(--cms-border); border-radius: var(--cms-r-md); cursor: pointer; outline: none;"></select>
                 </div>
 
                 <button onclick="addMenuItem()"
-                        style="height: 38px; width: 100%; font-family: var(--cms-font-ui); font-size: 13px; font-weight: 700; background: var(--cms-fg1); color: #fff; border: none; border-radius: var(--cms-r-md); cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; transition: background 120ms;"
+                        style="height: 38px; width: 100%; font-family: var(--cms-font-ui), sans-serif; font-size: 13px; font-weight: 700; background: var(--cms-fg1); color: #fff; border: none; border-radius: var(--cms-r-md); cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; transition: background 120ms;"
                         onmouseover="this.style.background='var(--cms-fg2)'" onmouseout="this.style.background='var(--cms-fg1)'">
                     <i data-lucide="plus" style="width: 14px; height: 14px;"></i>
                     Add to Menu
@@ -102,13 +102,13 @@
         <div style="background: var(--cms-surface); border: 1px solid var(--cms-border); border-radius: var(--cms-r-xl); padding: 24px; box-shadow: var(--cms-sh-card); display: flex; flex-direction: column; gap: 20px;">
             <div style="display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--cms-border); padding-bottom: 14px;">
                 <div>
-                    <h2 id="menu-editor-title" style="font-family: var(--cms-font-disp); font-size: 20px; font-weight: 700; color: var(--cms-fg1);">Primary Header Navigation</h2>
+                    <h2 id="menu-editor-title" style="font-family: var(--cms-font-disp), serif; font-size: 20px; font-weight: 700; color: var(--cms-fg1);">Primary Header Navigation</h2>
                     <p style="font-size: 12.5px; color: var(--cms-fg3); margin-top: 1px;">Drag handles or use controls to nest and sort links.</p>
                 </div>
 
                 <div style="display: flex; align-items: center; gap: 8px;">
                     <select id="menu-location-select"
-                            style="height: 34px; padding: 0 8px; font-family: var(--cms-font-ui); font-size: 12px; font-weight: 600; color: var(--cms-fg2); background: var(--cms-bg); border: 1px solid var(--cms-border); border-radius: var(--cms-r-md); cursor: pointer; outline: none;">
+                            style="height: 34px; padding: 0 8px; font-family: var(--cms-font-ui), sans-serif; font-size: 12px; font-weight: 600; color: var(--cms-fg2); background: var(--cms-bg); border: 1px solid var(--cms-border); border-radius: var(--cms-r-md); cursor: pointer; outline: none;">
                         <option value="header">Location: Header Main</option>
                         <option value="footer">Location: Footer Left</option>
                         <option value="none">Location: Unassigned</option>
@@ -124,7 +124,7 @@
             {{-- Save CTA --}}
             <div style="border-top: 1px solid var(--cms-border); padding-top: 16px; display: flex; justify-content: flex-end;">
                 <button onclick="saveMenuStructure()"
-                        style="display: inline-flex; align-items: center; gap: 7px; height: 40px; padding: 0 20px; font-family: var(--cms-font-ui); font-size: 13.5px; font-weight: 700; background: var(--cms-gold); color: #1A1410; border: none; border-radius: var(--cms-r-md); cursor: pointer; transition: background 150ms;"
+                        style="display: inline-flex; align-items: center; gap: 7px; height: 40px; padding: 0 20px; font-family: var(--cms-font-ui), sans-serif; font-size: 13.5px; font-weight: 700; background: var(--cms-gold); color: #1A1410; border: none; border-radius: var(--cms-r-md); cursor: pointer; transition: background 150ms;"
                         onmouseover="this.style.background='#D69B00'" onmouseout="this.style.background='var(--cms-gold)'">
                     <i data-lucide="check" style="width: 16px; height: 16px;"></i>
                     Save Menu Layout
@@ -141,21 +141,21 @@
 <div id="create-menu-modal" style="display: none; position: fixed; inset: 0; background: rgba(20,16,12,0.5); z-index: 200; align-items: center; justify-content: center;">
     <div style="background: var(--cms-surface); border-radius: var(--cms-r-xl); padding: 28px; width: 380px; max-width: calc(100vw - 40px); box-shadow: var(--cms-sh-pop); animation: dsPop 200ms ease;">
         <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px;">
-            <span style="font-family: var(--cms-font-ui); font-size: 16px; font-weight: 700; color: var(--cms-fg1);">Create New Menu</span>
+            <span style="font-family: var(--cms-font-ui), sans-serif; font-size: 16px; font-weight: 700; color: var(--cms-fg1);">Create New Menu</span>
             <button onclick="closeCreateMenuModal()" style="width: 28px; height: 28px; border-radius: 6px; border: 1.5px solid var(--cms-border); background: var(--cms-bg); cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--cms-fg3);">
                 <i data-lucide="x" style="width: 12px; height: 12px;"></i>
             </button>
         </div>
         <div style="display: flex; flex-direction: column; gap: 14px; margin-bottom: 20px;">
             <div>
-                <label style="font-family: var(--cms-font-ui); font-size: 12px; font-weight: 700; color: var(--cms-fg3); text-transform: uppercase; letter-spacing: 0.04em; display: block; margin-bottom: 6px;">Menu Name</label>
+                <label style="font-family: var(--cms-font-ui), sans-serif; font-size: 12px; font-weight: 700; color: var(--cms-fg3); text-transform: uppercase; letter-spacing: 0.04em; display: block; margin-bottom: 6px;">Menu Name</label>
                 <input type="text" id="new-menu-name" placeholder="e.g. Primary Header"
-                       style="display: block; width: 100%; height: 40px; padding: 0 10px; font-family: var(--cms-font-ui); font-size: 13.5px; color: var(--cms-fg1); background: var(--cms-bg); border: 1.5px solid var(--cms-border); border-radius: var(--cms-r-md); outline: none;" />
+                       style="display: block; width: 100%; height: 40px; padding: 0 10px; font-family: var(--cms-font-ui), sans-serif; font-size: 13.5px; color: var(--cms-fg1); background: var(--cms-bg); border: 1.5px solid var(--cms-border); border-radius: var(--cms-r-md); outline: none;" />
             </div>
         </div>
         <div style="display: flex; gap: 8px;">
-            <button onclick="closeCreateMenuModal()" style="flex: 1; height: 38px; font-family: var(--cms-font-ui); font-size: 13px; font-weight: 600; background: var(--cms-bg); color: var(--cms-fg2); border: 1.5px solid var(--cms-border); border-radius: var(--cms-r-md); cursor: pointer;">Cancel</button>
-            <button onclick="submitCreateMenu()" style="flex: 1.5; height: 38px; font-family: var(--cms-font-ui); font-size: 13px; font-weight: 700; background: var(--cms-gold); color: #1A1410; border: none; border-radius: var(--cms-r-md); cursor: pointer;">Create</button>
+            <button onclick="closeCreateMenuModal()" style="flex: 1; height: 38px; font-family: var(--cms-font-ui), sans-serif; font-size: 13px; font-weight: 600; background: var(--cms-bg); color: var(--cms-fg2); border: 1.5px solid var(--cms-border); border-radius: var(--cms-r-md); cursor: pointer;">Cancel</button>
+            <button onclick="submitCreateMenu()" style="flex: 1.5; height: 38px; font-family: var(--cms-font-ui), sans-serif; font-size: 13px; font-weight: 700; background: var(--cms-gold); color: #1A1410; border: none; border-radius: var(--cms-r-md); cursor: pointer;">Create</button>
         </div>
     </div>
 </div>
@@ -269,7 +269,7 @@
 
         if (items.length === 0) {
             container.innerHTML = `
-                <div style="border: 2px dashed var(--cms-border); border-radius: var(--cms-r-md); padding: 32px; text-align: center; color: var(--cms-fg4); font-family: var(--cms-font-ui); font-size: 13.5px;">
+                <div style="border: 2px dashed var(--cms-border); border-radius: var(--cms-r-md); padding: 32px; text-align: center; color: var(--cms-fg4); font-family: var(--cms-font-ui), sans-serif; font-size: 13.5px;">
                     <i data-lucide="link-2" style="width:24px; height:24px; color:var(--cms-fg4); margin-bottom:8px;"></i>
                     <div>This menu is empty. Add menu links on the left panel.</div>
                 </div>
@@ -301,8 +301,8 @@
                 <div style="flex: 1; display: flex; align-items: center; justify-content: space-between; background: var(--cms-surface); border: 1.5px solid var(--cms-border); border-radius: var(--cms-r-md); padding: 10px 14px; min-height: 48px; box-shadow: 0 1px 2px rgba(0,0,0,0.01); margin-bottom: 4px;">
                     <div style="display: flex; align-items: center; gap: 8px; min-width: 0;">
                         <i data-lucide="grip-vertical" style="width: 14px; height: 14px; color: var(--cms-fg4); cursor: move; flex-shrink: 0;"></i>
-                        <span style="font-family: var(--cms-font-ui); font-size: 13.5px; font-weight: 600; color: var(--cms-fg1); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${item.title}</span>
-                        <span style="font-family: var(--cms-font-mono); font-size: 11px; color: var(--cms-fg4); overflow: hidden; text-overflow: ellipsis; max-width: 180px;">${item.url}</span>
+                        <span style="font-family: var(--cms-font-ui), sans-serif; font-size: 13.5px; font-weight: 600; color: var(--cms-fg1); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${item.title}</span>
+                        <span style="font-family: var(--cms-font-mono), monospace; font-size: 11px; color: var(--cms-fg4); overflow: hidden; text-overflow: ellipsis; max-width: 180px;">${item.url}</span>
                     </div>
 
                     <div style="display: flex; align-items: center; gap: 4px; flex-shrink: 0;">
@@ -427,7 +427,7 @@
                 card.onclick = () => selectMenu(id, card);
                 card.style.cssText = "background: var(--cms-surface); border: 1px solid var(--cms-border); border-radius: var(--cms-r-lg); padding: 14px; cursor: pointer; transition: all 120ms;";
                 card.innerHTML = `
-                    <div style="font-family: var(--cms-font-ui); font-size: 14px; font-weight: 700; color: var(--cms-fg1);">${data.menu.name}</div>
+                    <div style="font-family: var(--cms-font-ui), sans-serif; font-size: 14px; font-weight: 700; color: var(--cms-fg1);">${data.menu.name}</div>
                     <div style="font-size: 11.5px; color: var(--cms-fg3); margin-top: 4px;">Location: <strong>Unassigned</strong></div>
                     <div style="font-size: 11.5px; color: var(--cms-fg4); margin-top: 2px;">0 items • Created just now</div>
                 `;
@@ -482,7 +482,7 @@
     function showToast(message) {
         const container = document.getElementById('toast-container');
         const toast = document.createElement('div');
-        toast.style.cssText = "background: #17120D; border: 1.5px solid var(--cms-gold); border-radius: var(--cms-r-md); padding: 12px 20px; color: #fff; font-family: var(--cms-font-ui); font-size: 13.5px; font-weight: 600; display: flex; align-items: center; gap: 8px; box-shadow: var(--cms-sh-pop); animation: dsPop 180ms ease; min-width: 280px;";
+        toast.style.cssText = "background: #17120D; border: 1.5px solid var(--cms-gold); border-radius: var(--cms-r-md); padding: 12px 20px; color: #fff; font-family: var(--cms-font-ui), sans-serif; font-size: 13.5px; font-weight: 600; display: flex; align-items: center; gap: 8px; box-shadow: var(--cms-sh-pop); animation: dsPop 180ms ease; min-width: 280px;";
         toast.innerHTML = `<i data-lucide="check-circle" style="width: 16px; height: 16px; color: var(--cms-gold); flex-shrink: 0;"></i> <span>${message}</span>`;
         container.appendChild(toast);
         lucide.createIcons();

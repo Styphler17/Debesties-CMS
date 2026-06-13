@@ -51,18 +51,8 @@ class User extends Authenticatable
 
     public function hasPermission(string $key): bool
     {
-        static $cache = [];
-
-        $cacheKey = $this->id.':'.$key;
-
-        if (! array_key_exists($cacheKey, $cache)) {
-            $cache[$cacheKey] = $this->roles()
-                ->with('permissions')
-                ->get()
-                ->flatMap(fn ($role) => $role->permissions)
-                ->contains('slug', $key);
-        }
-
-        return $cache[$cacheKey];
+        return $this->roles()
+            ->whereHas('permissions', fn ($query) => $query->where('slug', $key))
+            ->exists();
     }
 }

@@ -8,7 +8,7 @@
     .range-btn {
         height: 32px;
         padding: 0 16px;
-        font-family: var(--cms-font-ui);
+        font-family: var(--cms-font-ui), sans-serif;
         font-size: 13px;
         font-weight: 600;
         border: none;
@@ -27,7 +27,7 @@
         color: var(--cms-fg1);
     }
     .stat-trend {
-        font-family: var(--cms-font-ui);
+        font-family: var(--cms-font-ui), sans-serif;
         font-size: 12px;
         font-weight: 700;
         padding: 3px 8px;
@@ -58,8 +58,8 @@
             </button>
         @endforeach
     </div>
-    <div style="font-family: var(--cms-font-ui); font-size: 13px; color: var(--cms-fg4);">
-        Powered by internal <code style="font-family: var(--cms-font-mono); background: var(--cms-border-soft); padding: 1px 5px; border-radius: 4px; font-size: 11.5px;">view_count</code> tracking
+    <div style="font-family: var(--cms-font-ui), sans-serif; font-size: 13px; color: var(--cms-fg4);">
+        Powered by internal <code style="font-family: var(--cms-font-mono), monospace; background: var(--cms-border-soft); padding: 1px 5px; border-radius: 4px; font-size: 11.5px;">view_count</code> tracking
     </div>
 </div>
 
@@ -73,8 +73,8 @@
                 </div>
                 <span class="stat-trend {{ $stat['up'] ? 'up' : 'down' }}">{{ $stat['delta'] }}</span>
             </div>
-            <div style="font-family: var(--cms-font-disp); font-size: 26px; font-weight: 700; color: var(--cms-fg1); margin-bottom: 4px;">{{ $stat['value'] }}</div>
-            <div style="font-family: var(--cms-font-ui); font-size: 12.5px; color: var(--cms-fg3);">{{ $stat['label'] }}</div>
+            <div style="font-family: var(--cms-font-disp), serif; font-size: 26px; font-weight: 700; color: var(--cms-fg1); margin-bottom: 4px;">{{ $stat['value'] }}</div>
+            <div style="font-family: var(--cms-font-ui), sans-serif; font-size: 12.5px; color: var(--cms-fg3);">{{ $stat['label'] }}</div>
         </div>
     @endforeach
 </div>
@@ -87,8 +87,8 @@
 @endphp
 <div style="background: var(--cms-surface); border: 1px solid var(--cms-border); border-radius: var(--cms-r-lg); padding: 20px; margin-bottom: 20px; box-shadow: var(--cms-sh-card);">
     <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px;">
-        <span style="font-family: var(--cms-font-ui); font-size: 14px; font-weight: 700; color: var(--cms-fg1);">Daily Views — Last {{ $rangeDays }} Days</span>
-        <span style="font-family: var(--cms-font-ui); font-size: 12px; color: var(--cms-fg4);">Peak: {{ number_format(max($chartBars)) }} views</span>
+        <span style="font-family: var(--cms-font-ui), sans-serif; font-size: 14px; font-weight: 700; color: var(--cms-fg1);">Daily Views — Last {{ $rangeDays }} Days</span>
+        <span style="font-family: var(--cms-font-ui), sans-serif; font-size: 12px; color: var(--cms-fg4);">Peak: {{ number_format(max($chartBars)) }} views</span>
     </div>
     <div style="display: flex; align-items: flex-end; gap: 5px; height: 160px; padding: 0 4px;">
         @foreach($chartBars as $i => $val)
@@ -108,9 +108,9 @@
         @endforeach
     </div>
     <div style="display: flex; align-items: center; justify-content: space-between; margin-top: 6px; padding: 0 4px;">
-        <span style="font-family: var(--cms-font-ui); font-size: 11px; color: var(--cms-fg4);">{{ now()->subDays($rangeDays - 1)->format('j M') }}</span>
-        <span style="font-family: var(--cms-font-ui); font-size: 11px; color: var(--cms-fg4);">{{ now()->subDays($rangeDays / 2)->format('j M') }}</span>
-        <span style="font-family: var(--cms-font-ui); font-size: 11px; color: var(--cms-fg4);">{{ now()->format('j M') }}</span>
+        <span style="font-family: var(--cms-font-ui), sans-serif; font-size: 11px; color: var(--cms-fg4);">{{ now()->subDays($rangeDays - 1)->format('j M') }}</span>
+        <span style="font-family: var(--cms-font-ui), sans-serif; font-size: 11px; color: var(--cms-fg4);">{{ now()->subDays($rangeDays / 2)->format('j M') }}</span>
+        <span style="font-family: var(--cms-font-ui), sans-serif; font-size: 11px; color: var(--cms-fg4);">{{ now()->format('j M') }}</span>
     </div>
 </div>
 
@@ -120,16 +120,16 @@
     <div style="background: var(--cms-surface); border: 1px solid var(--cms-border); border-radius: var(--cms-r-lg); overflow: hidden; box-shadow: var(--cms-sh-card);">
         <div style="padding: 14px 20px; border-bottom: 1px solid var(--cms-border); display: flex; align-items: center; gap: 8px;">
             <i data-lucide="bar-chart-2" style="width: 15px; height: 15px; color: var(--cms-gold);"></i>
-            <span style="font-family: var(--cms-font-ui); font-size: 14px; font-weight: 700; color: var(--cms-fg1);">Top Posts</span>
+            <span style="font-family: var(--cms-font-ui), sans-serif; font-size: 14px; font-weight: 700; color: var(--cms-fg1);">Top Posts</span>
         </div>
         <table style="width: 100%; border-collapse: collapse;">
             <thead>
                 <tr style="border-bottom: 1px solid var(--cms-border);">
-                    <th style="width: 36px; padding: 9px 12px; font-family: var(--cms-font-ui); font-size: 11px; font-weight: 700; color: var(--cms-fg4); text-transform: uppercase; letter-spacing: 0.04em; text-align: center;">#</th>
-                    <th style="padding: 9px 12px 9px 0; font-family: var(--cms-font-ui); font-size: 11px; font-weight: 700; color: var(--cms-fg4); text-transform: uppercase; letter-spacing: 0.04em; text-align: left;">Post</th>
-                    <th style="padding: 9px 12px 9px 0; font-family: var(--cms-font-ui); font-size: 11px; font-weight: 700; color: var(--cms-fg4); text-transform: uppercase; letter-spacing: 0.04em; text-align: right;">Views</th>
-                    <th style="padding: 9px 12px 9px 0; font-family: var(--cms-font-ui); font-size: 11px; font-weight: 700; color: var(--cms-fg4); text-transform: uppercase; letter-spacing: 0.04em; text-align: right;">Avg Time</th>
-                    <th style="padding: 9px 16px 9px 0; font-family: var(--cms-font-ui); font-size: 11px; font-weight: 700; color: var(--cms-fg4); text-transform: uppercase; letter-spacing: 0.04em; text-align: center;">Trend</th>
+                    <th style="width: 36px; padding: 9px 12px; font-family: var(--cms-font-ui), sans-serif; font-size: 11px; font-weight: 700; color: var(--cms-fg4); text-transform: uppercase; letter-spacing: 0.04em; text-align: center;">#</th>
+                    <th style="padding: 9px 12px 9px 0; font-family: var(--cms-font-ui), sans-serif; font-size: 11px; font-weight: 700; color: var(--cms-fg4); text-transform: uppercase; letter-spacing: 0.04em; text-align: left;">Post</th>
+                    <th style="padding: 9px 12px 9px 0; font-family: var(--cms-font-ui), sans-serif; font-size: 11px; font-weight: 700; color: var(--cms-fg4); text-transform: uppercase; letter-spacing: 0.04em; text-align: right;">Views</th>
+                    <th style="padding: 9px 12px 9px 0; font-family: var(--cms-font-ui), sans-serif; font-size: 11px; font-weight: 700; color: var(--cms-fg4); text-transform: uppercase; letter-spacing: 0.04em; text-align: right;">Avg Time</th>
+                    <th style="padding: 9px 16px 9px 0; font-family: var(--cms-font-ui), sans-serif; font-size: 11px; font-weight: 700; color: var(--cms-fg4); text-transform: uppercase; letter-spacing: 0.04em; text-align: center;">Trend</th>
                 </tr>
             </thead>
             <tbody>
@@ -137,17 +137,17 @@
                     <tr style="border-bottom: 1px solid var(--cms-border); transition: background 100ms;"
                         onmouseover="this.style.background='#FDFBF8'" onmouseout="this.style.background='transparent'">
                         <td style="padding: 12px; text-align: center;">
-                            <span style="font-family: var(--cms-font-ui); font-size: 13px; font-weight: 800;" data-color="{{ $p['rank'] <= 3 ? 'var(--cms-gold)' : 'var(--cms-fg4)' }}">{{ $p['rank'] }}</span>
+                            <span style="font-family: var(--cms-font-ui), sans-serif; font-size: 13px; font-weight: 800;" data-color="{{ $p['rank'] <= 3 ? 'var(--cms-gold)' : 'var(--cms-fg4)' }}">{{ $p['rank'] }}</span>
                         </td>
                         <td style="padding: 12px 12px 12px 0; max-width: 0;">
-                            <div style="font-family: var(--cms-font-ui); font-size: 13px; font-weight: 600; color: var(--cms-fg1); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ $p['title'] }}</div>
-                            <div style="font-family: var(--cms-font-ui); font-size: 11.5px; color: var(--cms-fg4); margin-top: 2px;">{{ $p['category'] }}</div>
+                            <div style="font-family: var(--cms-font-ui), sans-serif; font-size: 13px; font-weight: 600; color: var(--cms-fg1); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ $p['title'] }}</div>
+                            <div style="font-family: var(--cms-font-ui), sans-serif; font-size: 11.5px; color: var(--cms-fg4); margin-top: 2px;">{{ $p['category'] }}</div>
                         </td>
                         <td style="padding: 12px 12px 12px 0; text-align: right; white-space: nowrap;">
-                            <span style="font-family: var(--cms-font-ui); font-size: 13px; font-weight: 700; color: var(--cms-fg1);">{{ $p['views'] }}</span>
+                            <span style="font-family: var(--cms-font-ui), sans-serif; font-size: 13px; font-weight: 700; color: var(--cms-fg1);">{{ $p['views'] }}</span>
                         </td>
                         <td style="padding: 12px 12px 12px 0; text-align: right; white-space: nowrap;">
-                            <span style="font-family: var(--cms-font-ui); font-size: 12.5px; color: var(--cms-fg3);">{{ $p['time'] }}</span>
+                            <span style="font-family: var(--cms-font-ui), sans-serif; font-size: 12.5px; color: var(--cms-fg3);">{{ $p['time'] }}</span>
                         </td>
                         <td style="padding: 12px 16px 12px 0;">
                             <svg viewBox="0 0 70 28" width="70" height="28" style="display: block; margin: 0 auto;">
@@ -175,12 +175,12 @@
     {{-- Traffic Sources + Countries --}}
     <div style="display: flex; flex-direction: column; gap: 14px;">
         <div style="background: var(--cms-surface); border: 1px solid var(--cms-border); border-radius: var(--cms-r-lg); padding: 16px 18px; box-shadow: var(--cms-sh-card);">
-            <div style="font-family: var(--cms-font-ui); font-size: 14px; font-weight: 700; color: var(--cms-fg1); margin-bottom: 14px;">Traffic Sources</div>
+            <div style="font-family: var(--cms-font-ui), sans-serif; font-size: 14px; font-weight: 700; color: var(--cms-fg1); margin-bottom: 14px;">Traffic Sources</div>
             @foreach($sources as $s)
                 <div style="margin-bottom: 11px;">
                     <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 5px;">
-                        <span style="font-family: var(--cms-font-ui); font-size: 13px; color: var(--cms-fg2);">{{ $s['label'] }}</span>
-                        <span style="font-family: var(--cms-font-ui); font-size: 13px; font-weight: 700; color: var(--cms-fg1);">{{ $s['pct'] }}%</span>
+                        <span style="font-family: var(--cms-font-ui), sans-serif; font-size: 13px; color: var(--cms-fg2);">{{ $s['label'] }}</span>
+                        <span style="font-family: var(--cms-font-ui), sans-serif; font-size: 13px; font-weight: 700; color: var(--cms-fg1);">{{ $s['pct'] }}%</span>
                     </div>
                     <div style="width: 100%; height: 6px; background: var(--cms-border); border-radius: 999px; overflow: hidden;">
                         <div style="height: 100%; border-radius: 999px;" data-width="{{ $s['pct'] }}%" data-background="{{ $s['color'] }}"></div>
@@ -190,13 +190,13 @@
         </div>
 
         <div style="background: var(--cms-surface); border: 1px solid var(--cms-border); border-radius: var(--cms-r-lg); overflow: hidden; box-shadow: var(--cms-sh-card);">
-            <div style="padding: 12px 16px; border-bottom: 1px solid var(--cms-border); font-family: var(--cms-font-ui); font-size: 14px; font-weight: 700; color: var(--cms-fg1);">Top Countries</div>
+            <div style="padding: 12px 16px; border-bottom: 1px solid var(--cms-border); font-family: var(--cms-font-ui), sans-serif; font-size: 14px; font-weight: 700; color: var(--cms-fg1);">Top Countries</div>
             @foreach($countries as $c)
                 <div style="display: flex; align-items: center; justify-content: space-between; padding: 9px 16px; border-bottom: 1px solid var(--cms-border);">
-                    <span style="font-family: var(--cms-font-ui); font-size: 13px; color: var(--cms-fg1);">{{ $c['country'] }}</span>
+                    <span style="font-family: var(--cms-font-ui), sans-serif; font-size: 13px; color: var(--cms-fg1);">{{ $c['country'] }}</span>
                     <div style="display: flex; align-items: center; gap: 10px;">
-                        <span style="font-family: var(--cms-font-ui); font-size: 12.5px; color: var(--cms-fg3);">{{ $c['visits'] }}</span>
-                        <span style="font-family: var(--cms-font-ui); font-size: 12px; font-weight: 600; color: var(--cms-fg2); min-width: 36px; text-align: right;">{{ $c['pct'] }}%</span>
+                        <span style="font-family: var(--cms-font-ui), sans-serif; font-size: 12.5px; color: var(--cms-fg3);">{{ $c['visits'] }}</span>
+                        <span style="font-family: var(--cms-font-ui), sans-serif; font-size: 12px; font-weight: 600; color: var(--cms-fg2); min-width: 36px; text-align: right;">{{ $c['pct'] }}%</span>
                     </div>
                 </div>
             @endforeach
@@ -205,7 +205,7 @@
 </div>
 
 {{-- Tooltip --}}
-<div id="bar-tip" style="display: none; position: fixed; z-index: 300; background: var(--cms-bg); border: 1px solid var(--cms-border); border-radius: var(--cms-r-md); padding: 6px 10px; font-family: var(--cms-font-ui); font-size: 12.5px; color: var(--cms-fg1); box-shadow: var(--cms-sh-card); pointer-events: none; white-space: nowrap;"></div>
+<div id="bar-tip" style="display: none; position: fixed; z-index: 300; background: var(--cms-bg); border: 1px solid var(--cms-border); border-radius: var(--cms-r-md); padding: 6px 10px; font-family: var(--cms-font-ui), sans-serif; font-size: 12.5px; color: var(--cms-fg1); box-shadow: var(--cms-sh-card); pointer-events: none; white-space: nowrap;"></div>
 
 <script>
     function setRange(r, btn) {

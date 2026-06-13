@@ -12,6 +12,8 @@ class CategoryController extends Controller
 {
     public function index()
     {
+        $this->authorize('viewAny', Category::class);
+
         $categories = Category::with(['parent', 'children'])
             ->orderBy('sort_order')
             ->orderBy('name')
@@ -24,6 +26,8 @@ class CategoryController extends Controller
 
     public function create()
     {
+        $this->authorize('create', Category::class);
+
         $parents = Category::whereNull('parent_id')->orderBy('name')->get();
 
         return view('admin.categories.create', compact('parents'));
@@ -31,6 +35,8 @@ class CategoryController extends Controller
 
     public function store(StoreCategoryRequest $request)
     {
+        $this->authorize('create', Category::class);
+
         $slug = (new GenerateSlug)->handle($request->name, 'categories');
 
         Category::create([
@@ -49,11 +55,15 @@ class CategoryController extends Controller
 
     public function show(Category $category)
     {
+        $this->authorize('view', $category);
+
         return view('admin.categories.show', compact('category'));
     }
 
     public function edit(Category $category)
     {
+        $this->authorize('update', $category);
+
         $parents = Category::whereNull('parent_id')
             ->where('id', '!=', $category->id)
             ->orderBy('name')
@@ -64,6 +74,8 @@ class CategoryController extends Controller
 
     public function update(UpdateCategoryRequest $request, Category $category)
     {
+        $this->authorize('update', $category);
+
         $slug = $category->slug;
 
         if ($request->name !== $category->name) {
@@ -86,6 +98,8 @@ class CategoryController extends Controller
 
     public function destroy(Category $category)
     {
+        $this->authorize('delete', $category);
+
         if ($category->posts()->count() > 0) {
             return redirect()
                 ->back()

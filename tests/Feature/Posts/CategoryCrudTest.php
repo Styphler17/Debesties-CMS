@@ -3,6 +3,7 @@
 namespace Tests\Feature\Posts;
 
 use App\Models\Category;
+use App\Models\Permission;
 use App\Models\Post;
 use App\Models\Role;
 use App\Models\User;
@@ -21,6 +22,9 @@ class CategoryCrudTest extends TestCase
         parent::setUp();
 
         $role = Role::create(['name' => 'Super Admin', 'slug' => 'super_admin']);
+        $permission = Permission::create(['name' => 'categories.manage', 'slug' => 'categories.manage']);
+        $role->permissions()->attach($permission);
+
         $this->admin = User::factory()->create();
         $this->admin->roles()->attach($role);
     }

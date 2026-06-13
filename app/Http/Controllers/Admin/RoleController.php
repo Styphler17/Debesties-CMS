@@ -13,6 +13,8 @@ class RoleController extends Controller
 {
     public function index()
     {
+        $this->authorize('viewAny', Role::class);
+
         $roles = Role::withCount('users')->with('permissions')->get();
         $permissions = Permission::all();
 
@@ -21,6 +23,8 @@ class RoleController extends Controller
 
     public function store(StoreRoleRequest $request)
     {
+        $this->authorize('create', Role::class);
+
         $slug = (new GenerateSlug)->handle($request->name, 'roles');
 
         $role = Role::create([
@@ -39,6 +43,7 @@ class RoleController extends Controller
     public function update(UpdateRoleRequest $request, string $id)
     {
         $role = Role::findOrFail($id);
+        $this->authorize('update', $role);
 
         $role->update([
             'name' => $request->name,
@@ -67,6 +72,7 @@ class RoleController extends Controller
     public function destroy(string $id)
     {
         $role = Role::findOrFail($id);
+        $this->authorize('delete', $role);
 
         if (in_array($role->slug, ['super_admin', 'subscriber'])) {
             if (request()->wantsJson() || request()->ajax()) {

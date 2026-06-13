@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Posts;
 
+use App\Models\Permission;
 use App\Models\Post;
 use App\Models\Role;
 use App\Models\Tag;
@@ -21,6 +22,9 @@ class TagCrudTest extends TestCase
         parent::setUp();
 
         $role = Role::create(['name' => 'Super Admin', 'slug' => 'super_admin']);
+        $permission = Permission::create(['name' => 'tags.manage', 'slug' => 'tags.manage']);
+        $role->permissions()->attach($permission);
+
         $this->admin = User::factory()->create();
         $this->admin->roles()->attach($role);
     }

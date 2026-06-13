@@ -4,6 +4,17 @@
 @section('page_title', 'Categories')
 
 @section('content')
+
+<style>
+    .cat-toggle-btn { width: 38px; height: 22px; border-radius: 999px; border: none; cursor: pointer; transition: background 200ms; position: relative; }
+    .cat-toggle-btn--on { background: var(--cms-green); }
+    .cat-toggle-btn--off { background: var(--cms-border-st); }
+
+    .cat-toggle-dot { position: absolute; top: 3px; width: 16px; height: 16px; border-radius: 999px; background: #fff; transition: left 200ms; }
+    .cat-toggle-dot--on { left: 19px; }
+    .cat-toggle-dot--off { left: 3px; }
+</style>
+
 <div style="display: grid; grid-template-columns: 1fr 340px; gap: 20px; align-items: start;">
 
     {{-- Left: Category Tree Table --}}
@@ -12,16 +23,16 @@
             <div style="display: flex; align-items: center; justify-content: space-between; padding: 14px 20px; border-bottom: 1px solid var(--cms-border);">
                 <div style="display: flex; align-items: center; gap: 8px;">
                     <i data-lucide="folder-tree" style="width: 16px; height: 16px; color: var(--cms-gold);"></i>
-                    <span style="font-family: var(--cms-font-ui); font-size: 14px; font-weight: 700; color: var(--cms-fg1);">All Categories</span>
-                    <span style="font-family: var(--cms-font-ui); font-size: 12px; color: var(--cms-fg4);">{{ $categories->total() }} total</span>
+                    <span style="font-family: var(--cms-font-ui), sans-serif; font-size: 14px; font-weight: 700; color: var(--cms-fg1);">All Categories</span>
+                    <span style="font-family: var(--cms-font-ui), sans-serif; font-size: 12px; color: var(--cms-fg4);">{{ $categories->total() }} total</span>
                 </div>
                 <div id="bulk-bar" style="display: none; align-items: center; gap: 8px;">
-                    <span id="bulk-count" style="font-family: var(--cms-font-ui); font-size: 13px; color: var(--cms-fg3);">0 selected</span>
-                    <button style="height: 32px; padding: 0 14px; font-family: var(--cms-font-ui); font-size: 12.5px; font-weight: 600; background: var(--cms-red-soft); color: var(--cms-red-deep); border: 1.5px solid rgba(200,55,43,0.2); border-radius: var(--cms-r-md); cursor: pointer;">Delete</button>
+                    <span id="bulk-count" style="font-family: var(--cms-font-ui), sans-serif; font-size: 13px; color: var(--cms-fg3);">0 selected</span>
+                    <button style="height: 32px; padding: 0 14px; font-family: var(--cms-font-ui), sans-serif; font-size: 12.5px; font-weight: 600; background: var(--cms-red-soft); color: var(--cms-red-deep); border: 1.5px solid rgba(200,55,43,0.2); border-radius: var(--cms-r-md); cursor: pointer;">Delete</button>
                 </div>
             </div>
 
-            <table style="width: 100%; border-collapse: collapse; font-family: var(--cms-font-ui);">
+            <table style="width: 100%; border-collapse: collapse; font-family: var(--cms-font-ui), sans-serif;">
                 <thead>
                     <tr style="border-bottom: 1px solid var(--cms-border);">
                         <th style="width: 40px; padding: 10px 16px; text-align: center;">
@@ -45,26 +56,26 @@
                             <td style="padding: 13px 16px 13px 0;">
                                 <div style="display: flex; align-items: center; gap: 8px;">
                                     <div style="width: 7px; height: 7px; border-radius: 999px; background: var(--cms-gold); flex-shrink: 0;"></div>
-                                    <span style="font-family: var(--cms-font-ui); font-size: 13.5px; font-weight: 600; color: var(--cms-fg1);">{{ $cat->name }}</span>
+                                    <span style="font-family: var(--cms-font-ui), sans-serif; font-size: 13.5px; font-weight: 600; color: var(--cms-fg1);">{{ $cat->name }}</span>
                                 </div>
                             </td>
                             <td style="padding: 13px 16px 13px 0;">
-                                <span style="font-family: var(--cms-font-mono); font-size: 12px; color: var(--cms-fg3);">{{ $cat->slug }}</span>
+                                <span style="font-family: var(--cms-font-mono), monospace; font-size: 12px; color: var(--cms-fg3);">{{ $cat->slug }}</span>
                             </td>
                             <td style="padding: 13px 16px 13px 0;">
-                                <span style="font-family: var(--cms-font-ui); font-size: 12.5px; color: var(--cms-fg4);">—</span>
+                                <span style="font-family: var(--cms-font-ui), sans-serif; font-size: 12.5px; color: var(--cms-fg4);">—</span>
                             </td>
                             <td style="padding: 13px 16px 13px 0; text-align: center;">
                                 <a href="{{ route('admin.posts.index', ['category' => $cat->slug]) }}"
-                                   style="font-family: var(--cms-font-ui); font-size: 13px; font-weight: 600; color: var(--cms-blue); text-decoration: none;">
+                                   style="font-family: var(--cms-font-ui), sans-serif; font-size: 13px; font-weight: 600; color: var(--cms-blue); text-decoration: none;">
                                     {{ $cat->posts_count ?? $cat->posts()->count() }}
                                 </a>
                             </td>
                             <td style="padding: 13px 16px 13px 0; text-align: center;">
                                 <button onclick="toggleVisible({{ $cat->id }}, this)"
                                         data-visible="{{ $cat->is_visible ? 'true' : 'false' }}"
-                                        style="width: 38px; height: 22px; border-radius: 999px; border: none; cursor: pointer; transition: background 200ms; position: relative; background: {{ $cat->is_visible ? 'var(--cms-green)' : 'var(--cms-border-st)' }};">
-                                    <span style="position: absolute; top: 3px; width: 16px; height: 16px; border-radius: 999px; background: #fff; transition: left 200ms; left: {{ $cat->is_visible ? '19px' : '3px' }};"></span>
+                                        @class(['cat-toggle-btn', 'cat-toggle-btn--on' => $cat->is_visible, 'cat-toggle-btn--off' => ! $cat->is_visible])>
+                                    <span @class(['cat-toggle-dot', 'cat-toggle-dot--on' => $cat->is_visible, 'cat-toggle-dot--off' => ! $cat->is_visible])></span>
                                 </button>
                             </td>
                             <td style="padding: 13px 16px;">
@@ -97,22 +108,22 @@
                                 <td style="padding: 10px 16px 10px 0;">
                                     <div style="display: flex; align-items: center; gap: 8px; padding-left: 20px;">
                                         <i data-lucide="corner-down-right" style="width: 13px; height: 13px; color: var(--cms-fg4);"></i>
-                                        <span style="font-family: var(--cms-font-ui); font-size: 13px; font-weight: 500; color: var(--cms-fg2);">{{ $child->name }}</span>
+                                        <span style="font-family: var(--cms-font-ui), sans-serif; font-size: 13px; font-weight: 500; color: var(--cms-fg2);">{{ $child->name }}</span>
                                     </div>
                                 </td>
                                 <td style="padding: 10px 16px 10px 0;">
-                                    <span style="font-family: var(--cms-font-mono); font-size: 11.5px; color: var(--cms-fg4);">{{ $child->slug }}</span>
+                                    <span style="font-family: var(--cms-font-mono), monospace; font-size: 11.5px; color: var(--cms-fg4);">{{ $child->slug }}</span>
                                 </td>
                                 <td style="padding: 10px 16px 10px 0;">
-                                    <span style="font-family: var(--cms-font-ui); font-size: 12.5px; color: var(--cms-fg3);">{{ $cat->name }}</span>
+                                    <span style="font-family: var(--cms-font-ui), sans-serif; font-size: 12.5px; color: var(--cms-fg3);">{{ $cat->name }}</span>
                                 </td>
                                 <td style="padding: 10px 16px 10px 0; text-align: center;">
-                                    <span style="font-family: var(--cms-font-ui); font-size: 13px; font-weight: 600; color: var(--cms-fg2);">{{ $child->posts()->count() }}</span>
+                                    <span style="font-family: var(--cms-font-ui), sans-serif; font-size: 13px; font-weight: 600; color: var(--cms-fg2);">{{ $child->posts()->count() }}</span>
                                 </td>
                                 <td style="padding: 10px 16px 10px 0; text-align: center;">
                                     <button onclick="toggleVisible({{ $child->id }}, this)" data-visible="{{ $child->is_visible ? 'true' : 'false' }}"
-                                            style="width: 38px; height: 22px; border-radius: 999px; border: none; cursor: pointer; background: {{ $child->is_visible ? 'var(--cms-green)' : 'var(--cms-border-st)' }}; position: relative; transition: background 200ms;">
-                                        <span style="position: absolute; top: 3px; width: 16px; height: 16px; border-radius: 999px; background: #fff; transition: left 200ms; left: {{ $child->is_visible ? '19px' : '3px' }};"></span>
+                                            @class(['cat-toggle-btn', 'cat-toggle-btn--on' => $child->is_visible, 'cat-toggle-btn--off' => ! $child->is_visible])>
+                                        <span @class(['cat-toggle-dot', 'cat-toggle-dot--on' => $child->is_visible, 'cat-toggle-dot--off' => ! $child->is_visible])></span>
                                     </button>
                                 </td>
                                 <td style="padding: 10px 16px;">
@@ -144,38 +155,38 @@
     <div style="background: var(--cms-surface); border: 1px solid var(--cms-border); border-radius: var(--cms-r-lg); overflow: hidden; box-shadow: var(--cms-sh-card); position: sticky; top: 88px;">
         <div style="padding: 14px 18px; border-bottom: 1px solid var(--cms-border); display: flex; align-items: center; gap: 8px;">
             <i data-lucide="folder-plus" style="width: 15px; height: 15px; color: var(--cms-gold);"></i>
-            <span id="form-title" style="font-family: var(--cms-font-ui); font-size: 14px; font-weight: 700; color: var(--cms-fg1);">Add New Category</span>
+            <span id="form-title" style="font-family: var(--cms-font-ui), sans-serif; font-size: 14px; font-weight: 700; color: var(--cms-fg1);">Add New Category</span>
         </div>
         <form method="POST" action="{{ route('admin.categories.store') }}" style="padding: 18px; display: flex; flex-direction: column; gap: 14px;">
             @csrf
             <input type="hidden" id="edit-cat-id" value="" />
 
             <div>
-                <label style="font-family: var(--cms-font-ui); font-size: 12px; font-weight: 700; color: var(--cms-fg3); text-transform: uppercase; letter-spacing: 0.04em; display: block; margin-bottom: 6px;">Name <span style="color: var(--cms-red);">*</span></label>
+                <label style="font-family: var(--cms-font-ui), sans-serif; font-size: 12px; font-weight: 700; color: var(--cms-fg3); text-transform: uppercase; letter-spacing: 0.04em; display: block; margin-bottom: 6px;">Name <span style="color: var(--cms-red);">*</span></label>
                 <input id="cat-name" name="name" type="text" placeholder="e.g. Music Awards" oninput="autoCatSlug(this.value)"
-                       style="display: block; width: 100%; height: 40px; padding: 0 12px; font-family: var(--cms-font-ui); font-size: 13.5px; color: var(--cms-fg1); background: var(--cms-bg); border: 1.5px solid var(--cms-border); border-radius: var(--cms-r-md); outline: none;"
+                       style="display: block; width: 100%; height: 40px; padding: 0 12px; font-family: var(--cms-font-ui), sans-serif; font-size: 13.5px; color: var(--cms-fg1); background: var(--cms-bg); border: 1.5px solid var(--cms-border); border-radius: var(--cms-r-md); outline: none;"
                        onfocus="this.style.borderColor='var(--cms-gold)'; this.style.boxShadow='0 0 0 3px rgba(232,168,0,0.13)'"
                        onblur="this.style.borderColor='var(--cms-border)'; this.style.boxShadow='none'" />
             </div>
 
             <div>
-                <label style="font-family: var(--cms-font-ui); font-size: 12px; font-weight: 700; color: var(--cms-fg3); text-transform: uppercase; letter-spacing: 0.04em; display: block; margin-bottom: 6px;">Slug</label>
+                <label style="font-family: var(--cms-font-ui), sans-serif; font-size: 12px; font-weight: 700; color: var(--cms-fg3); text-transform: uppercase; letter-spacing: 0.04em; display: block; margin-bottom: 6px;">Slug</label>
                 <input id="cat-slug" type="text" placeholder="auto-generated"
-                       style="display: block; width: 100%; height: 40px; padding: 0 12px; font-family: var(--cms-font-mono); font-size: 12.5px; color: var(--cms-fg2); background: var(--cms-bg); border: 1.5px solid var(--cms-border); border-radius: var(--cms-r-md); outline: none;"
+                       style="display: block; width: 100%; height: 40px; padding: 0 12px; font-family: var(--cms-font-mono), monospace; font-size: 12.5px; color: var(--cms-fg2); background: var(--cms-bg); border: 1.5px solid var(--cms-border); border-radius: var(--cms-r-md); outline: none;"
                        onfocus="this.style.borderColor='var(--cms-gold)'" onblur="this.style.borderColor='var(--cms-border)'" />
             </div>
 
             <div>
-                <label style="font-family: var(--cms-font-ui); font-size: 12px; font-weight: 700; color: var(--cms-fg3); text-transform: uppercase; letter-spacing: 0.04em; display: block; margin-bottom: 6px;">Description</label>
+                <label style="font-family: var(--cms-font-ui), sans-serif; font-size: 12px; font-weight: 700; color: var(--cms-fg3); text-transform: uppercase; letter-spacing: 0.04em; display: block; margin-bottom: 6px;">Description</label>
                 <textarea id="cat-desc" name="description" rows="2" placeholder="Optional description…"
-                          style="display: block; width: 100%; padding: 10px 12px; font-family: var(--cms-font-ui); font-size: 13px; color: var(--cms-fg1); background: var(--cms-bg); border: 1.5px solid var(--cms-border); border-radius: var(--cms-r-md); outline: none; resize: vertical; line-height: 1.5;"
+                          style="display: block; width: 100%; padding: 10px 12px; font-family: var(--cms-font-ui), sans-serif; font-size: 13px; color: var(--cms-fg1); background: var(--cms-bg); border: 1.5px solid var(--cms-border); border-radius: var(--cms-r-md); outline: none; resize: vertical; line-height: 1.5;"
                           onfocus="this.style.borderColor='var(--cms-gold)'" onblur="this.style.borderColor='var(--cms-border)'"></textarea>
             </div>
 
             <div>
-                <label style="font-family: var(--cms-font-ui); font-size: 12px; font-weight: 700; color: var(--cms-fg3); text-transform: uppercase; letter-spacing: 0.04em; display: block; margin-bottom: 6px;">Parent Category</label>
+                <label style="font-family: var(--cms-font-ui), sans-serif; font-size: 12px; font-weight: 700; color: var(--cms-fg3); text-transform: uppercase; letter-spacing: 0.04em; display: block; margin-bottom: 6px;">Parent Category</label>
                 <select id="cat-parent" name="parent_id"
-                        style="width: 100%; height: 40px; padding: 0 10px; font-family: var(--cms-font-ui); font-size: 13.5px; color: var(--cms-fg1); background: var(--cms-bg); border: 1.5px solid var(--cms-border); border-radius: var(--cms-r-md); cursor: pointer; outline: none;">
+                        style="width: 100%; height: 40px; padding: 0 10px; font-family: var(--cms-font-ui), sans-serif; font-size: 13.5px; color: var(--cms-fg1); background: var(--cms-bg); border: 1.5px solid var(--cms-border); border-radius: var(--cms-r-md); cursor: pointer; outline: none;">
                     <option value="">None (top-level)</option>
                     @foreach($topLevel as $cat)
                         <option value="{{ $cat->id }}">{{ $cat->name }}</option>
@@ -184,16 +195,16 @@
             </div>
 
             <div>
-                <label style="font-family: var(--cms-font-ui); font-size: 12px; font-weight: 700; color: var(--cms-fg3); text-transform: uppercase; letter-spacing: 0.04em; display: block; margin-bottom: 6px;">Sort Order</label>
+                <label style="font-family: var(--cms-font-ui), sans-serif; font-size: 12px; font-weight: 700; color: var(--cms-fg3); text-transform: uppercase; letter-spacing: 0.04em; display: block; margin-bottom: 6px;">Sort Order</label>
                 <input id="cat-order" name="sort_order" type="number" value="0" min="0"
-                       style="display: block; width: 100%; height: 40px; padding: 0 12px; font-family: var(--cms-font-ui); font-size: 13.5px; color: var(--cms-fg1); background: var(--cms-bg); border: 1.5px solid var(--cms-border); border-radius: var(--cms-r-md); outline: none;"
+                       style="display: block; width: 100%; height: 40px; padding: 0 12px; font-family: var(--cms-font-ui), sans-serif; font-size: 13.5px; color: var(--cms-fg1); background: var(--cms-bg); border: 1.5px solid var(--cms-border); border-radius: var(--cms-r-md); outline: none;"
                        onfocus="this.style.borderColor='var(--cms-gold)'" onblur="this.style.borderColor='var(--cms-border)'" />
             </div>
 
             <div style="display: flex; gap: 8px; padding-top: 4px;">
-                <button type="button" id="cancel-btn" onclick="resetCatForm()" style="display: none; flex: 1; height: 38px; font-family: var(--cms-font-ui); font-size: 13.5px; font-weight: 600; background: var(--cms-bg); color: var(--cms-fg2); border: 1.5px solid var(--cms-border); border-radius: var(--cms-r-md); cursor: pointer;">Cancel</button>
+                <button type="button" id="cancel-btn" onclick="resetCatForm()" style="display: none; flex: 1; height: 38px; font-family: var(--cms-font-ui), sans-serif; font-size: 13.5px; font-weight: 600; background: var(--cms-bg); color: var(--cms-fg2); border: 1.5px solid var(--cms-border); border-radius: var(--cms-r-md); cursor: pointer;">Cancel</button>
                 <button type="submit" id="cat-submit"
-                        style="flex: 1; height: 40px; font-family: var(--cms-font-ui); font-size: 13.5px; font-weight: 700; background: var(--cms-gold); color: #1A1410; border: none; border-radius: var(--cms-r-md); cursor: pointer;"
+                        style="flex: 1; height: 40px; font-family: var(--cms-font-ui), sans-serif; font-size: 13.5px; font-weight: 700; background: var(--cms-gold); color: #1A1410; border: none; border-radius: var(--cms-r-md); cursor: pointer;"
                         onmouseover="this.style.background='#D69B00'" onmouseout="this.style.background='var(--cms-gold)'">
                     Add Category
                 </button>
@@ -210,16 +221,16 @@
                 <i data-lucide="folder-x" style="width: 20px; height: 20px; color: var(--cms-red);"></i>
             </div>
             <div>
-                <div style="font-family: var(--cms-font-ui); font-size: 15px; font-weight: 700; color: var(--cms-fg1);">Delete Category?</div>
-                <div id="delete-label" style="font-family: var(--cms-font-ui); font-size: 13px; color: var(--cms-fg3); margin-top: 2px;"></div>
+                <div style="font-family: var(--cms-font-ui), sans-serif; font-size: 15px; font-weight: 700; color: var(--cms-fg1);">Delete Category?</div>
+                <div id="delete-label" style="font-family: var(--cms-font-ui), sans-serif; font-size: 13px; color: var(--cms-fg3); margin-top: 2px;"></div>
             </div>
         </div>
-        <div style="background: var(--cms-gold-soft); border: 1px solid rgba(232,168,0,0.3); border-radius: var(--cms-r-md); padding: 10px 14px; margin: 12px 0; font-family: var(--cms-font-ui); font-size: 12.5px; color: var(--cms-gold-deep);">
+        <div style="background: var(--cms-gold-soft); border: 1px solid rgba(232,168,0,0.3); border-radius: var(--cms-r-md); padding: 10px 14px; margin: 12px 0; font-family: var(--cms-font-ui), sans-serif; font-size: 12.5px; color: var(--cms-gold-deep);">
             Posts in this category will be set to uncategorized.
         </div>
         <div style="display: flex; gap: 8px; justify-content: flex-end;">
-            <button onclick="closeModal()" style="height: 38px; padding: 0 18px; font-family: var(--cms-font-ui); font-size: 13.5px; font-weight: 600; background: var(--cms-surface); color: var(--cms-fg2); border: 1.5px solid var(--cms-border); border-radius: var(--cms-r-md); cursor: pointer;">Cancel</button>
-            <button onclick="executeDelete()" style="height: 38px; padding: 0 18px; font-family: var(--cms-font-ui); font-size: 13.5px; font-weight: 600; background: var(--cms-red); color: #fff; border: none; border-radius: var(--cms-r-md); cursor: pointer;">Delete</button>
+            <button onclick="closeModal()" style="height: 38px; padding: 0 18px; font-family: var(--cms-font-ui), sans-serif; font-size: 13.5px; font-weight: 600; background: var(--cms-surface); color: var(--cms-fg2); border: 1.5px solid var(--cms-border); border-radius: var(--cms-r-md); cursor: pointer;">Cancel</button>
+            <button onclick="executeDelete()" style="height: 38px; padding: 0 18px; font-family: var(--cms-font-ui), sans-serif; font-size: 13.5px; font-weight: 600; background: var(--cms-red); color: #fff; border: none; border-radius: var(--cms-r-md); cursor: pointer;">Delete</button>
         </div>
     </div>
 </div>

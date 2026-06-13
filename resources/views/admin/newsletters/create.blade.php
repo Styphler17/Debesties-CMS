@@ -8,7 +8,7 @@
 <div style="max-width: 800px; margin: 0 auto; display: flex; flex-direction: column; gap: 20px;">
     
     <div style="display: flex; align-items: center; justify-content: space-between;">
-        <a href="{{ route('admin.newsletters.index') }}" style="display: inline-flex; align-items: center; gap: 6px; font-family: var(--cms-font-ui); font-size: 13.5px; color: var(--cms-fg3); text-decoration: none;">
+        <a href="{{ route('admin.newsletters.index') }}" style="display: inline-flex; align-items: center; gap: 6px; font-family: var(--cms-font-ui), sans-serif; font-size: 13.5px; color: var(--cms-fg3); text-decoration: none;">
             <i data-lucide="arrow-left" style="width: 16px; height: 16px;"></i>
             Back to Campaigns
         </a>
@@ -20,9 +20,9 @@
             
             <div style="display: flex; flex-direction: column; gap: 20px; margin-bottom: 24px;">
                 <div>
-                    <label style="font-family: var(--cms-font-ui); font-size: 12px; font-weight: 700; color: var(--cms-fg3); text-transform: uppercase; letter-spacing: 0.04em; display: block; margin-bottom: 6px;">Email Subject</label>
+                    <label style="font-family: var(--cms-font-ui), sans-serif; font-size: 12px; font-weight: 700; color: var(--cms-fg3); text-transform: uppercase; letter-spacing: 0.04em; display: block; margin-bottom: 6px;">Email Subject</label>
                     <input type="text" name="subject" value="{{ old('subject') }}" required placeholder="e.g. Weekly Roundup: Art & Music Scene in Accra"
-                           style="display: block; width: 100%; height: 42px; padding: 0 12px; font-family: var(--cms-font-ui); font-size: 13.5px; color: var(--cms-fg1); background: var(--cms-bg); border: 1.5px solid var(--cms-border); border-radius: var(--cms-r-md); outline: none;"
+                           style="display: block; width: 100%; height: 42px; padding: 0 12px; font-family: var(--cms-font-ui), sans-serif; font-size: 13.5px; color: var(--cms-fg1); background: var(--cms-bg); border: 1.5px solid var(--cms-border); border-radius: var(--cms-r-md); outline: none;"
                            onfocus="this.style.borderColor='var(--cms-gold)'; this.style.boxShadow='0 0 0 3px rgba(232,168,0,0.13)'"
                            onblur="this.style.borderColor='var(--cms-border)'; this.style.boxShadow='none'" />
                     @error('subject')
@@ -31,9 +31,9 @@
                 </div>
 
                 <div>
-                    <label style="font-family: var(--cms-font-ui); font-size: 12px; font-weight: 700; color: var(--cms-fg3); text-transform: uppercase; letter-spacing: 0.04em; display: block; margin-bottom: 6px;">Newsletter Body (Markdown / Text)</label>
+                    <label style="font-family: var(--cms-font-ui), sans-serif; font-size: 12px; font-weight: 700; color: var(--cms-fg3); text-transform: uppercase; letter-spacing: 0.04em; display: block; margin-bottom: 6px;">Newsletter Body (Markdown / Text)</label>
                     <textarea name="body" required placeholder="Write your newsletter copy here..."
-                              style="display: block; width: 100%; height: 350px; padding: 12px; font-family: var(--cms-font-ui); font-size: 14px; color: var(--cms-fg1); background: var(--cms-bg); border: 1.5px solid var(--cms-border); border-radius: var(--cms-r-md); outline: none; resize: vertical; line-height: 1.5;"
+                              style="display: block; width: 100%; height: 350px; padding: 12px; font-family: var(--cms-font-ui), sans-serif; font-size: 14px; color: var(--cms-fg1); background: var(--cms-bg); border: 1.5px solid var(--cms-border); border-radius: var(--cms-r-md); outline: none; resize: vertical; line-height: 1.5;"
                               onfocus="this.style.borderColor='var(--cms-gold)'; this.style.boxShadow='0 0 0 3px rgba(232,168,0,0.13)'"
                               onblur="this.style.borderColor='var(--cms-border)'; this.style.boxShadow='none'">{{ old('body') }}</textarea>
                     @error('body')
@@ -44,11 +44,11 @@
 
             <div style="border-top: 1px solid var(--cms-border); padding-top: 18px; display: flex; justify-content: flex-end; gap: 12px;">
                 <a href="{{ route('admin.newsletters.index') }}" 
-                   style="display: inline-flex; align-items: center; justify-content: center; height: 38px; padding: 0 16px; font-family: var(--cms-font-ui); font-size: 13.5px; font-weight: 600; color: var(--cms-fg2); border: 1.5px solid var(--cms-border); border-radius: var(--cms-r-md); text-decoration: none; background: transparent; cursor: pointer;">
+                   style="display: inline-flex; align-items: center; justify-content: center; height: 38px; padding: 0 16px; font-family: var(--cms-font-ui), sans-serif; font-size: 13.5px; font-weight: 600; color: var(--cms-fg2); border: 1.5px solid var(--cms-border); border-radius: var(--cms-r-md); text-decoration: none; background: transparent; cursor: pointer;">
                     Cancel
                 </a>
                 <button type="submit"
-                        style="display: inline-flex; align-items: center; gap: 7px; height: 38px; padding: 0 18px; font-family: var(--cms-font-ui); font-size: 13.5px; font-weight: 700; background: var(--cms-gold); color: #1A1410; border: none; border-radius: var(--cms-r-md); cursor: pointer; transition: background 150ms;"
+                        style="display: inline-flex; align-items: center; gap: 7px; height: 38px; padding: 0 18px; font-family: var(--cms-font-ui), sans-serif; font-size: 13.5px; font-weight: 700; background: var(--cms-gold); color: #1A1410; border: none; border-radius: var(--cms-r-md); cursor: pointer; transition: background 150ms;"
                         onmouseover="this.style.background='#D69B00'" onmouseout="this.style.background='var(--cms-gold)'">
                     <i data-lucide="save" style="width: 15px; height: 15px;"></i>
                     Save Draft

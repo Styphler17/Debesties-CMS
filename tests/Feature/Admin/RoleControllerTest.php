@@ -16,6 +16,8 @@ class RoleControllerTest extends TestCase
 
     private Role $adminRole;
 
+    private User $editor;
+
     protected function setUp(): void
     {
         parent::setUp();
@@ -26,6 +28,14 @@ class RoleControllerTest extends TestCase
         $this->adminRole = Role::where('slug', 'super_admin')->first();
         $this->admin = User::factory()->create();
         $this->admin->roles()->sync([$this->adminRole->id]);
+
+        $editorRole = Role::create(['name' => 'Content Staff', 'slug' => 'content_staff']);
+        $editorRole->permissions()->sync([
+            Permission::where('slug', 'posts.create')->firstOrFail()->id,
+        ]);
+
+        $this->editor = User::factory()->create();
+        $this->editor->roles()->sync([$editorRole->id]);
     }
 
     public function test_admin_can_access_roles_index(): void
@@ -34,6 +44,13 @@ class RoleControllerTest extends TestCase
         $response->assertStatus(200);
         $response->assertViewHas('roles');
         $response->assertViewHas('permissions');
+    }
+
+    public function test_admin_role_without_roles_manage_cannot_access_roles_index(): void
+    {
+        $response = $this->actingAs($this->editor)->get(route('admin.roles.index'));
+
+        $response->assertForbidden();
     }
 
     public function test_admin_can_create_role(): void
@@ -50,6 +67,18 @@ class RoleControllerTest extends TestCase
             'slug' => 'moderator',
             'description' => 'Can moderate comments.',
         ]);
+    }
+
+    public function test_admin_role_without_roles_manage_cannot_create_role(): void
+    {
+        $response = $this->actingAs($this->editor)
+            ->post(route('admin.roles.store'), [
+                'name' => 'Moderator',
+                'description' => 'Can moderate comments.',
+            ]);
+
+        $response->assertForbidden();
+        $this->assertDatabaseMissing('roles', ['slug' => 'moderator']);
     }
 
     public function test_admin_can_create_role_via_ajax(): void
@@ -86,6 +115,26 @@ class RoleControllerTest extends TestCase
         ]);
 
         $this->assertTrue($role->fresh()->permissions->contains($permission->id));
+    }
+
+    public function test_admin_role_without_roles_manage_cannot_update_role_permissions(): void
+    {
+        $role = Role::create(['name' => 'Moderator', 'slug' => 'moderator', 'description' => 'Old desc']);
+        $permission = Permission::where('slug', 'roles.manage')->firstOrFail();
+
+        $response = $this->actingAs($this->editor)
+            ->putJson(route('admin.roles.update', $role->id), [
+                'name' => 'Compromised Moderator',
+                'description' => 'New desc',
+                'permissions' => [$permission->id],
+            ]);
+
+        $response->assertForbidden();
+        $this->assertDatabaseHas('roles', [
+            'id' => $role->id,
+            'name' => 'Moderator',
+        ]);
+        $this->assertFalse($role->fresh()->permissions->contains($permission->id));
     }
 
     public function test_admin_cannot_delete_system_roles(): void

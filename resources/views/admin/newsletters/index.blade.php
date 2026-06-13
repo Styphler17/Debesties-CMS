@@ -18,8 +18,8 @@
                 <i data-lucide="users" style="width: 22px; height: 22px; color: var(--cms-gold-deep);"></i>
             </div>
             <div>
-                <div style="font-family: var(--cms-font-ui); font-size: 26px; font-weight: 800; color: var(--cms-fg1); line-height: 1.1;">{{ number_format($subscriberCount) }}</div>
-                <div style="font-family: var(--cms-font-ui); font-size: 13px; color: var(--cms-fg3); margin-top: 2px;">Active Subscribers</div>
+                <div style="font-family: var(--cms-font-ui), sans-serif; font-size: 26px; font-weight: 800; color: var(--cms-fg1); line-height: 1.1;">{{ number_format($subscriberCount) }}</div>
+                <div style="font-family: var(--cms-font-ui), sans-serif; font-size: 13px; color: var(--cms-fg3); margin-top: 2px;">Active Subscribers</div>
             </div>
         </div>
         
@@ -29,15 +29,15 @@
                 <i data-lucide="mail" style="width: 22px; height: 22px; color: var(--cms-green-deep);"></i>
             </div>
             <div>
-                <div style="font-family: var(--cms-font-ui); font-size: 26px; font-weight: 800; color: var(--cms-fg1); line-height: 1.1;">{{ $campaigns->total() }}</div>
-                <div style="font-family: var(--cms-font-ui); font-size: 13px; color: var(--cms-fg3); margin-top: 2px;">Total Campaigns</div>
+                <div style="font-family: var(--cms-font-ui), sans-serif; font-size: 26px; font-weight: 800; color: var(--cms-fg1); line-height: 1.1;">{{ $campaigns->total() }}</div>
+                <div style="font-family: var(--cms-font-ui), sans-serif; font-size: 13px; color: var(--cms-fg3); margin-top: 2px;">Total Campaigns</div>
             </div>
         </div>
 
         <!-- Action Button -->
         <div style="display: flex; align-items: center; justify-content: flex-end;">
             <a href="{{ route('admin.newsletters.create') }}" 
-               style="display: inline-flex; align-items: center; gap: 8px; font-family: var(--cms-font-ui); font-size: 13.5px; font-weight: 700; padding: 12px 20px; background: var(--cms-gold); color: #1A1410; border: none; border-radius: var(--cms-r-md); cursor: pointer; text-decoration: none; transition: background 150ms;"
+               style="display: inline-flex; align-items: center; gap: 8px; font-family: var(--cms-font-ui), sans-serif; font-size: 13.5px; font-weight: 700; padding: 12px 20px; background: var(--cms-gold); color: #1A1410; border: none; border-radius: var(--cms-r-md); cursor: pointer; text-decoration: none; transition: background 150ms;"
                onmouseover="this.style.background='#D69B00'" onmouseout="this.style.background='var(--cms-gold)'">
                 <i data-lucide="plus" style="width: 16px; height: 16px; stroke-width: 2.5;"></i>
                 Compose Newsletter
@@ -48,7 +48,7 @@
     {{-- Campaign List Table --}}
     <div style="background: var(--cms-surface); border: 1px solid var(--cms-border); border-radius: var(--cms-r-lg); overflow: hidden; box-shadow: var(--cms-sh-card);">
         <div style="padding: 20px 24px; border-bottom: 1px solid var(--cms-border); display: flex; align-items: center; justify-content: space-between;">
-            <h3 style="font-family: var(--cms-font-ui); font-size: 15px; font-weight: 700; color: var(--cms-fg1);">All Campaigns</h3>
+            <h3 style="font-family: var(--cms-font-ui), sans-serif; font-size: 15px; font-weight: 700; color: var(--cms-fg1);">All Campaigns</h3>
         </div>
 
         @if($campaigns->count() > 0)
@@ -56,11 +56,11 @@
                 <table style="width: 100%; border-collapse: collapse; text-align: left;">
                     <thead>
                         <tr style="border-bottom: 1px solid var(--cms-border); background: #FAF9F6;">
-                            <th style="padding: 14px 24px; font-family: var(--cms-font-ui); font-size: 11px; font-weight: 700; color: var(--cms-fg3); text-transform: uppercase; letter-spacing: 0.05em;">Subject</th>
-                            <th style="padding: 14px 24px; font-family: var(--cms-font-ui); font-size: 11px; font-weight: 700; color: var(--cms-fg3); text-transform: uppercase; letter-spacing: 0.05em;">Status</th>
-                            <th style="padding: 14px 24px; font-family: var(--cms-font-ui); font-size: 11px; font-weight: 700; color: var(--cms-fg3); text-transform: uppercase; letter-spacing: 0.05em;">Sent To</th>
-                            <th style="padding: 14px 24px; font-family: var(--cms-font-ui); font-size: 11px; font-weight: 700; color: var(--cms-fg3); text-transform: uppercase; letter-spacing: 0.05em;">Sent At</th>
-                            <th style="padding: 14px 24px; font-family: var(--cms-font-ui); font-size: 11px; font-weight: 700; color: var(--cms-fg3); text-transform: uppercase; letter-spacing: 0.05em; text-align: right;">Actions</th>
+                            <th style="padding: 14px 24px; font-family: var(--cms-font-ui), sans-serif; font-size: 11px; font-weight: 700; color: var(--cms-fg3); text-transform: uppercase; letter-spacing: 0.05em;">Subject</th>
+                            <th style="padding: 14px 24px; font-family: var(--cms-font-ui), sans-serif; font-size: 11px; font-weight: 700; color: var(--cms-fg3); text-transform: uppercase; letter-spacing: 0.05em;">Status</th>
+                            <th style="padding: 14px 24px; font-family: var(--cms-font-ui), sans-serif; font-size: 11px; font-weight: 700; color: var(--cms-fg3); text-transform: uppercase; letter-spacing: 0.05em;">Sent To</th>
+                            <th style="padding: 14px 24px; font-family: var(--cms-font-ui), sans-serif; font-size: 11px; font-weight: 700; color: var(--cms-fg3); text-transform: uppercase; letter-spacing: 0.05em;">Sent At</th>
+                            <th style="padding: 14px 24px; font-family: var(--cms-font-ui), sans-serif; font-size: 11px; font-weight: 700; color: var(--cms-fg3); text-transform: uppercase; letter-spacing: 0.05em; text-align: right;">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -78,19 +78,20 @@
                             @endphp
                             <tr style="border-bottom: 1px solid var(--cms-border); transition: background 120ms;" onmouseover="this.style.background='#FDFBF9'" onmouseout="this.style.background='transparent'">
                                 <td style="padding: 16px 24px;">
-                                    <a href="{{ route('admin.newsletters.show', $campaign) }}" style="font-family: var(--cms-font-ui); font-size: 13.5px; font-weight: 600; color: var(--cms-fg1); text-decoration: none; display: block;">
+                                    <a href="{{ route('admin.newsletters.show', $campaign) }}" style="font-family: var(--cms-font-ui), sans-serif; font-size: 13.5px; font-weight: 600; color: var(--cms-fg1); text-decoration: none; display: block;">
                                         {{ $campaign->subject }}
                                     </a>
                                 </td>
                                 <td style="padding: 16px 24px;">
-                                    <span style="display: inline-flex; align-items: center; height: 22px; padding: 0 8px; border-radius: 4px; font-family: var(--cms-font-ui); font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.02em; background: {{ $statusBg }}; color: {{ $statusColor }};">
+                                    @php $badgeStyle = "display: inline-flex; align-items: center; height: 22px; padding: 0 8px; border-radius: 4px; font-family: var(--cms-font-ui), sans-serif; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.02em; background: $statusBg; color: $statusColor;"; @endphp
+                                    <span style="{!! $badgeStyle !!}">
                                         {{ $campaign->status }}
                                     </span>
                                 </td>
-                                <td style="padding: 16px 24px; font-family: var(--cms-font-ui); font-size: 13px; color: var(--cms-fg2);">
+                                <td style="padding: 16px 24px; font-family: var(--cms-font-ui), sans-serif; font-size: 13px; color: var(--cms-fg2);">
                                     {{ $campaign->status === 'sent' ? number_format($campaign->sent_to_count) . ' subscribers' : '—' }}
                                 </td>
-                                <td style="padding: 16px 24px; font-family: var(--cms-font-ui); font-size: 13px; color: var(--cms-fg3);">
+                                <td style="padding: 16px 24px; font-family: var(--cms-font-ui), sans-serif; font-size: 13px; color: var(--cms-fg3);">
                                     {{ $campaign->sent_at ? $campaign->sent_at->format('M d, Y H:i') : 'Not sent yet' }}
                                 </td>
                                 <td style="padding: 16px 24px; text-align: right;">
@@ -129,10 +130,10 @@
                 <div style="width: 56px; height: 56px; border-radius: 999px; background: var(--cms-bg); display: inline-flex; align-items: center; justify-content: center; margin-bottom: 16px;">
                     <i data-lucide="mail-open" style="width: 24px; height: 24px; color: var(--cms-fg4);"></i>
                 </div>
-                <h4 style="font-family: var(--cms-font-ui); font-size: 15px; font-weight: 700; color: var(--cms-fg2); margin: 0 0 4px 0;">No Campaigns Yet</h4>
-                <p style="font-family: var(--cms-font-ui); font-size: 13px; color: var(--cms-fg4); margin: 0 0 20px 0;">Compose and send your first newsletter campaign to all subscribers.</p>
+                <h4 style="font-family: var(--cms-font-ui), sans-serif; font-size: 15px; font-weight: 700; color: var(--cms-fg2); margin: 0 0 4px 0;">No Campaigns Yet</h4>
+                <p style="font-family: var(--cms-font-ui), sans-serif; font-size: 13px; color: var(--cms-fg4); margin: 0 0 20px 0;">Compose and send your first newsletter campaign to all subscribers.</p>
                 <a href="{{ route('admin.newsletters.create') }}" 
-                   style="display: inline-flex; align-items: center; gap: 8px; font-family: var(--cms-font-ui); font-size: 13px; font-weight: 700; padding: 9px 16px; background: var(--cms-gold); color: #1A1410; border: none; border-radius: var(--cms-r-md); cursor: pointer; text-decoration: none;"
+                   style="display: inline-flex; align-items: center; gap: 8px; font-family: var(--cms-font-ui), sans-serif; font-size: 13px; font-weight: 700; padding: 9px 16px; background: var(--cms-gold); color: #1A1410; border: none; border-radius: var(--cms-r-md); cursor: pointer; text-decoration: none;"
                    onmouseover="this.style.background='#D69B00'" onmouseout="this.style.background='var(--cms-gold)'">
                     <i data-lucide="plus" style="width: 15px; height: 15px;"></i>
                     Create First Campaign
@@ -149,7 +150,7 @@
         if (!container) return;
         
         const toast = document.createElement('div');
-        toast.style.cssText = "background: #17120D; border: 1.5px solid var(--cms-gold); border-radius: var(--cms-r-md); padding: 12px 20px; color: #fff; font-family: var(--cms-font-ui); font-size: 13.5px; font-weight: 600; display: flex; align-items: center; gap: 8px; box-shadow: var(--cms-sh-pop); animation: dsPop 180ms ease; min-width: 280px;";
+        toast.style.cssText = "background: #17120D; border: 1.5px solid var(--cms-gold); border-radius: var(--cms-r-md); padding: 12px 20px; color: #fff; font-family: var(--cms-font-ui), sans-serif; font-size: 13.5px; font-weight: 600; display: flex; align-items: center; gap: 8px; box-shadow: var(--cms-sh-pop); animation: dsPop 180ms ease; min-width: 280px;";
         toast.innerHTML = `<i data-lucide="check-circle" style="width: 16px; height: 16px; color: var(--cms-gold); flex-shrink: 0;"></i> <span>${message}</span>`;
         
         container.appendChild(toast);

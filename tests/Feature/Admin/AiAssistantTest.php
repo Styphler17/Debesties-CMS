@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Admin;
 
+use App\Models\Role;
 use App\Models\User;
 use Database\Seeders\RolesAndPermissionsSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -13,11 +14,17 @@ class AiAssistantTest extends TestCase
 
     private User $admin;
 
+    private User $limitedAdmin;
+
     protected function setUp(): void
     {
         parent::setUp();
         $this->seed(RolesAndPermissionsSeeder::class);
         $this->admin = User::whereHas('roles', fn ($q) => $q->where('slug', 'super_admin'))->first();
+
+        $role = Role::create(['name' => 'Limited Admin', 'slug' => 'limited_admin']);
+        $this->limitedAdmin = User::factory()->create();
+        $this->limitedAdmin->roles()->sync([$role->id]);
     }
 
     public function test_admin_can_generate_tags()
@@ -36,6 +43,19 @@ class AiAssistantTest extends TestCase
         $this->assertIsArray($response->json('tags'));
     }
 
+    public function test_admin_role_without_posts_create_cannot_generate_tags()
+    {
+        $this->withoutMiddleware();
+
+        $response = $this->actingAs($this->limitedAdmin)
+            ->postJson(route('admin.ai-assistant.generate-tags'), [
+                'title' => 'Test Post Title',
+                'body' => 'This is the body content of the test post.',
+            ]);
+
+        $response->assertForbidden();
+    }
+
     public function test_admin_can_generate_outline()
     {
         $this->withoutMiddleware();
@@ -50,6 +70,18 @@ class AiAssistantTest extends TestCase
         ]);
         $this->assertIsArray($response->json('outline'));
         $this->assertStringContainsString('Future of Music', $response->json('outline')[0]);
+    }
+
+    public function test_admin_role_without_posts_create_cannot_generate_outline()
+    {
+        $this->withoutMiddleware();
+
+        $response = $this->actingAs($this->limitedAdmin)
+            ->postJson(route('admin.ai-assistant.generate-outline'), [
+                'title' => 'The Future of Music',
+            ]);
+
+        $response->assertForbidden();
     }
 
     public function test_guest_cannot_use_ai_assistant()
